@@ -1153,7 +1153,7 @@ VOID PeerAssocRspAction(
 #ifdef RT_CFG80211_SUPPORT
 			{
 				PFRAME_802_11 pFrame = (PFRAME_802_11) (Elem->Msg);
-/*
+				/*
 				RTEnqueueInternalCmd(pAd,
 						     CMDTHREAD_CONNECT_RESULT_INFORM,
 						     &pFrame->Octet[6],
