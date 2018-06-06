@@ -517,10 +517,9 @@ int write_reg(
 							  4);
 
 
-	if (ret) {
+	if (ret != 0) {
 		DBGPRINT(RT_DEBUG_ERROR, ("write reg fail\n"));
 	}
-
 	return ret;
 }
 
@@ -550,7 +549,7 @@ int read_reg(
 
 	*value = le2cpu32(io_value);
 
-	if (ret)
+	if (ret != 0)
 		*value = 0xffffffff;
 
 	return ret;
