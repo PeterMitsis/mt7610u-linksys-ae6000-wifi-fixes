@@ -74,7 +74,15 @@
 #ifdef RT_CFG80211_SUPPORT
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
 #include <net/mac80211.h>
+
+/*
+ * Only define EXT_BUILD_CHANNEL_LIST if it is not already defined
+ * (via a Makefile) to prevent unnecessary build warnings.
+ */
+#ifndef EXT_BUILD_CHANNEL_LIST
 #define EXT_BUILD_CHANNEL_LIST		/* must define with CRDA */
+#endif
+
 #else /* LINUX_VERSION_CODE */
 #undef RT_CFG80211_SUPPORT
 #endif /* LINUX_VERSION_CODE */
