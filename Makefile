@@ -26,6 +26,12 @@ RT28xx_DIR = $(shell pwd)
 # Set the default PLATFORM (unless previously specified)
 PLATFORM ?= PC
 
+# KERNEL_RELEASE
+# Indicates "Likely 2.4" or "Not 2.4"
+KERNEL_RELEASE_2.4 = "Likely 2.4"
+KERNEL_RELEASE_ = "Not 2.4"
+KERNEL_RELEASE = ${KERNEL_RELEASE_$(findstring 2.4, ${LINUX_SRC})}
+
 #APSOC
 ifeq ($(MODULE),3050)
 PLATFORM = RALINK_3050
@@ -73,6 +79,11 @@ build_tools:
 	$(RT28xx_DIR)/tools/bin2h
 
 LINUX:
+	$(info "OSABL: ${OSABL}")
+	$(info "RT28xx_MODE: ${RT28xx_MODE}")
+	$(info "PLATFORM: ${PLATFORM}")
+	$(info "Kernel: ${KERNEL_RELEASE})
+
 ifneq (,$(findstring 2.4,$(LINUX_SRC)))
 
 ifeq ($(OSABL),YES)
