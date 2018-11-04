@@ -2662,7 +2662,7 @@ BOOLEAN CFG80211_SupBandInit(
 		}
 	}
 
-	CFG80211DBG(RT_DEBUG_ERROR, ("80211> Number of channel = %d\n",
+	CFG80211DBG(RT_DEBUG_ERROR, ("80211> Number of channel = %zu\n",
 				CFG80211_NUM_OF_CHAN_5GHZ));
 
 	if (pRates == NULL)
