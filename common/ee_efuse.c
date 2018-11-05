@@ -1434,14 +1434,14 @@ int rtmp_ee_efuse_write16(
 	IN USHORT Offset, 
 	IN USHORT data)
 {
-    if (pAd->bFroceEEPROMBuffer || pAd->bEEPROMFile)
-    {
-    	data = le2cpu16(data);
-        DBGPRINT(RT_DEBUG_TRACE,  ("Write to EEPROM Buffer\n"));
-        NdisMoveMemory(&(pAd->EEPROMImage[Offset]), &data, 2);
-    }
-    else
-        eFuseWrite(pAd,Offset ,&data, 2);
+	if (pAd->bFroceEEPROMBuffer || pAd->bEEPROMFile)
+	{
+		data = le2cpu16(data);
+		DBGPRINT(RT_DEBUG_TRACE,  ("Write to EEPROM Buffer\n"));
+		NdisMoveMemory(&(pAd->EEPROMImage[Offset]), &data, 2);
+	}
+	else
+		eFuseWrite(pAd,Offset ,&data, 2);
 	return 0;
 }
 

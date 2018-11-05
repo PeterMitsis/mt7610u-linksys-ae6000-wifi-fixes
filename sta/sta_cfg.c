@@ -746,7 +746,7 @@ INT Set_AuthMode_Proc(
     return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         Set Encryption Type
@@ -755,47 +755,47 @@ INT Set_AuthMode_Proc(
     ==========================================================================
 */
 INT Set_EncrypType_Proc(
-    IN  PRTMP_ADAPTER   pAd, 
-    IN  PSTRING          arg)
+	IN  PRTMP_ADAPTER   pAd,
+	IN  PSTRING         arg)
 {
-    if ((strcmp(arg, "NONE") == 0) || (strcmp(arg, "none") == 0))
-    {
-        if (pAd->StaCfg.AuthMode >= Ndis802_11AuthModeWPA)
-            return TRUE;    /* do nothing */
-            
-        pAd->StaCfg.WepStatus     = Ndis802_11WEPDisabled;
-        pAd->StaCfg.PairCipher    = Ndis802_11WEPDisabled;
-	    pAd->StaCfg.GroupCipher   = Ndis802_11WEPDisabled;
-    }
-    else if ((strcmp(arg, "WEP") == 0) || (strcmp(arg, "wep") == 0))
-    {
-        if (pAd->StaCfg.AuthMode >= Ndis802_11AuthModeWPA)
-            return TRUE;    /* do nothing */
-            
-        pAd->StaCfg.WepStatus     = Ndis802_11WEPEnabled;
-        pAd->StaCfg.PairCipher    = Ndis802_11WEPEnabled;
-	    pAd->StaCfg.GroupCipher   = Ndis802_11WEPEnabled;		
-    }
-    else if ((strcmp(arg, "TKIP") == 0) || (strcmp(arg, "tkip") == 0))
-    {
-        if (pAd->StaCfg.AuthMode < Ndis802_11AuthModeWPA)
-            return TRUE;    /* do nothing */
-            
-        pAd->StaCfg.WepStatus     = Ndis802_11Encryption2Enabled;
-        pAd->StaCfg.PairCipher    = Ndis802_11Encryption2Enabled;
-	    pAd->StaCfg.GroupCipher   = Ndis802_11Encryption2Enabled;
-    }
-    else if ((strcmp(arg, "AES") == 0) || (strcmp(arg, "aes") == 0))
-    {
-        if (pAd->StaCfg.AuthMode < Ndis802_11AuthModeWPA)
-            return TRUE;    /* do nothing */
-            
-        pAd->StaCfg.WepStatus     = Ndis802_11Encryption3Enabled;
-        pAd->StaCfg.PairCipher    = Ndis802_11Encryption3Enabled;
-	    pAd->StaCfg.GroupCipher   = Ndis802_11Encryption3Enabled;
-    }
-    else
-        return FALSE;
+	if ((strcmp(arg, "NONE") == 0) || (strcmp(arg, "none") == 0))
+	{
+		if (pAd->StaCfg.AuthMode >= Ndis802_11AuthModeWPA)
+			return TRUE;    /* do nothing */
+
+		pAd->StaCfg.WepStatus     = Ndis802_11WEPDisabled;
+		pAd->StaCfg.PairCipher    = Ndis802_11WEPDisabled;
+		pAd->StaCfg.GroupCipher   = Ndis802_11WEPDisabled;
+	}
+	else if ((strcmp(arg, "WEP") == 0) || (strcmp(arg, "wep") == 0))
+	{
+		if (pAd->StaCfg.AuthMode >= Ndis802_11AuthModeWPA)
+			return TRUE;    /* do nothing */
+
+		pAd->StaCfg.WepStatus     = Ndis802_11WEPEnabled;
+		pAd->StaCfg.PairCipher    = Ndis802_11WEPEnabled;
+		pAd->StaCfg.GroupCipher   = Ndis802_11WEPEnabled;
+	}
+	else if ((strcmp(arg, "TKIP") == 0) || (strcmp(arg, "tkip") == 0))
+	{
+		if (pAd->StaCfg.AuthMode < Ndis802_11AuthModeWPA)
+			return TRUE;    /* do nothing */
+
+		pAd->StaCfg.WepStatus     = Ndis802_11Encryption2Enabled;
+		pAd->StaCfg.PairCipher    = Ndis802_11Encryption2Enabled;
+		pAd->StaCfg.GroupCipher   = Ndis802_11Encryption2Enabled;
+	}
+	else if ((strcmp(arg, "AES") == 0) || (strcmp(arg, "aes") == 0))
+	{
+		if (pAd->StaCfg.AuthMode < Ndis802_11AuthModeWPA)
+			return TRUE;    /* do nothing */
+
+		pAd->StaCfg.WepStatus     = Ndis802_11Encryption3Enabled;
+		pAd->StaCfg.PairCipher    = Ndis802_11Encryption3Enabled;
+		pAd->StaCfg.GroupCipher   = Ndis802_11Encryption3Enabled;
+	}
+	else
+		return FALSE;
 
 	if (pAd->StaCfg.BssType == BSS_ADHOC)
 	{
@@ -803,9 +803,9 @@ INT Set_EncrypType_Proc(
 		RTMPSetPhyMode(pAd, pAd->CommonCfg.cfg_wmode);
 	}
 
-    DBGPRINT(RT_DEBUG_TRACE, ("Set_EncrypType_Proc::(EncrypType=%d)\n", pAd->StaCfg.WepStatus));
+	DBGPRINT(RT_DEBUG_TRACE, ("Set_EncrypType_Proc::(EncrypType=%d)\n", pAd->StaCfg.WepStatus));
 
-    return TRUE;
+	return TRUE;
 }
 
 /* 
@@ -5722,17 +5722,17 @@ RtmpIoctl_rt_ioctl_siwfreq(
 		MAP_KHZ_TO_CHANNEL_ID( freq , chan); /* Setting by frequency - search the table , like 2.412G, 2.422G, */
 	}
 
-    if (ChannelSanity(pAd, chan) == TRUE)
-    {
+	if (ChannelSanity(pAd, chan) == TRUE)
+	{
 	pAd->CommonCfg.Channel = chan;
 		/* Save the channel on MlmeAux for CntlOidRTBssidProc used. */
 		pAd->MlmeAux.Channel = pAd->CommonCfg.Channel;
 		/*save connect info*/
-		pAd->StaCfg.ConnectinfoChannel = pAd->CommonCfg.Channel;	
+		pAd->StaCfg.ConnectinfoChannel = pAd->CommonCfg.Channel;
 	DBGPRINT(RT_DEBUG_ERROR, ("==>rt_ioctl_siwfreq::SIOCSIWFREQ(Channel=%d)\n", pAd->CommonCfg.Channel));
-    }
-    else
-        return NDIS_STATUS_FAILURE;
+	}
+	else
+		return NDIS_STATUS_FAILURE;
 
 	return NDIS_STATUS_SUCCESS;
 }
@@ -7575,47 +7575,47 @@ RtmpIoctl_rt_ioctl_giwrate(
 	IN	VOID					*pData,
 	IN	ULONG					Data)
 {
-    int rate_index = 0, rate_count = 0;
+	int rate_index = 0, rate_count = 0;
 	HTTRANSMIT_SETTING ht_setting; 
 
 
-    rate_count = RT_RateSize/sizeof(__s32);
+	rate_count = RT_RateSize/sizeof(__s32);
 
-    if ((pAd->StaCfg.bAutoTxRateSwitch == FALSE) &&
-        (INFRA_ON(pAd)) &&
-        ((!WMODE_CAP_N(pAd->CommonCfg.PhyMode)) || (pAd->MacTab.Content[BSSID_WCID].HTPhyMode.field.MODE <= MODE_OFDM)))
-        ht_setting.word = pAd->StaCfg.HTPhyMode.word;
-    else
-        ht_setting.word = pAd->MacTab.Content[BSSID_WCID].HTPhyMode.word;
+	if ((pAd->StaCfg.bAutoTxRateSwitch == FALSE) &&
+		(INFRA_ON(pAd)) &&
+		((!WMODE_CAP_N(pAd->CommonCfg.PhyMode)) || (pAd->MacTab.Content[BSSID_WCID].HTPhyMode.field.MODE <= MODE_OFDM)))
+		ht_setting.word = pAd->StaCfg.HTPhyMode.word;
+	else
+		ht_setting.word = pAd->MacTab.Content[BSSID_WCID].HTPhyMode.word;
     
 #ifdef DOT11_VHT_AC
-       if (ht_setting.field.MODE >= MODE_VHT) {
-               if (ht_setting.field.BW == 0 /* 20Mhz */) {
-                       rate_index = 112 + ((UCHAR)ht_setting.field.ShortGI * 29) + ((UCHAR)ht_setting.field.MCS);
-               } else if (ht_setting.field.BW == 1 /* 40Mhz */) {
-                       rate_index = 121 + ((UCHAR)ht_setting.field.ShortGI * 29) + ((UCHAR)ht_setting.field.MCS);
-               } else if (ht_setting.field.BW == 2 /* 80Mhz */) {
-                       rate_index = 131 + ((UCHAR)ht_setting.field.ShortGI * 29) + ((UCHAR)ht_setting.field.MCS);
-               }
-       } else
+	if (ht_setting.field.MODE >= MODE_VHT) {
+		if (ht_setting.field.BW == 0 /* 20Mhz */) {
+			rate_index = 112 + ((UCHAR)ht_setting.field.ShortGI * 29) + ((UCHAR)ht_setting.field.MCS);
+		} else if (ht_setting.field.BW == 1 /* 40Mhz */) {
+			rate_index = 121 + ((UCHAR)ht_setting.field.ShortGI * 29) + ((UCHAR)ht_setting.field.MCS);
+		} else if (ht_setting.field.BW == 2 /* 80Mhz */) {
+			rate_index = 131 + ((UCHAR)ht_setting.field.ShortGI * 29) + ((UCHAR)ht_setting.field.MCS);
+		}
+	} else
 #endif /* DOT11_VHT_AC */
 
 #ifdef DOT11_N_SUPPORT
-    if ((ht_setting.field.MODE >= MODE_HTMIX) && (ht_setting.field.MODE < MODE_VHT)) {
+	if ((ht_setting.field.MODE >= MODE_HTMIX) && (ht_setting.field.MODE < MODE_VHT)) {
 		/* rate_index = 12 + ((UCHAR)ht_setting.field.BW *16) + ((UCHAR)ht_setting.field.ShortGI *32) + ((UCHAR)ht_setting.field.MCS); */
 		rate_index = 16 + ((UCHAR)ht_setting.field.BW *24) + ((UCHAR)ht_setting.field.ShortGI *48) + ((UCHAR)ht_setting.field.MCS);
-    } else 
+	} else 
 #endif /* DOT11_N_SUPPORT */
-    if (ht_setting.field.MODE == MODE_OFDM)                
-    	rate_index = (UCHAR)(ht_setting.field.MCS) + 4;
-    else if (ht_setting.field.MODE == MODE_CCK)   
-    	rate_index = (UCHAR)(ht_setting.field.MCS);
+	if (ht_setting.field.MODE == MODE_OFDM)                
+		rate_index = (UCHAR)(ht_setting.field.MCS) + 4;
+	else if (ht_setting.field.MODE == MODE_CCK)   
+		rate_index = (UCHAR)(ht_setting.field.MCS);
 
-    if (rate_index < 0)
-        rate_index = 0;
+	if (rate_index < 0)
+		rate_index = 0;
     
-    if (rate_index >= rate_count)
-        rate_index = rate_count-1;
+	if (rate_index >= rate_count)
+		rate_index = rate_count-1;
 
 	*(ULONG *)pData = ralinkrate[rate_index] * 500000;
 

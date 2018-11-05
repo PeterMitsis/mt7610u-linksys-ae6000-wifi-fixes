@@ -943,24 +943,24 @@ NDIS_STATUS	RTUSBEnqueueCmdFromNdis(
 	if ((status != NDIS_STATUS_SUCCESS) || (cmdqelmt == NULL))
 		return (NDIS_STATUS_RESOURCES);
 
-		cmdqelmt->buffer = NULL;
-		if (pInformationBuffer != NULL)
+	cmdqelmt->buffer = NULL;
+	if (pInformationBuffer != NULL)
+	{
+		status = os_alloc_mem(pAd, (PUCHAR *)&cmdqelmt->buffer, InformationBufferLength);
+		if ((status != NDIS_STATUS_SUCCESS) || (cmdqelmt->buffer == NULL))
 		{
-			status = os_alloc_mem(pAd, (PUCHAR *)&cmdqelmt->buffer, InformationBufferLength);
-			if ((status != NDIS_STATUS_SUCCESS) || (cmdqelmt->buffer == NULL))
-			{
-/*				kfree(cmdqelmt);*/
-				os_free_mem(NULL, cmdqelmt);
-				return (NDIS_STATUS_RESOURCES);
-			}
-			else
-			{
-				NdisMoveMemory(cmdqelmt->buffer, pInformationBuffer, InformationBufferLength);
-				cmdqelmt->bufferlength = InformationBufferLength;
-			}
+/*			kfree(cmdqelmt);*/
+			os_free_mem(NULL, cmdqelmt);
+			return (NDIS_STATUS_RESOURCES);
 		}
 		else
-			cmdqelmt->bufferlength = 0;
+		{
+			NdisMoveMemory(cmdqelmt->buffer, pInformationBuffer, InformationBufferLength);
+			cmdqelmt->bufferlength = InformationBufferLength;
+		}
+	}
+	else
+		cmdqelmt->bufferlength = 0;
 
 	cmdqelmt->command = Oid;
 	cmdqelmt->CmdFromNdis = TRUE;

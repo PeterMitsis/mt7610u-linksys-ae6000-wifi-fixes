@@ -1234,7 +1234,7 @@ VOID WPAStart2WayGroupHS(
     IN PRTMP_ADAPTER    pAd, 
     IN MAC_TABLE_ENTRY  *pEntry) 
 {
-    UCHAR               Header802_3[14];
+	UCHAR               Header802_3[14];
 	UCHAR   			TxTsc[6]; 
 	UCHAR   			*mpool;
 	PEAPOL_PACKET		pEapolFrame;
@@ -1246,22 +1246,22 @@ VOID WPAStart2WayGroupHS(
     
 	DBGPRINT(RT_DEBUG_TRACE, ("===> WPAStart2WayGroupHS\n"));
 
-    if ((!pEntry) || !IS_ENTRY_CLIENT(pEntry))
-        return;
+	if ((!pEntry) || !IS_ENTRY_CLIENT(pEntry))
+		return;
 
 
 	/* Allocate memory for output*/
 	os_alloc_mem(NULL, (PUCHAR *)&mpool, TX_EAPOL_BUFFER);
 	if (mpool == NULL)
-    {
-        DBGPRINT(RT_DEBUG_ERROR, ("!!!%s : no memory!!!\n", __FUNCTION__));
-        return;
-    }
+	{
+		DBGPRINT(RT_DEBUG_ERROR, ("!!!%s : no memory!!!\n", __FUNCTION__));
+		return;
+	}
 
 	pEapolFrame = (PEAPOL_PACKET)mpool;
 	NdisZeroMemory(pEapolFrame, TX_EAPOL_BUFFER);
 
-    /* Increment replay counter by 1*/
+	/* Increment replay counter by 1*/
 	ADD_ONE_To_64BIT_VAR(pEntry->R_Counter);
 		
 	/* Construct EAPoL message - Group Msg 1*/
@@ -1283,17 +1283,17 @@ VOID WPAStart2WayGroupHS(
 		return;
 	}
 
-    MAKE_802_3_HEADER(Header802_3, pEntry->Addr, pBssid, EAPOL);            
-    RTMPToWirelessSta(pAd, pEntry, 
+	MAKE_802_3_HEADER(Header802_3, pEntry->Addr, pBssid, EAPOL);            
+	RTMPToWirelessSta(pAd, pEntry, 
 					  Header802_3, LENGTH_802_3, 
 					  (PUCHAR)pEapolFrame, 
 					  CONV_ARRARY_TO_UINT16(pEapolFrame->Body_Len) + 4, FALSE);
 
 	os_free_mem(NULL, mpool);
 
-    DBGPRINT(RT_DEBUG_TRACE, ("<=== WPAStart2WayGroupHS : send out Group Message 1 \n"));
+	DBGPRINT(RT_DEBUG_TRACE, ("<=== WPAStart2WayGroupHS : send out Group Message 1 \n"));
         
-    return;
+	return;
 }
      
 /*

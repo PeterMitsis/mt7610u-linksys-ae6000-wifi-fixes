@@ -1743,45 +1743,43 @@ Arguments:
 */
 PSTRING GetEncryptType(CHAR enc)
 {
-    if(enc == Ndis802_11WEPDisabled)
-        return "NONE";
-    if(enc == Ndis802_11WEPEnabled)
-    	return "WEP";
-    if(enc == Ndis802_11Encryption2Enabled)
-    	return "TKIP";
-    if(enc == Ndis802_11Encryption3Enabled)
-    	return "AES";
+	if(enc == Ndis802_11WEPDisabled)
+		return "NONE";
+	if(enc == Ndis802_11WEPEnabled)
+		return "WEP";
+	if(enc == Ndis802_11Encryption2Enabled)
+		return "TKIP";
+	if(enc == Ndis802_11Encryption3Enabled)
+		return "AES";
 	if(enc == Ndis802_11Encryption4Enabled)
-    	return "TKIPAES";
-    else
-    	return "UNKNOW";
+		return "TKIPAES";
+	return "UNKNOW";
 }
 
 PSTRING GetAuthMode(CHAR auth)
 {
-    if(auth == Ndis802_11AuthModeOpen)
-    	return "OPEN";
-    if(auth == Ndis802_11AuthModeShared)
-    	return "SHARED";
+	if(auth == Ndis802_11AuthModeOpen)
+		return "OPEN";
+	if(auth == Ndis802_11AuthModeShared)
+		return "SHARED";
 	if(auth == Ndis802_11AuthModeAutoSwitch)
-    	return "AUTOWEP";
-    if(auth == Ndis802_11AuthModeWPA)
-    	return "WPA";
-    if(auth == Ndis802_11AuthModeWPAPSK)
-    	return "WPAPSK";
-    if(auth == Ndis802_11AuthModeWPANone)
-    	return "WPANONE";
-    if(auth == Ndis802_11AuthModeWPA2)
-    	return "WPA2";
-    if(auth == Ndis802_11AuthModeWPA2PSK)
-    	return "WPA2PSK";
+		return "AUTOWEP";
+	if(auth == Ndis802_11AuthModeWPA)
+		return "WPA";
+	if(auth == Ndis802_11AuthModeWPAPSK)
+		return "WPAPSK";
+	if(auth == Ndis802_11AuthModeWPANone)
+		return "WPANONE";
+	if(auth == Ndis802_11AuthModeWPA2)
+		return "WPA2";
+	if(auth == Ndis802_11AuthModeWPA2PSK)
+		return "WPA2PSK";
 	if(auth == Ndis802_11AuthModeWPA1WPA2)
-    	return "WPA1WPA2";
+		return "WPA1WPA2";
 	if(auth == Ndis802_11AuthModeWPA1PSKWPA2PSK)
-    	return "WPA1PSKWPA2PSK";
-	
-    	return "UNKNOW";
-}		
+		return "WPA1PSKWPA2PSK";
+	return "UNKNOW";
+}
 
 
 /* 
@@ -4210,9 +4208,9 @@ INT	Show_PMK_Proc(
 		NdisMoveMemory(PMK, pAd->StaCfg.PMK, 32);
 #endif /* CONFIG_STA_SUPPORT */
 	
-    sprintf(pBuf, "\tPMK = ");
-    for (idx = 0; idx < 32; idx++)
-        sprintf(pBuf+strlen(pBuf), "%02X", PMK[idx]);
+	sprintf(pBuf, "\tPMK = ");
+	for (idx = 0; idx < 32; idx++)
+		sprintf(pBuf+strlen(pBuf), "%02X", PMK[idx]);
 
 	return 0;
 }
