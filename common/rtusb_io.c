@@ -502,8 +502,13 @@ int write_reg(
 	u8 req;
 	u32 io_value;
 
-	if (base == 0x40)
+	if (base == 0x40) {
 		req = 0x46;
+	} else {
+		/* Unknown case. Indicate failure. */
+		DBGPRINT(RT_DEBUG_ERROR, ("write_reg() fail. Unknown case.\n"));
+		return NDIS_STATUS_FAILURE;
+	}
 
 	io_value = cpu2le32(value);
 
@@ -533,10 +538,16 @@ int read_reg(
 	u8 req;
 	u32 io_value;
 	
-	if (base == 0x40)
+	if (base == 0x40) {
 		req = 0x47;
-	else if (base == 0x41)
+	} else if (base == 0x41) {
 		req = 0x7;
+	} else {
+		/* Unknown case. Indicate failure. */
+		DBGPRINT(RT_DEBUG_ERROR, ("read_reg() fail. Unknown case.\n"));
+		*value = 0xffffffff;
+		return NDIS_STATUS_FAILURE;
+	}
 
 	ret = RTUSB_VendorRequest(ad,
 							  (USBD_TRANSFER_DIRECTION_IN | USBD_SHORT_TRANSFER_OK),
