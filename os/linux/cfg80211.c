@@ -453,7 +453,7 @@ static int CFG80211_OpsScan(
 	if (RTMP_TEST_FLAG(((PRTMP_ADAPTER)pAd), fRTMP_ADAPTER_HALT_IN_PROGRESS | fRTMP_ADAPTER_NIC_NOT_EXIST))
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> %s adapter halting. exiting. \n", __FUNCTION__));
-		return;
+		return -ENODEV;
 	}
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
@@ -731,7 +731,7 @@ static int CFG80211_OpsStaGet(
 	if (RTMP_TEST_FLAG(((PRTMP_ADAPTER)pAd), fRTMP_ADAPTER_HALT_IN_PROGRESS | fRTMP_ADAPTER_NIC_NOT_EXIST))
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> %s adapter halting. exiting. \n", __FUNCTION__));
-		return;
+		return -ENODEV;
 	}
 
 	/* init */
