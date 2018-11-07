@@ -52,9 +52,6 @@ ULONG RTPktOffsetData = 0, RTPktOffsetLen = 0, RTPktOffsetCB = 0;
 #endif /* OS_ABL_FUNC_SUPPORT */
 
 
-#ifdef VENDOR_FEATURE4_SUPPORT
-ULONG OS_NumOfMemAlloc = 0, OS_NumOfMemFree = 0;
-#endif /* VENDOR_FEATURE4_SUPPORT */
 #ifdef VENDOR_FEATURE2_SUPPORT
 ULONG OS_NumOfPktAlloc = 0, OS_NumOfPktFree = 0;
 #endif /* VENDOR_FEATURE2_SUPPORT */
@@ -209,10 +206,6 @@ NDIS_STATUS os_alloc_mem(
 {
 	*mem = (PUCHAR) kmalloc(size, GFP_ATOMIC);
 	if (*mem) {
-#ifdef VENDOR_FEATURE4_SUPPORT
-		OS_NumOfMemAlloc++;
-#endif /* VENDOR_FEATURE4_SUPPORT */
-
 		return NDIS_STATUS_SUCCESS;
 	} else
 		return NDIS_STATUS_FAILURE;
@@ -225,10 +218,6 @@ NDIS_STATUS os_alloc_mem_suspend(
 {
 	*mem = (PUCHAR) kmalloc(size, GFP_KERNEL);
 	if (*mem) {
-#ifdef VENDOR_FEATURE4_SUPPORT
-		OS_NumOfMemAlloc++;
-#endif /* VENDOR_FEATURE4_SUPPORT */
-
 		return NDIS_STATUS_SUCCESS;
 	} else
 		return NDIS_STATUS_FAILURE;
@@ -241,10 +230,6 @@ NDIS_STATUS os_free_mem(
 {
 	ASSERT(mem);
 	kfree(mem);
-
-#ifdef VENDOR_FEATURE4_SUPPORT
-	OS_NumOfMemFree++;
-#endif /* VENDOR_FEATURE4_SUPPORT */
 
 	return NDIS_STATUS_SUCCESS;
 }
@@ -1547,10 +1532,6 @@ void RtmpOSNetDevFree(PNET_DEV pNetDev)
 	kfree(pNetDev);
 #endif
 
-#ifdef VENDOR_FEATURE4_SUPPORT
-	printk("OS_NumOfMemAlloc = %ld, OS_NumOfMemFree = %ld\n",
-			OS_NumOfMemAlloc, OS_NumOfMemFree);
-#endif /* VENDOR_FEATURE4_SUPPORT */
 #ifdef VENDOR_FEATURE2_SUPPORT
 	printk("OS_NumOfPktAlloc = %ld, OS_NumOfPktFree = %ld\n",
 			OS_NumOfPktAlloc, OS_NumOfPktFree);
