@@ -52,10 +52,6 @@ ULONG RTPktOffsetData = 0, RTPktOffsetLen = 0, RTPktOffsetCB = 0;
 #endif /* OS_ABL_FUNC_SUPPORT */
 
 
-#ifdef VENDOR_FEATURE2_SUPPORT
-ULONG OS_NumOfPktAlloc = 0, OS_NumOfPktFree = 0;
-#endif /* VENDOR_FEATURE2_SUPPORT */
-
 /*
  * the lock will not be used in TX/RX
  * path so throughput should not be impacted
@@ -1531,11 +1527,6 @@ void RtmpOSNetDevFree(PNET_DEV pNetDev)
 #else
 	kfree(pNetDev);
 #endif
-
-#ifdef VENDOR_FEATURE2_SUPPORT
-	printk("OS_NumOfPktAlloc = %ld, OS_NumOfPktFree = %ld\n",
-			OS_NumOfPktAlloc, OS_NumOfPktFree);
-#endif /* VENDOR_FEATURE2_SUPPORT */
 }
 
 INT RtmpOSNetDevAlloc(
