@@ -77,9 +77,9 @@
 
 #define IS_WPA_CAPABILITY(a)       (((a) >= Ndis802_11AuthModeWPA) && ((a) <= Ndis802_11AuthModeWPA1PSKWPA2PSK))
 
-/* 	
+/*
 	WFA recommend to restrict the encryption type in 11n-HT mode.
- 	So, the WEP and TKIP shall not be allowed to use HT rate. 
+ 	So, the WEP and TKIP shall not be allowed to use HT rate.
  */
 #define IS_INVALID_HT_SECURITY(_mode)		\
 	(((_mode) == Ndis802_11Encryption1Enabled) || \
@@ -256,10 +256,10 @@ VOID RTMPInsertRSNIE(
 	IN PUINT8 pmkid_ptr,
 	IN UINT8 pmkid_len);
 
-/* 
- =====================================	
+/*
+ =====================================
  	function prototype in cmm_wpa.c
- =====================================	
+ =====================================
 */
 VOID RTMPToWirelessSta(
 	IN PRTMP_ADAPTER pAd,
@@ -406,10 +406,10 @@ PSTRING GetEapolMsgType(
 #ifdef CONFIG_STA_SUPPORT
 #endif /* CONFIG_STA_SUPPORT */
 
-/* 
- =====================================	
+/*
+ =====================================
  	function prototype in cmm_wep.c
- =====================================	
+ =====================================
 */
 UINT RTMP_CALC_FCS32(
 	IN UINT Fcs,
@@ -434,10 +434,10 @@ BOOLEAN RTMPSoftDecryptWEP(
 	INOUT PUCHAR pData,
 	INOUT UINT16 *DataByteCnt);
 
-/* 
- =====================================	
+/*
+ =====================================
  	function prototype in cmm_tkip.c
- =====================================	
+ =====================================
 */
 BOOLEAN RTMPSoftDecryptTKIP(
 	IN PRTMP_ADAPTER pAd,
@@ -461,10 +461,10 @@ VOID TKIP_GTK_KEY_UNWRAP(
 	IN UINT32 input_len,
 	OUT UCHAR *output_text);
 
-/* 
- =====================================	
+/*
+ =====================================
  	function prototype in cmm_aes.c
- =====================================	
+ =====================================
 */
 BOOLEAN RTMPSoftDecryptAES(
 	IN PRTMP_ADAPTER pAd,

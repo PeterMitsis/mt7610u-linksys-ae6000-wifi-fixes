@@ -606,7 +606,7 @@ Routine Description:
 
 Arguments:
 	pWiphy			- Wireless hardware description
-	Type			- 
+	Type			-
 	dBm				- dBm
 
 Return Value:
@@ -674,7 +674,7 @@ Routine Description:
 
 Arguments:
 	pWiphy			- Wireless hardware description
-	pNdev			- 
+	pNdev			-
 	FlgIsEnabled	-
 	Timeout			-
 
@@ -810,7 +810,7 @@ Routine Description:
 Arguments:
 	pWiphy			- Wireless hardware description
 	pNdev			-
-	Idx				- 
+	Idx				-
 	pMac			-
 	pSinfo			-
 
@@ -939,7 +939,7 @@ static int CFG80211_OpsKeyAdd(
 	KeyInfo.KeyBuf[pParams->key_len] = 0x00;
 	KeyInfo.KeyId = KeyIdx;
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))		
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
 	KeyInfo.bPairwise = Pairwise;
 #endif
 	KeyInfo.KeyLen = pParams->key_len;
@@ -982,7 +982,7 @@ static int CFG80211_OpsKeyAdd(
 			KeyInfo.KeyType = RT_CMD_80211_KEY_AES_CMAC;
 			KeyInfo.KeyId = KeyIdx;
 			KeyInfo.bPairwise = FALSE;
-			KeyInfo.KeyLen = pParams->key_len;			
+			KeyInfo.KeyLen = pParams->key_len;
 	}
 #endif /* LINUX_VERSION_CODE */
 #endif /* DOT11W_PMF_SUPPORT */
@@ -1156,7 +1156,7 @@ Routine Description:
 Arguments:
 	pWiphy			- Wireless hardware description
 	pNdev			- Network device interface
-	pSme			- 
+	pSme			-
 
 Return Value:
 	0				- success
@@ -1207,7 +1207,7 @@ static int CFG80211_OpsConnect(
 	Pairwise |= pSme->crypto.ciphers_pairwise[0];
 
 	CFG80211DBG(RT_DEBUG_ERROR, ("Pairwise %x\n", pSme->crypto.ciphers_pairwise[0]));
-	
+
 	for(Idx=0; Idx<pSme->crypto.n_akm_suites; Idx++)
 		Keymgmt |= pSme->crypto.akm_suites[Idx];
 	/* End of for */
@@ -1259,7 +1259,7 @@ static int CFG80211_OpsConnect(
 	if (WpaVersion & NL80211_WPA_VERSION_1) {
 		ConnInfo.WpaVer = 1;
 	}
-	
+
 	if (WpaVersion & NL80211_WPA_VERSION_2) {
 		ConnInfo.WpaVer = 2;
 	}
@@ -1269,8 +1269,8 @@ static int CFG80211_OpsConnect(
 		ConnInfo.FlgIs8021x = TRUE;
 	else
 		ConnInfo.FlgIs8021x = FALSE;
-	
-	CFG80211DBG(RT_DEBUG_ERROR, ("Auth_type %x\n", pSme->auth_type));	
+
+	CFG80211DBG(RT_DEBUG_ERROR, ("Auth_type %x\n", pSme->auth_type));
 	if (pSme->auth_type == NL80211_AUTHTYPE_SHARED_KEY)
 		ConnInfo.AuthType = Ndis802_11AuthModeShared;
 	else if (pSme->auth_type == NL80211_AUTHTYPE_OPEN_SYSTEM)
@@ -1278,37 +1278,37 @@ static int CFG80211_OpsConnect(
 	else
 		ConnInfo.AuthType = Ndis802_11AuthModeAutoSwitch;
 
-	if (Pairwise == WLAN_CIPHER_SUITE_CCMP) 
+	if (Pairwise == WLAN_CIPHER_SUITE_CCMP)
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("WLAN_CIPHER_SUITE_CCMP...\n"));
 		ConnInfo.PairwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_CCMP;
 	}
-	else if (Pairwise == WLAN_CIPHER_SUITE_TKIP) 
+	else if (Pairwise == WLAN_CIPHER_SUITE_TKIP)
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("WLAN_CIPHER_SUITE_TKIP...\n"));
 		ConnInfo.PairwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_TKIP;
 	}
 	else if ((Pairwise == WLAN_CIPHER_SUITE_WEP40) ||
-			(Pairwise & WLAN_CIPHER_SUITE_WEP104)) 	
+			(Pairwise & WLAN_CIPHER_SUITE_WEP104))
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("WLAN_CIPHER_SUITE_WEP...\n"));
 		ConnInfo.PairwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_WEP;
 	}
-	else 
+	else
 	{
 		CFG80211DBG(RT_DEBUG_ERROR, ("NONE...\n"));
 		ConnInfo.PairwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_NONE;
 	}
 
-	if (Groupwise == WLAN_CIPHER_SUITE_CCMP) 
+	if (Groupwise == WLAN_CIPHER_SUITE_CCMP)
 	{
 		ConnInfo.GroupwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_CCMP;
 	}
-	else if (Groupwise == WLAN_CIPHER_SUITE_TKIP) 
+	else if (Groupwise == WLAN_CIPHER_SUITE_TKIP)
 	{
 		ConnInfo.GroupwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_TKIP;
 	}
-	else 
+	else
 	{
 		ConnInfo.GroupwiseEncrypType |= RT_CMD_80211_CONN_ENCRYPT_NONE;
 	}
@@ -1341,18 +1341,18 @@ static int CFG80211_OpsConnect(
 	//CFG80211DBG(RT_DEBUG_ERROR,	("80211> SME %x\n",	pSme->auth_type));
 
 	if ((pSme->ie_len > 6) /* EID(1) + LEN(1) + OUI(4) */ &&
-		(pSme->ie[0] == WLAN_EID_VENDOR_SPECIFIC && 
+		(pSme->ie[0] == WLAN_EID_VENDOR_SPECIFIC &&
 		pSme->ie[1] >= 4 &&
 		pSme->ie[2] == 0x00 && pSme->ie[3] == 0x50 && pSme->ie[4] == 0xf2 &&
 		pSme->ie[5] == 0x04))
 	{
 		ConnInfo.bWpsConnection= TRUE;
 	}
-	
+
 	/* %NULL if not specified (auto-select based on scan)*/
 	if (pSme->bssid != NULL)
 	{
-		CFG80211DBG(RT_DEBUG_ERROR, ("80211> Connect bssid %02x:%02x:%02x:%02x:%02x:%02x\n",  
+		CFG80211DBG(RT_DEBUG_ERROR, ("80211> Connect bssid %02x:%02x:%02x:%02x:%02x:%02x\n",
 				PRINT_MAC(pSme->bssid)));
 		ConnInfo.pBssid = pSme->bssid;
 	}
@@ -1370,7 +1370,7 @@ Routine Description:
 Arguments:
 	pWiphy			- Wireless hardware description
 	pNdev			- Network device interface
-	ReasonCode		- 
+	ReasonCode		-
 
 Return Value:
 	0				- success
@@ -1411,7 +1411,7 @@ static int CFG80211_OpsRFKill(
 	MAC80211_PAD_GET(pAd, pWiphy);
 
 	RTMP_DRIVER_80211_RFKILL(pAd, &active);
-	wiphy_rfkill_set_hw_state(pWiphy, !active);	
+	wiphy_rfkill_set_hw_state(pWiphy, !active);
 	return active;
 }
 
@@ -1641,73 +1641,16 @@ static int CFG80211_OpsSetBeacon(
     VOID *pAd;
     CMD_RTPRIV_IOCTL_80211_BEACON bcn;
     UCHAR *beacon_head_buf, *beacon_tail_buf;
-	
+
     CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==>\n", __FUNCTION__));
-    MAC80211_PAD_GET(pAd, pWiphy);	
+    MAC80211_PAD_GET(pAd, pWiphy);
 
     hex_dump("Beacon head", info->head, info->head_len);
     hex_dump("Beacon tail", info->tail, info->tail_len);
     CFG80211DBG(RT_DEBUG_TRACE, ("80211>dtim_period = %d \n", info->dtim_period));
     CFG80211DBG(RT_DEBUG_TRACE, ("80211>interval = %d \n", info->interval));
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0)) 
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>ssid = %s \n", info->ssid));
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>ssid_len = %s \n", info->ssid_len));
-    	
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>beacon_ies_len = %d \n", info->beacon_ies_len));
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>proberesp_ies_len = %d \n", info->proberesp_ies_len));
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>assocresp_ies_len = %d \n", info->assocresp_ies_len));		
-
-    if (info->proberesp_ies_len > 0 && info->proberesp_ies)
-        RTMP_DRIVER_80211_AP_PROBE_RSP(pAd, info->proberesp_ies, info->proberesp_ies_len);
-
-	if (info->assocresp_ies_len > 0 && info->assocresp_ies)
-		RTMP_DRIVER_80211_AP_ASSOC_RSP(pAd, info->assocresp_ies, info->assocresp_ies_len);	
-#endif    		
-
-    os_alloc_mem(NULL, &beacon_head_buf, info->head_len);
-    NdisCopyMemory(beacon_head_buf, info->head, info->head_len);
-    
-	os_alloc_mem(NULL, &beacon_tail_buf, info->tail_len);
-	NdisCopyMemory(beacon_tail_buf, info->tail, info->tail_len);
-
-    bcn.beacon_head_len = info->head_len;
-	bcn.beacon_tail_len = info->tail_len;
-    bcn.beacon_head = beacon_head_buf;
-	bcn.beacon_tail = beacon_tail_buf;
-    bcn.dtim_period = info->dtim_period;
-	bcn.interval = info->interval;
-
-
-    RTMP_DRIVER_80211_BEACON_SET(pAd, &bcn);
-
-    if (beacon_head_buf)
-        os_free_mem(NULL, beacon_head_buf);
-	
-	if (beacon_tail_buf)	
-	    os_free_mem(NULL, beacon_tail_buf);
-
-    return 0;
-}
-
-static int CFG80211_OpsAddBeacon(
-        struct wiphy *pWiphy,
-        struct net_device *netdev,
-        struct beacon_parameters *info)
-{
-    VOID *pAd;
-    CMD_RTPRIV_IOCTL_80211_BEACON bcn;
-    UCHAR *beacon_head_buf, *beacon_tail_buf;
-    
-    MAC80211_PAD_GET(pAd, pWiphy);	
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==>\n", __FUNCTION__));
-
-    hex_dump("Beacon head", info->head, info->head_len);
-    hex_dump("Beacon tail", info->tail, info->tail_len);
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>dtim_period = %d \n", info->dtim_period));
-    CFG80211DBG(RT_DEBUG_TRACE, ("80211>interval = %d \n", info->interval));
-
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0)) 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))
     CFG80211DBG(RT_DEBUG_TRACE, ("80211>ssid = %s \n", info->ssid));
     CFG80211DBG(RT_DEBUG_TRACE, ("80211>ssid_len = %s \n", info->ssid_len));
 
@@ -1724,7 +1667,64 @@ static int CFG80211_OpsAddBeacon(
 
     os_alloc_mem(NULL, &beacon_head_buf, info->head_len);
     NdisCopyMemory(beacon_head_buf, info->head, info->head_len);
-    
+
+	os_alloc_mem(NULL, &beacon_tail_buf, info->tail_len);
+	NdisCopyMemory(beacon_tail_buf, info->tail, info->tail_len);
+
+    bcn.beacon_head_len = info->head_len;
+	bcn.beacon_tail_len = info->tail_len;
+    bcn.beacon_head = beacon_head_buf;
+	bcn.beacon_tail = beacon_tail_buf;
+    bcn.dtim_period = info->dtim_period;
+	bcn.interval = info->interval;
+
+
+    RTMP_DRIVER_80211_BEACON_SET(pAd, &bcn);
+
+    if (beacon_head_buf)
+        os_free_mem(NULL, beacon_head_buf);
+
+	if (beacon_tail_buf)
+	    os_free_mem(NULL, beacon_tail_buf);
+
+    return 0;
+}
+
+static int CFG80211_OpsAddBeacon(
+        struct wiphy *pWiphy,
+        struct net_device *netdev,
+        struct beacon_parameters *info)
+{
+    VOID *pAd;
+    CMD_RTPRIV_IOCTL_80211_BEACON bcn;
+    UCHAR *beacon_head_buf, *beacon_tail_buf;
+
+    MAC80211_PAD_GET(pAd, pWiphy);
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211> %s ==>\n", __FUNCTION__));
+
+    hex_dump("Beacon head", info->head, info->head_len);
+    hex_dump("Beacon tail", info->tail, info->tail_len);
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>dtim_period = %d \n", info->dtim_period));
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>interval = %d \n", info->interval));
+
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0))
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>ssid = %s \n", info->ssid));
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>ssid_len = %s \n", info->ssid_len));
+
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>beacon_ies_len = %d \n", info->beacon_ies_len));
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>proberesp_ies_len = %d \n", info->proberesp_ies_len));
+    CFG80211DBG(RT_DEBUG_TRACE, ("80211>assocresp_ies_len = %d \n", info->assocresp_ies_len));
+
+    if (info->proberesp_ies_len > 0 && info->proberesp_ies)
+        RTMP_DRIVER_80211_AP_PROBE_RSP(pAd, info->proberesp_ies, info->proberesp_ies_len);
+
+	if (info->assocresp_ies_len > 0 && info->assocresp_ies)
+		RTMP_DRIVER_80211_AP_ASSOC_RSP(pAd, info->assocresp_ies, info->assocresp_ies_len);
+#endif
+
+    os_alloc_mem(NULL, &beacon_head_buf, info->head_len);
+    NdisCopyMemory(beacon_head_buf, info->head, info->head_len);
+
 	os_alloc_mem(NULL, &beacon_tail_buf, info->tail_len);
 	NdisCopyMemory(beacon_tail_buf, info->tail, info->tail_len);
 
@@ -1740,8 +1740,8 @@ static int CFG80211_OpsAddBeacon(
 
     if (beacon_head_buf)
         os_free_mem(NULL, beacon_head_buf);
-	
-	if (beacon_tail_buf)	
+
+	if (beacon_tail_buf)
 	    os_free_mem(NULL, beacon_tail_buf);
 
     return 0;

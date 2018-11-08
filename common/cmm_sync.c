@@ -36,7 +36,7 @@ extern UINT16 const Country_Region_GroupNum_2GHZ;
 extern COUNTRY_REGION_CH_DESC Country_Region_ChDesc_5GHZ[];
 extern UINT16 const Country_Region_GroupNum_5GHZ;
 
-/* 
+/*
 	==========================================================================
 	Description:
 		Update StaCfg->ChannelList[] according to 1) Country Region 2) RF IC type,
@@ -45,7 +45,7 @@ extern UINT16 const Country_Region_GroupNum_5GHZ;
 
 	IRQL = PASSIVE_LEVEL
 	IRQL = DISPATCH_LEVEL
-	
+
 	==========================================================================
  */
 VOID BuildChannelList(
@@ -77,7 +77,7 @@ VOID BuildChannelList(
 		if (!bRegionFound)
 		{
 			DBGPRINT(RT_DEBUG_ERROR,("CountryRegion=%d not support", pAd->CommonCfg.CountryRegion));
-			return;		
+			return;
 		}
 
 		if (num > 0)
@@ -96,7 +96,7 @@ VOID BuildChannelList(
 			{
 				DBGPRINT(RT_DEBUG_ERROR,("%s:Allocate memory for ChannelListFlag failed\n", __FUNCTION__));
 				os_free_mem(NULL, pChannelList);
-				return;	
+				return;
 			}
 
 			for (i = 0; i < num; i++)
@@ -190,7 +190,7 @@ VOID BuildChannelList(
 #ifdef DOT11_N_SUPPORT
 				if (N_ChannelGroupCheck(pAd, pAd->ChannelList[index + i].Channel))
 					pAd->ChannelList[index + i].Flags |= CHANNEL_40M_CAP;
-#endif /* DOT11_N_SUPPORT */	
+#endif /* DOT11_N_SUPPORT */
 
 				for (j=0; j<15; j++)
 				{
@@ -206,8 +206,8 @@ VOID BuildChannelList(
 		}
 	}
 
-	pAd->ChannelListNum = index;	
-	DBGPRINT(RT_DEBUG_TRACE,("country code=%d/%d, RFIC=%d, PHY mode=%d, support %d channels\n", 
+	pAd->ChannelListNum = index;
+	DBGPRINT(RT_DEBUG_TRACE,("country code=%d/%d, RFIC=%d, PHY mode=%d, support %d channels\n",
 		pAd->CommonCfg.CountryRegion, pAd->CommonCfg.CountryRegionForABand, pAd->RfIcType, pAd->CommonCfg.PhyMode, pAd->ChannelListNum));
 
 #ifdef RT_CFG80211_SUPPORT
@@ -223,22 +223,22 @@ VOID BuildChannelList(
 	}
 #endif /* RT_CFG80211_SUPPORT */
 
-#ifdef DBG	
+#ifdef DBG
 	for (i=0;i<pAd->ChannelListNum;i++)
 	{
-		DBGPRINT_RAW(RT_DEBUG_TRACE,("BuildChannel # %d :: Pwr0 = %d, Pwr1 =%d, Flags = %x\n ", 
-									 pAd->ChannelList[i].Channel, 
-									 pAd->ChannelList[i].Power, 
-									 pAd->ChannelList[i].Power2, 
+		DBGPRINT_RAW(RT_DEBUG_TRACE,("BuildChannel # %d :: Pwr0 = %d, Pwr1 =%d, Flags = %x\n ",
+									 pAd->ChannelList[i].Channel,
+									 pAd->ChannelList[i].Power,
+									 pAd->ChannelList[i].Power2,
 									 pAd->ChannelList[i].Flags));
 	}
 #endif
 }
 
-/* 
+/*
 	==========================================================================
 	Description:
-		This routine return the first channel number according to the country 
+		This routine return the first channel number according to the country
 		code selection and RF IC selection (signal band or dual band). It is called
 		whenever driver need to start a site survey of all supported channels.
 	Return:
@@ -254,7 +254,7 @@ UCHAR FirstChannel(
 	return pAd->ChannelList[0].Channel;
 }
 
-/* 
+/*
 	==========================================================================
 	Description:
 		This routine returns the next channel number. This routine is called
@@ -266,12 +266,12 @@ UCHAR FirstChannel(
 	==========================================================================
  */
 UCHAR NextChannel(
-	IN PRTMP_ADAPTER pAd, 
+	IN PRTMP_ADAPTER pAd,
 	IN UCHAR channel)
 {
 	int i;
 	UCHAR next_channel = 0;
-			
+
 	for (i = 0; i < (pAd->ChannelListNum - 1); i++)
 	{
 		if (channel == pAd->ChannelList[i].Channel)
@@ -294,15 +294,15 @@ UCHAR NextChannel(
 			break;
 	}
 		}
-		
+
 	}
 	return next_channel;
 }
 
-/* 
+/*
 	==========================================================================
 	Description:
-		This routine is for Cisco Compatible Extensions 2.X 
+		This routine is for Cisco Compatible Extensions 2.X
 		Spec31. AP Control of Client Transmit Power
 	Return:
 		None
@@ -311,7 +311,7 @@ UCHAR NextChannel(
 		   0dBm(1mW),   1dBm(5mW), 13dBm(20mW), 15dBm(30mW),
 		  17dBm(50mw), 20dBm(100mW)
 
-	   We supported 
+	   We supported
 		   3dBm(Lowest), 6dBm(10%), 9dBm(25%), 12dBm(50%),
 		  14dBm(75%),   15dBm(100%)
 
@@ -328,10 +328,10 @@ VOID ChangeToCellPowerLimit(
 		from the AP's Beacon/Probe response
 	*/
 	if (AironetCellPowerLimit == 0xFF)
-		return;  
-	
+		return;
+
 	if (AironetCellPowerLimit < 6) /*Used Lowest Power Percentage.*/
-		pAd->CommonCfg.TxPowerPercentage = 6; 
+		pAd->CommonCfg.TxPowerPercentage = 6;
 	else if (AironetCellPowerLimit < 9)
 		pAd->CommonCfg.TxPowerPercentage = 10;
 	else if (AironetCellPowerLimit < 12)
@@ -345,7 +345,7 @@ VOID ChangeToCellPowerLimit(
 
 	if (pAd->CommonCfg.TxPowerPercentage > pAd->CommonCfg.TxPowerDefault)
 		pAd->CommonCfg.TxPowerPercentage = pAd->CommonCfg.TxPowerDefault;
-	
+
 }
 
 

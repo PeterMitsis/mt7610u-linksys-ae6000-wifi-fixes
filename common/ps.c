@@ -32,7 +32,7 @@
 	========================================================================
 	Routine Description:
 		This routine is used to do insert packet into power-saveing queue.
-	
+
 	Arguments:
 		pAd: Pointer to our adapter
 		pPacket: Pointer to send packet
@@ -66,8 +66,8 @@ NDIS_STATUS RtmpInsertPsQueue(
 	{
 		if (pMacEntry->PsQueue.Number >= MAX_PACKETS_IN_PS_QUEUE)
 		{
-			RELEASE_NDIS_PACKET(pAd, pPacket, NDIS_STATUS_FAILURE);			
-			return NDIS_STATUS_FAILURE;			
+			RELEASE_NDIS_PACKET(pAd, pPacket, NDIS_STATUS_FAILURE);
+			return NDIS_STATUS_FAILURE;
 		}
 		else
 		{
@@ -118,7 +118,7 @@ VOID RtmpCleanupPsQueue(
   ========================================================================
   Description:
 	This routine frees all packets in PSQ that's destined to a specific DA.
-	BCAST/MCAST in DTIMCount=0 case is also handled here, just like a PS-POLL 
+	BCAST/MCAST in DTIMCount=0 case is also handled here, just like a PS-POLL
 	is received from a WSTA which has MAC address FF:FF:FF:FF:FF:FF
   ========================================================================
 */
@@ -127,7 +127,7 @@ VOID RtmpHandleRxPsPoll(
 	IN	PUCHAR			pAddr,
 	IN	USHORT			Aid,
     IN	BOOLEAN			isActive)
-{ 
+{
 	PQUEUE_ENTRY	  pEntry;
 	PMAC_TABLE_ENTRY  pMacEntry;
 	unsigned long		IrqFlags;
@@ -277,7 +277,7 @@ VOID RtmpHandleRxPsPoll(
 	}
 	else
 	{
-		DBGPRINT(RT_DEBUG_ERROR,("rcv PS-POLL (AID=%d not match) from %02x:%02x:%02x:%02x:%02x:%02x\n", 
+		DBGPRINT(RT_DEBUG_ERROR,("rcv PS-POLL (AID=%d not match) from %02x:%02x:%02x:%02x:%02x:%02x\n",
 			  Aid, pAddr[0], pAddr[1], pAddr[2], pAddr[3], pAddr[4], pAddr[5]));
 
 	}
@@ -293,17 +293,17 @@ VOID RtmpHandleRxPsPoll(
 	==========================================================================
  */
 BOOLEAN RtmpPsIndicate(
-	IN PRTMP_ADAPTER pAd, 
-	IN PUCHAR pAddr, 
-	IN ULONG Wcid, 
-	IN UCHAR Psm) 
+	IN PRTMP_ADAPTER pAd,
+	IN PUCHAR pAddr,
+	IN ULONG Wcid,
+	IN UCHAR Psm)
 {
 	MAC_TABLE_ENTRY *pEntry;
     UCHAR old_psmode;
 
 	if (Wcid >= MAX_LEN_OF_MAC_TABLE)
 	{
-		return PWR_ACTIVE;	
+		return PWR_ACTIVE;
 	}
 
 	pEntry = &pAd->MacTab.Content[Wcid];
@@ -343,7 +343,7 @@ BOOLEAN RtmpPsIndicate(
 		/* move to above section */
 /*		pEntry->NoDataIdleCount = 0; */
 /*		pEntry->PsMode = Psm; */
-	} 
+	}
 /*	else */
 /*	{ */
 		/* not in table, try to learn it ???? why bother? */
@@ -406,7 +406,7 @@ VOID RtmpPsModeChange(
 				pAd->StaCfg.WindowsPowerMode = Ndis802_11PowerModeMAX_PSP;
 			pAd->StaCfg.WindowsBatteryPowerMode = Ndis802_11PowerModeMAX_PSP;
 			pAd->StaCfg.DefaultListenCount = 5;
-		}							
+		}
 		else if (PsMode == Ndis802_11PowerModeFast_PSP)
 		{
 			// do NOT turn on PSM bit here, wait until MlmeCheckForPsmChange()

@@ -410,7 +410,7 @@ VOID MlmeGetSupportedMcsAdapt(
 		if ((pCurrTxRate->CurrMCS >= 8 && pAd->CommonCfg.TxStream < 2) ||
 			(pCurrTxRate->CurrMCS >= 16 && pAd->CommonCfg.TxStream < 3))
 			continue;
- 
+
 		/*  Rate Table may contain CCK and MCS rates. Give HT/Legacy priority over CCK */
 		if (pCurrTxRate->CurrMCS==MCS_0 && (mcs[0]==-1 || pCurrTxRate->Mode!=MODE_CCK))
 			mcs[0] = idx;
@@ -502,7 +502,7 @@ UCHAR MlmeSelectTxRateAdapt(
 		if (pTable == RateTableVht2S)
 		{
 			DBGPRINT_RAW(RT_DEBUG_INFO | DBG_FUNC_RA, ("%s: GRP: 2*2, RssiOffset=%d\n", __FUNCTION__, RssiOffset));
-			
+
 			/* 2x2 peer device (Adhoc, DLS or AP) */
 			if (mcs[15] && (Rssi > (-69 + RssiOffset)))
 				TxRateIdx = mcs[15];
@@ -520,13 +520,13 @@ UCHAR MlmeSelectTxRateAdapt(
 				TxRateIdx = mcs[9];
 			else
 				TxRateIdx = mcs[0];
-			
+
 			pEntry->mcsGroup = 2;
-		} 
+		}
 		else if (pTable == RateTableVht1S)
 		{
 			DBGPRINT_RAW(RT_DEBUG_INFO | DBG_FUNC_RA, ("%s: GRP: 1*1, RssiOffset=%d\n", __FUNCTION__, RssiOffset));
-			
+
 			/* 1x1 peer device (Adhoc, DLS or AP) */
 			if (mcs[9] && (Rssi > (-67 + RssiOffset)))
 				TxRateIdx = mcs[9];
@@ -548,13 +548,13 @@ UCHAR MlmeSelectTxRateAdapt(
 				TxRateIdx = mcs[1];
 			else
 				TxRateIdx = mcs[0];
-			
+
 			pEntry->mcsGroup = 1;
 		}
 		else
 		{
 			DBGPRINT_RAW(RT_DEBUG_INFO | DBG_FUNC_RA, ("%s: GRP: 1*1, RssiOffset=%d\n", __FUNCTION__, RssiOffset));
-			
+
 			/* 1x1 peer device (Adhoc, DLS or AP) */
 			if (mcs[7] && (Rssi > (-71 + RssiOffset)))
 				TxRateIdx = mcs[7];
@@ -572,7 +572,7 @@ UCHAR MlmeSelectTxRateAdapt(
 				TxRateIdx = mcs[1];
 			else
 				TxRateIdx = mcs[0];
-			
+
 			pEntry->mcsGroup = 1;
 		}
 	}
@@ -748,7 +748,7 @@ static ULONG MlmeRAEstimateThroughput(
 	}
 	else if ((pCurrTxRate->Mode==MODE_HTMIX) || (pCurrTxRate->Mode==MODE_HTGREENFIELD))
 	{
-		if (pEntry->MaxHTPhyMode.field.BW==BW_40 
+		if (pEntry->MaxHTPhyMode.field.BW==BW_40
 #ifdef DBG_CTRL_SUPPORT
 			|| (pAd->CommonCfg.DebugFlags & DBF_FORCE_40MHZ)
 #endif /* DBG_CTRL_SUPPORT */
@@ -843,7 +843,7 @@ VOID MlmeNewRateAdapt(
 		pLastNonBfRate = PTX_RA_GRP_ENTRY(pTable, pEntry->lastNonBfRate);
 
 		if ((pEntry->phyETxBf || pEntry->phyITxBf) &&
-			(pLastNonBfRate->dataRate >= pDownRate->dataRate) 
+			(pLastNonBfRate->dataRate >= pDownRate->dataRate)
 #ifdef DBG_CTRL_SUPPORT
 			&& ((pAd->CommonCfg.DebugFlags & DBF_NO_BF_AWARE_RA)==0)
 #endif /* DBG_CTRL_SUPPORT */
@@ -1603,7 +1603,7 @@ INT Set_RateTable_Proc(RTMP_ADAPTER *pAd, PSTRING arg)
 	}
 
     DBGPRINT(RT_DEBUG_OFF, ("%d, 0x%02x, %d, %d, %d, %d, %d, %d, %d, %d\n",
-		pRateEntry[0], pRateEntry[1], pRateEntry[2], pRateEntry[3], pRateEntry[4], 
+		pRateEntry[0], pRateEntry[1], pRateEntry[2], pRateEntry[3], pRateEntry[4],
 		pRateEntry[5], pRateEntry[6], pRateEntry[7], pRateEntry[8], pRateEntry[9]));
 
 	return TRUE;
@@ -1611,14 +1611,14 @@ INT Set_RateTable_Proc(RTMP_ADAPTER *pAd, PSTRING arg)
 
 
 INT	Set_PerThrdAdj_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UCHAR i;
 	for (i=0; i<MAX_LEN_OF_MAC_TABLE; i++){
 		pAd->MacTab.Content[i].perThrdAdj = simple_strtol(arg, 0, 10);
 	}
-	return TRUE;	
+	return TRUE;
 }
 
 /* Set_LowTrafficThrd_Proc - set threshold for reverting to default MCS based on RSSI */

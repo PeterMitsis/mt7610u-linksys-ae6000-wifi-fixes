@@ -129,12 +129,12 @@ enum SCAN_MODE{
 	/* Active scan, send probe request, and wait beacon and probe response */
 	SCAN_ACTIVE = 0x00,			/* all channels */
 	SCAN_CISCO_ACTIVE = 0x1,	/* single channel only */
-	FAST_SCAN_ACTIVE = 0x2,	
+	FAST_SCAN_ACTIVE = 0x2,
 #ifdef DOT11N_DRAFT3
 	SCAN_2040_BSS_COEXIST = 0x4,
 #endif /* DOT11N_DRAFT3 */
 	SCAN_ACTIVE_MAX,
-	
+
 	/* Passive scan, no probe request, only wait beacon and probe response */
 	SCAN_PASSIVE = 0x80,		/* all channels */
 	SCAN_CISCO_PASSIVE = 0x81,	/* single channel only */
@@ -286,7 +286,7 @@ typedef struct GNU_PACKED _HT_CAP_PARM{
 
 typedef struct GNU_PACKED _HT_MCS_SET_TX_SUBFIELD{
 #ifdef RT_BIG_ENDIAN
-	UCHAR	TxMCSSetDefined:1; 
+	UCHAR	TxMCSSetDefined:1;
 	UCHAR	TxRxNotEqual:1;
 	UCHAR	TxMaxStream:2;
 	UCHAR	TxUnqualModulation:1;
@@ -310,20 +310,20 @@ typedef struct GNU_PACKED _HT_MCS_SET{
 	UCHAR	MpduDensity:1;
 	UCHAR	TxStream:2;
 	UCHAR	TxRxNotEqual:1;
-	UCHAR	TxMCSSetDefined:1; 
+	UCHAR	TxMCSSetDefined:1;
 #else
-	UCHAR	TxMCSSetDefined:1; 
+	UCHAR	TxMCSSetDefined:1;
 	UCHAR	TxRxNotEqual:1;
 	UCHAR	TxStream:2;
 	UCHAR	MpduDensity:1;
 	UCHAR	rsv:3;
 #endif /* RT_BIG_ENDIAN */
-	UCHAR	rsv3[3];  
+	UCHAR	rsv3[3];
 } HT_MCS_SET, *PHT_MCS_SET;
 
 /*  HT Capability INFO field in HT Cap IE . */
 typedef struct GNU_PACKED _EXT_HT_CAP_INFO{
-#ifdef RT_BIG_ENDIAN 
+#ifdef RT_BIG_ENDIAN
 	USHORT	rsv2:4;
 	USHORT	RDGSupport:1;	/*reverse Direction Grant  support */
 	USHORT	PlusHTC:1;	/*+HTC control field support */
@@ -358,7 +358,7 @@ typedef struct GNU_PACKED _HT_BF_CAP{
 	ULONG	NoComSteerBFAntSup:2;
 	ULONG	CSIBFAntSup:2;
 	ULONG	MinGrouping:2;
-	ULONG	ExpComBF:2;	
+	ULONG	ExpComBF:2;
 	ULONG	ExpNoComBF:2;
 	ULONG	ExpCSIFbk:2;
 	ULONG	ExpComSteerCapable:1;
@@ -366,8 +366,8 @@ typedef struct GNU_PACKED _HT_BF_CAP{
 	ULONG	ExpCSICapable:1;
 	ULONG	Calibration:2;
 	ULONG	ImpTxBFCapable:1;
-	ULONG	TxNDPCapable:1;	
-	ULONG	RxNDPCapable:1;	
+	ULONG	TxNDPCapable:1;
+	ULONG	RxNDPCapable:1;
 	ULONG	TxSoundCapable:1;
 	ULONG	RxSoundCapable:1;
 	ULONG	TxBFRecCapable:1;
@@ -375,16 +375,16 @@ typedef struct GNU_PACKED _HT_BF_CAP{
 	ULONG	TxBFRecCapable:1;
 	ULONG	RxSoundCapable:1;
 	ULONG	TxSoundCapable:1;
-	ULONG	RxNDPCapable:1;	
-	ULONG	TxNDPCapable:1;	
-	ULONG	ImpTxBFCapable:1;	
+	ULONG	RxNDPCapable:1;
+	ULONG	TxNDPCapable:1;
+	ULONG	ImpTxBFCapable:1;
 	ULONG	Calibration:2;
 	ULONG	ExpCSICapable:1;
 	ULONG	ExpNoComSteerCapable:1;
 	ULONG	ExpComSteerCapable:1;
-	ULONG	ExpCSIFbk:2;	
-	ULONG	ExpNoComBF:2;	
-	ULONG	ExpComBF:2;	
+	ULONG	ExpCSIFbk:2;
+	ULONG	ExpNoComBF:2;
+	ULONG	ExpComBF:2;
 	ULONG	MinGrouping:2;
 	ULONG	CSIBFAntSup:2;
 	ULONG	NoComSteerBFAntSup:2;
@@ -405,9 +405,9 @@ typedef struct GNU_PACKED _HT_AS_CAP{
 	UCHAR	ExpCSIFbk:1;
 	UCHAR	AntIndFbkTxASEL:1;
 	UCHAR	ExpCSIFbkTxASEL:1;
-	UCHAR	AntSelect:1; 
+	UCHAR	AntSelect:1;
 #else
-	UCHAR	AntSelect:1; 
+	UCHAR	AntSelect:1;
 	UCHAR	ExpCSIFbkTxASEL:1;
 	UCHAR	AntIndFbkTxASEL:1;
 	UCHAR	ExpCSIFbk:1;
@@ -464,8 +464,8 @@ typedef union GNU_PACKED _BSS_2040_COEXIST_IE{
  	UCHAR	ObssScanExempGrant:1;
 	UCHAR	ObssScanExempReq:1;
 	UCHAR	BSS20WidthReq:1;
-	UCHAR	Intolerant40:1;	
-	UCHAR	InfoReq:1; 
+	UCHAR	Intolerant40:1;
+	UCHAR	InfoReq:1;
 #else
 	UCHAR	InfoReq:1;
 	UCHAR	Intolerant40:1;			/* Inter-BSS. set 1 when prohibits a receiving BSS from operating as a 20/40 Mhz BSS. */
@@ -480,8 +480,8 @@ typedef union GNU_PACKED _BSS_2040_COEXIST_IE{
 
 
 typedef struct  _TRIGGER_EVENTA{
-	BOOLEAN			bValid;	 
-	UCHAR	BSSID[6];	
+	BOOLEAN			bValid;
+	UCHAR	BSSID[6];
 	UCHAR	RegClass;	/* Regulatory Class */
 	USHORT	Channel;
 } TRIGGER_EVENTA, *PTRIGGER_EVENTA;
@@ -491,8 +491,8 @@ typedef struct  _TRIGGER_EVENTA{
 /* If one Event A delete or created, or if Event B is detected or not detected, STA should send 2040BSSCoexistence to AP. */
 #define MAX_TRIGGER_EVENT		64
 typedef struct  _TRIGGER_EVENT_TAB{
-	UCHAR	EventANo;	
-	TRIGGER_EVENTA	EventA[MAX_TRIGGER_EVENT];	
+	UCHAR	EventANo;
+	TRIGGER_EVENTA	EventA[MAX_TRIGGER_EVENT];
 	ULONG			EventBCountDown;	/* Count down counter for Event B. */
 } TRIGGER_EVENT_TAB, *PTRIGGER_EVENT_TAB;
 
@@ -553,7 +553,7 @@ typedef struct GNU_PACKED _BSS_2040_COEXIST_ELEMENT{
 /*802.11n 7.3.2.59 */
 typedef struct GNU_PACKED _BSS_2040_INTOLERANT_CH_REPORT{
 	UCHAR				ElementID;		/* ID = IE_2040_BSS_INTOLERANT_REPORT = 73 */
-	UCHAR				Len;	
+	UCHAR				Len;
 	UCHAR				RegulatoryClass;
 	UCHAR				ChList[0];
 }BSS_2040_INTOLERANT_CH_REPORT, *PBSS_2040_INTOLERANT_CH_REPORT;
@@ -638,7 +638,7 @@ typedef struct {
 #ifdef RT_BIG_ENDIAN
 	UCHAR	RecomWidth:1;
 	UCHAR	ExtChanOffset:2;	/* Please not the difference with following 	UCHAR	NewExtChannelOffset; from 802.11n */
-	UCHAR	MpduDensity:3;	
+	UCHAR	MpduDensity:3;
 	UCHAR	MaxRAmpduFactor:2;
 #else
 	UCHAR	MaxRAmpduFactor:2;
@@ -660,11 +660,11 @@ typedef struct {
 	USHORT	OBSS_NonHTExist:1;
 	USHORT	rsv2:11;
 #endif
-	
+
 	/* New Extension Channel Offset IE */
-	UCHAR	NewExtChannelOffset;	
+	UCHAR	NewExtChannelOffset;
 	/* Extension Capability IE = 127 */
-	UCHAR	BSSCoexist2040;	
+	UCHAR	BSSCoexist2040;
 } RT_HT_CAPABILITY, *PRT_HT_CAPABILITY;
 
 
@@ -673,13 +673,13 @@ typedef struct GNU_PACKED _ADD_HTINFO{
 #ifdef RT_BIG_ENDIAN
 	UCHAR	SerInterGranu:3;
 	UCHAR	S_PSMPSup:1;
-	UCHAR	RifsMode:1; 
-	UCHAR	RecomWidth:1;	
+	UCHAR	RifsMode:1;
+	UCHAR	RecomWidth:1;
 	UCHAR	ExtChanOffset:2;
 #else
 	UCHAR	ExtChanOffset:2;
 	UCHAR	RecomWidth:1;
-	UCHAR	RifsMode:1; 
+	UCHAR	RifsMode:1;
 	UCHAR	S_PSMPSup:1;	 /*Indicate support for scheduled PSMP */
 	UCHAR	SerInterGranu:3;	 /*service interval granularity */
 #endif
@@ -688,17 +688,17 @@ typedef struct GNU_PACKED _ADD_HTINFO{
 
 typedef struct GNU_PACKED _ADD_HTINFO2{
 #ifdef RT_BIG_ENDIAN
-	USHORT	rsv2:11; 
+	USHORT	rsv2:11;
 	USHORT	OBSS_NonHTExist:1;
 	USHORT	rsv:1;
 	USHORT	NonGfPresent:1;
-	USHORT	OperaionMode:2;	
+	USHORT	OperaionMode:2;
 #else
 	USHORT	OperaionMode:2;
 	USHORT	NonGfPresent:1;
-	USHORT	rsv:1; 
+	USHORT	rsv:1;
 	USHORT	OBSS_NonHTExist:1;
-	USHORT	rsv2:11; 
+	USHORT	rsv2:11;
 #endif
 } ADD_HTINFO2, *PADD_HTINFO2;
 
@@ -717,12 +717,12 @@ typedef struct GNU_PACKED _ADD_HTINFO3{
 #else
 	USHORT	StbcMcs:6;
 	USHORT	DualBeacon:1;
-	USHORT	DualCTSProtect:1; 
+	USHORT	DualCTSProtect:1;
 	USHORT	STBCBeacon:1;
 	USHORT	LsigTxopProt:1;	/* L-SIG TXOP protection full support */
-	USHORT	PcoActive:1; 
-	USHORT	PcoPhase:1; 
-	USHORT	rsv:4; 
+	USHORT	PcoActive:1;
+	USHORT	PcoPhase:1;
+	USHORT	rsv:4;
 #endif /* RT_BIG_ENDIAN */
 } ADD_HTINFO3, *PADD_HTINFO3;
 
@@ -730,8 +730,8 @@ typedef struct GNU_PACKED _ADD_HTINFO3{
 typedef struct  GNU_PACKED _ADD_HT_INFO_IE{
 	UCHAR				ControlChan;
 	ADD_HTINFO			AddHtInfo;
-	ADD_HTINFO2			AddHtInfo2;	 
-	ADD_HTINFO3			AddHtInfo3;	 
+	ADD_HTINFO2			AddHtInfo2;
+	ADD_HTINFO3			AddHtInfo3;
 	UCHAR				MCSSet[16];		/* Basic MCS set */
 } ADD_HT_INFO_IE, *PADD_HT_INFO_IE;
 
@@ -842,11 +842,11 @@ typedef struct GNU_PACKED _MTBAR_CONTROL{
     USHORT      NumTID:4;
     USHORT      Rsv1:9;
     USHORT      Compressed:1;
-    USHORT      MTID:1;		
+    USHORT      MTID:1;
     USHORT      ACKPolicy:1;
 #else
     USHORT      ACKPolicy:1;
-    USHORT      MTID:1;		
+    USHORT      MTID:1;
     USHORT      Compressed:1;
     USHORT      Rsv1:9;
     USHORT      NumTID:4;
@@ -1038,7 +1038,7 @@ typedef	struct _CIPHER_SUITE {
 	USHORT							RsnCapability;	/* RSN capability from beacon */
 	BOOLEAN							bMixMode;		/* Indicate Pair & Group cipher might be different */
 }	CIPHER_SUITE, *PCIPHER_SUITE;
-	
+
 
 /* EDCA configuration from AP's BEACON/ProbeRsp */
 typedef struct {
@@ -1155,7 +1155,7 @@ typedef struct {
 #endif /* DOT11_VHT_AC */
 
 
-	CHAR	MinSNR;	
+	CHAR	MinSNR;
     UCHAR   Privacy;			/* Indicate security function ON/OFF. Don't mess up with auth mode. */
 	UCHAR	Hidden;
 
@@ -1168,7 +1168,7 @@ typedef struct {
     USHORT  CfpDurRemaining;
     UCHAR   SsidLen;
     CHAR    Ssid[MAX_LEN_OF_SSID];
-    
+
 	UCHAR	SameRxTimeCount;
 	ULONG   LastBeaconRxTimeA; /* OS's timestamp */
     ULONG   LastBeaconRxTime; /* OS's timestamp */
@@ -1182,7 +1182,7 @@ typedef struct {
 	/* New for microsoft WPA support */
 	NDIS_802_11_FIXED_IEs	FixIEs;
 	NDIS_802_11_AUTHENTICATION_MODE	AuthModeAux;	/* Addition mode for WPA2 / WPA capable AP */
-	NDIS_802_11_AUTHENTICATION_MODE	AuthMode;	
+	NDIS_802_11_AUTHENTICATION_MODE	AuthMode;
 	NDIS_802_11_WEP_STATUS	WepStatus;				/* Unicast Encryption Algorithm extract from VAR_IE */
 	USHORT					VarIELen;				/* Length of next VIE include EID & Length */
 	UCHAR					VarIEs[MAX_VIE_LEN];
@@ -1284,7 +1284,7 @@ typedef struct _MLME_AUX {
 	USHORT              CfpMaxDuration;
 	USHORT              CfpPeriod;
 	USHORT              AtimWin;
-    
+
 	/* Copy supported rate from desired AP's beacon. We are trying to match */
 	/* AP's supported and extended rate settings. */
 	UCHAR		        SupRate[MAX_LEN_OF_SUPPORTED_RATES];
@@ -1312,7 +1312,7 @@ typedef struct _MLME_AUX {
 
     /* new to keep Ralink specific feature */
     ULONG               APRalinkIe;
-    
+
     BSS_TABLE           SsidBssTab;     /* AP list for the same SSID */
     BSS_TABLE           RoamTab;        /* AP list eligible for roaming */
     ULONG               BssIdx;
@@ -1477,8 +1477,8 @@ typedef struct _IE_lists {
 
 
 typedef struct _bcn_ie_list {
-	UCHAR Addr1[MAC_ADDR_LEN]; 
-	UCHAR Addr2[MAC_ADDR_LEN]; 
+	UCHAR Addr1[MAC_ADDR_LEN];
+	UCHAR Addr2[MAC_ADDR_LEN];
 	UCHAR Bssid[MAC_ADDR_LEN];
 	CHAR Ssid[MAX_LEN_OF_SSID];
 	UCHAR SsidLen;

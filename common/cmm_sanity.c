@@ -46,22 +46,22 @@ typedef struct wsc_ie_probreq_data
 	UCHAR	data[2];
 } WSC_IE_PROBREQ_DATA;
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN MlmeAddBAReqSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
-    OUT PUCHAR pAddr2) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
+    OUT PUCHAR pAddr2)
 {
     PMLME_ADDBA_REQ_STRUCT   pInfo;
 
@@ -71,46 +71,46 @@ BOOLEAN MlmeAddBAReqSanity(
     {
         DBGPRINT(RT_DEBUG_TRACE, ("MlmeAddBAReqSanity fail - message lenght not correct.\n"));
         return FALSE;
-    }	
-	
+    }
+
     if ((pInfo->Wcid >= MAX_LEN_OF_MAC_TABLE))
     {
         DBGPRINT(RT_DEBUG_TRACE, ("MlmeAddBAReqSanity fail - The peer Mac is not associated yet.\n"));
         return FALSE;
-    }	
+    }
 
 	/*
     if ((pInfo->BaBufSize > MAX_RX_REORDERBUF) || (pInfo->BaBufSize < 2))
     {
         DBGPRINT(RT_DEBUG_TRACE, ("MlmeAddBAReqSanity fail - Rx Reordering buffer too big or too small\n"));
         return FALSE;
-    } 
-	*/  
+    }
+	*/
 
     if ((pInfo->pAddr[0]&0x01) == 0x01)
     {
         DBGPRINT(RT_DEBUG_TRACE, ("MlmeAddBAReqSanity fail - broadcast address not support BA\n"));
         return FALSE;
-    }	
-    
+    }
+
     return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN MlmeDelBAReqSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen)
 {
 	MLME_DELBA_REQ_STRUCT *pInfo;
 	pInfo = (MLME_DELBA_REQ_STRUCT *)Msg;
@@ -119,32 +119,32 @@ BOOLEAN MlmeDelBAReqSanity(
     {
         DBGPRINT(RT_DEBUG_ERROR, ("MlmeDelBAReqSanity fail - message lenght not correct.\n"));
         return FALSE;
-    }	
-	
+    }
+
     if ((pInfo->Wcid >= MAX_LEN_OF_MAC_TABLE))
     {
         DBGPRINT(RT_DEBUG_ERROR, ("MlmeDelBAReqSanity fail - The peer Mac is not associated yet.\n"));
         return FALSE;
-    }	
+    }
 
     if ((pInfo->TID & 0xf0))
     {
         DBGPRINT(RT_DEBUG_ERROR, ("MlmeDelBAReqSanity fail - The peer TID is incorrect.\n"));
         return FALSE;
-    }	
+    }
 
 	if (NdisEqualMemory(pAd->MacTab.Content[pInfo->Wcid].Addr, pInfo->Addr, MAC_ADDR_LEN) == 0)
-    {    	
-        DBGPRINT(RT_DEBUG_ERROR, ("MlmeDelBAReqSanity fail - the peer addr dosen't exist.\n"));		
+    {
+        DBGPRINT(RT_DEBUG_ERROR, ("MlmeDelBAReqSanity fail - the peer addr dosen't exist.\n"));
         return FALSE;
-    }	
-    
+    }
+
     return TRUE;
 }
 
 BOOLEAN PeerAddBAReqActionSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *pMsg, 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *pMsg,
     IN ULONG MsgLen,
 	OUT PUCHAR pAddr2)
 {
@@ -169,7 +169,7 @@ BOOLEAN PeerAddBAReqActionSanity(
 	*(USHORT *)(&pAddFrame->BaParm) = cpu2le16(*(USHORT *)(&pAddFrame->BaParm));
 #endif
 	pAddFrame->TimeOutValue = cpu2le16(pAddFrame->TimeOutValue);
-	pAddFrame->BaStartSeq.word = cpu2le16(pAddFrame->BaStartSeq.word); 
+	pAddFrame->BaStartSeq.word = cpu2le16(pAddFrame->BaStartSeq.word);
 
 	COPY_MAC_ADDR(pAddr2, pFrame->Hdr.Addr2);
 
@@ -184,13 +184,13 @@ BOOLEAN PeerAddBAReqActionSanity(
 }
 
 BOOLEAN PeerAddBARspActionSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *pMsg, 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *pMsg,
     IN ULONG MsgLen)
 {
 	/*PFRAME_802_11 pFrame = (PFRAME_802_11)pMsg;*/
 	PFRAME_ADDBA_RSP pAddFrame;
-	
+
 	pAddFrame = (PFRAME_ADDBA_RSP)(pMsg);
 	if (MsgLen < (sizeof(FRAME_ADDBA_RSP)))
 	{
@@ -223,19 +223,19 @@ BOOLEAN PeerAddBARspActionSanity(
 }
 
 BOOLEAN PeerDelBAActionSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN UCHAR Wcid, 
-    IN VOID *pMsg, 
+    IN PRTMP_ADAPTER pAd,
+    IN UCHAR Wcid,
+    IN VOID *pMsg,
     IN ULONG MsgLen )
 {
 	/*PFRAME_802_11 pFrame = (PFRAME_802_11)pMsg;*/
 	PFRAME_DELBA_REQ  pDelFrame;
 	if (MsgLen != (sizeof(FRAME_DELBA_REQ)))
 		return FALSE;
-	
+
 	if (Wcid >= MAX_LEN_OF_MAC_TABLE)
 		return FALSE;
-	
+
 	pDelFrame = (PFRAME_DELBA_REQ)(pMsg);
 
 	*(USHORT *)(&pDelFrame->DelbaParm) = cpu2le16(*(USHORT *)(&pDelFrame->DelbaParm));
@@ -247,26 +247,26 @@ BOOLEAN PeerDelBAActionSanity(
 
 BOOLEAN PeerBeaconAndProbeRspSanity_Old(
     IN PRTMP_ADAPTER pAd,
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
+    IN VOID *Msg,
+    IN ULONG MsgLen,
     IN UCHAR  MsgChannel,
-    OUT PUCHAR pAddr2, 
-    OUT PUCHAR pBssid, 
-    OUT CHAR Ssid[], 
-    OUT UCHAR *pSsidLen, 
-    OUT UCHAR *pBssType, 
-    OUT USHORT *pBeaconPeriod, 
-    OUT UCHAR *pChannel, 
-    OUT UCHAR *pNewChannel, 
-    OUT LARGE_INTEGER *pTimestamp, 
-    OUT CF_PARM *pCfParm, 
-    OUT USHORT *pAtimWin, 
-    OUT USHORT *pCapabilityInfo, 
+    OUT PUCHAR pAddr2,
+    OUT PUCHAR pBssid,
+    OUT CHAR Ssid[],
+    OUT UCHAR *pSsidLen,
+    OUT UCHAR *pBssType,
+    OUT USHORT *pBeaconPeriod,
+    OUT UCHAR *pChannel,
+    OUT UCHAR *pNewChannel,
+    OUT LARGE_INTEGER *pTimestamp,
+    OUT CF_PARM *pCfParm,
+    OUT USHORT *pAtimWin,
+    OUT USHORT *pCapabilityInfo,
     OUT UCHAR *pErp,
-    OUT UCHAR *pDtimCount, 
-    OUT UCHAR *pDtimPeriod, 
-    OUT UCHAR *pBcastFlag, 
-    OUT UCHAR *pMessageToMe, 
+    OUT UCHAR *pDtimCount,
+    OUT UCHAR *pDtimPeriod,
+    OUT UCHAR *pBcastFlag,
+    OUT UCHAR *pMessageToMe,
     OUT UCHAR SupRate[],
     OUT UCHAR *pSupRateLen,
     OUT UCHAR ExtRate[],
@@ -286,7 +286,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
     OUT UCHAR *AddHtInfoLen,
     OUT ADD_HT_INFO_IE *AddHtInfo,
     OUT UCHAR *NewExtChannelOffset,		/* Ht extension channel offset(above or below)*/
-    OUT USHORT *LengthVIE,	
+    OUT USHORT *LengthVIE,
     OUT PNDIS_802_11_VARIABLE_IEs pVIE)
 {
     UCHAR				*Ptr;
@@ -308,18 +308,18 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 	/*
 		For some 11a AP which didn't have DS_IE, we use two conditions to decide the channel
 		1. If the AP is 11n enabled, then check the control channel.
-		2. If the AP didn't have any info about channel, use the channel we received this 
+		2. If the AP didn't have any info about channel, use the channel we received this
 			frame as the channel. (May inaccuracy!!)
 	*/
 	UCHAR			CtrlChannel = 0;
-	
-	
+
+
 	os_alloc_mem(NULL, &pPeerWscIe, 512);
     /* Add for 3 necessary EID field check*/
     Sanity = 0;
 
     *pAtimWin = 0;
-    *pErp = 0;	
+    *pErp = 0;
     *pDtimCount = 0;
     *pDtimPeriod = 0;
     *pBcastFlag = 0;
@@ -342,21 +342,21 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
     pQbssLoad->bValid = FALSE;      /* default: no IE_QBSS_LOAD found*/
     pEdcaParm->bValid = FALSE;      /* default: no IE_EDCA_PARAMETER found*/
     pQosCapability->bValid = FALSE; /* default: no IE_QOS_CAPABILITY found*/
-    
+
     pFrame = (PFRAME_802_11)Msg;
-    
+
     /* get subtype from header*/
     SubType = (UCHAR)pFrame->Hdr.FC.SubType;
 
     /* get Addr2 and BSSID from header*/
     COPY_MAC_ADDR(pAddr2, pFrame->Hdr.Addr2);
     COPY_MAC_ADDR(pBssid, pFrame->Hdr.Addr3);
-    
+
 /*	hex_dump("Beacon", Msg, MsgLen);*/
 
     Ptr = pFrame->Octet;
     Length += LENGTH_802_11;
-    
+
     /* get timestamp from payload and advance the pointer*/
     NdisMoveMemory(pTimestamp, Ptr, TIMESTAMP_LEN);
 
@@ -376,17 +376,17 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
     Ptr += 2;
     Length += 2;
 
-    if (CAP_IS_ESS_ON(*pCapabilityInfo)) 
+    if (CAP_IS_ESS_ON(*pCapabilityInfo))
         *pBssType = BSS_INFRA;
-    else 
+    else
         *pBssType = BSS_ADHOC;
 
     pEid = (PEID_STRUCT) Ptr;
 
     /* get variable fields from payload and advance the pointer*/
-    while ((Length + 2 + pEid->Len) <= MsgLen)    
+    while ((Length + 2 + pEid->Len) <= MsgLen)
     {
-        
+
         /* Secure copy VIE to VarIE[MAX_VIE_LEN] didn't overflow.*/
         if ((*LengthVIE + pEid->Len + 2) >= MAX_VIE_LEN)
         {
@@ -422,8 +422,8 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
                     *pSupRateLen = pEid->Len;
 
                     /*
-						TODO: 2004-09-14 not a good design here, cause it exclude extra 
-							rates from ScanTab. We should report as is. And filter out 
+						TODO: 2004-09-14 not a good design here, cause it exclude extra
+							rates from ScanTab. We should report as is. And filter out
 							unsupported rates in MlmeAux
 					*/
                     /* Check against the supported rates*/
@@ -469,23 +469,23 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 			{
 				DBGPRINT(RT_DEBUG_WARN, ("%s() - wrong IE_HT_CAP. pEid->Len = %d\n", __FUNCTION__, pEid->Len));
 			}
-			
+
 		break;
             case IE_ADD_HT:
-			if (pEid->Len >= sizeof(ADD_HT_INFO_IE))				
+			if (pEid->Len >= sizeof(ADD_HT_INFO_IE))
 			{
-				/* 
-					This IE allows extension, but we can ignore extra bytes beyond our 
+				/*
+					This IE allows extension, but we can ignore extra bytes beyond our
 					knowledge , so only copy first sizeof(ADD_HT_INFO_IE)
 				*/
 				NdisMoveMemory(AddHtInfo, pEid->Octet, sizeof(ADD_HT_INFO_IE));
 				*AddHtInfoLen = SIZE_ADD_HT_INFO_IE;
 
 				CtrlChannel = AddHtInfo->ControlChan;
-				
+
 				*(USHORT *)(&AddHtInfo->AddHtInfo2) = cpu2le16(*(USHORT *)(&AddHtInfo->AddHtInfo2));
 				*(USHORT *)(&AddHtInfo->AddHtInfo3) = cpu2le16(*(USHORT *)(&AddHtInfo->AddHtInfo3));
-           
+
 #ifdef CONFIG_STA_SUPPORT
 				IF_DEV_CONFIG_OPMODE_ON_STA(pAd)
 				{
@@ -499,7 +499,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 			{
 				DBGPRINT(RT_DEBUG_WARN, ("%s() - wrong IE_ADD_HT. \n", __FUNCTION__));
 			}
-				
+
 		break;
             case IE_SECONDARY_CH_OFFSET:
 			if (pEid->Len == 1)
@@ -510,7 +510,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 			{
 				DBGPRINT(RT_DEBUG_WARN, ("%s() - wrong IE_SECONDARY_CH_OFFSET. \n", __FUNCTION__));
 			}
-				
+
 		break;
             case IE_FH_PARM:
                 DBGPRINT(RT_DEBUG_TRACE, ("%s(IE_FH_PARM) \n", __FUNCTION__));
@@ -525,7 +525,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 					{
 						if (ChannelSanity(pAd, *pChannel) == 0)
 						{
-							
+
 							goto SanityCheck;
 						}
 					}
@@ -589,7 +589,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
                 }
                 break;
 
-            /* 
+            /*
 				New for WPA
 				CCX v2 has the same IE, we need to parse that too
 				Wifi WMM use the same IE vale, need to parse that too
@@ -607,7 +607,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 #ifdef CONFIG_STA_SUPPORT
 #ifdef DOT11_N_SUPPORT
 		/* This HT IE is before IEEE draft set HT IE value.2006-09-28 by Jan.*/
-                
+
                 /* Other vendors had production before IE_HT_CAP value is assigned. To backward support those old-firmware AP,*/
                 /* Check broadcom-defiend pre-802.11nD1.0 OUI for HT related IE, including HT Capatilities IE and HT Information IE*/
                 else if ((*pHtCapabilityLen == 0) && NdisEqualMemory(pEid->Octet, PRE_N_HT_OUI, 3) && (pEid->Len >= 4) && (pAd->OpMode == OPMODE_STA))
@@ -702,12 +702,12 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 						NdisMoveMemory(pPeerWscIe+PeerWscIeLen, pEid->Octet+4, pEid->Len-4);
 						PeerWscIeLen += (pEid->Len - 4);
 					}
-					
 
-					
+
+
                 }
 
-                
+
                 break;
 
             case IE_EXT_SUPP_RATES:
@@ -743,7 +743,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
                     break;
 
                 /* 1. Copy CKIP flag byte to buffer for process*/
-                *pCkipFlag = *(pEid->Octet + 8);				
+                *pCkipFlag = *(pEid->Octet + 8);
                 break;
 
             case IE_AP_TX_POWER:
@@ -754,7 +754,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 
                 /* Get cell power limit in dBm*/
                 if (NdisEqualMemory(pEid->Octet, CISCO_OUI, 3) == 1)
-                    *pAironetCellPowerLimit = *(pEid->Octet + 4);	
+                    *pAironetCellPowerLimit = *(pEid->Octet + 4);
                 break;
 
             /* WPA2 & 802.11i RSN*/
@@ -793,7 +793,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
                     *LengthVIE += (pEid->Len + 2);
                 }
                 break;
-                
+
 
 
 			case IE_EXT_CAPABILITY:
@@ -810,9 +810,9 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
             default:
                 break;
         }
-        
+
         Length = Length + 2 + pEid->Len;  /* Eid[1] + Len[1]+ content[Len]*/
-        pEid = (PEID_STRUCT)((UCHAR*)pEid + 2 + pEid->Len);        
+        pEid = (PEID_STRUCT)((UCHAR*)pEid + 2 + pEid->Len);
     }
 
 	LatchRfChannel = MsgChannel;
@@ -835,7 +835,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity_Old(
 			NdisMoveMemory(Ptr + *LengthVIE + 6, pPeerWscIe, PeerWscIeLen);
 			*LengthVIE += (PeerWscIeLen + 6);
 		}
-		
+
 
 SanityCheck:
 	if (pPeerWscIe)
@@ -854,24 +854,24 @@ SanityCheck:
 }
 
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN PeerBeaconAndProbeRspSanity(
 	IN PRTMP_ADAPTER pAd,
-	IN VOID *Msg, 
-	IN ULONG MsgLen, 
+	IN VOID *Msg,
+	IN ULONG MsgLen,
 	IN UCHAR  MsgChannel,
 	OUT BCN_IE_LIST *ie_list,
-	OUT USHORT *LengthVIE,	
+	OUT USHORT *LengthVIE,
 	OUT PNDIS_802_11_VARIABLE_IEs pVIE)
 {
 	UCHAR *Ptr;
@@ -886,16 +886,16 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 	UCHAR *pPeerWscIe = NULL;
 	INT PeerWscIeLen = 0;
 	UCHAR LatchRfChannel = 0;
-	
+
 
 	/*
 		For some 11a AP which didn't have DS_IE, we use two conditions to decide the channel
 		1. If the AP is 11n enabled, then check the control channel.
-		2. If the AP didn't have any info about channel, use the channel we received this 
+		2. If the AP didn't have any info about channel, use the channel we received this
 			frame as the channel. (May inaccuracy!!)
 	*/
 	UCHAR CtrlChannel = 0;
-	
+
 
 
 	os_alloc_mem(NULL, &pPeerWscIe, 512);
@@ -904,9 +904,9 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 	ie_list->AironetCellPowerLimit = 0xFF;  /* Default of AironetCellPowerLimit is 0xFF*/
 	ie_list->NewExtChannelOffset = 0xff;	/*Default 0xff means no such IE*/
 	*LengthVIE = 0; /* Set the length of VIE to init value 0*/
-	
+
 	pFrame = (PFRAME_802_11)Msg;
-    
+
 	/* get subtype from header*/
 	SubType = (UCHAR)pFrame->Hdr.FC.SubType;
 
@@ -917,7 +917,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 
     Ptr = pFrame->Octet;
     Length += LENGTH_802_11;
-    
+
     /* get timestamp from payload and advance the pointer*/
     NdisMoveMemory(&ie_list->TimeStamp, Ptr, TIMESTAMP_LEN);
 
@@ -937,17 +937,17 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
     Ptr += 2;
     Length += 2;
 
-    if (CAP_IS_ESS_ON(ie_list->CapabilityInfo)) 
+    if (CAP_IS_ESS_ON(ie_list->CapabilityInfo))
         ie_list->BssType = BSS_INFRA;
-    else 
+    else
         ie_list->BssType = BSS_ADHOC;
 
     pEid = (PEID_STRUCT) Ptr;
 
     /* get variable fields from payload and advance the pointer*/
-    while ((Length + 2 + pEid->Len) <= MsgLen)    
+    while ((Length + 2 + pEid->Len) <= MsgLen)
     {
-        
+
         /* Secure copy VIE to VarIE[MAX_VIE_LEN] didn't overflow.*/
         if ((*LengthVIE + pEid->Len + 2) >= MAX_VIE_LEN)
         {
@@ -983,8 +983,8 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 				ie_list->SupRateLen = pEid->Len;
 
 				/*
-				TODO: 2004-09-14 not a good design here, cause it exclude extra 
-				rates from ScanTab. We should report as is. And filter out 
+				TODO: 2004-09-14 not a good design here, cause it exclude extra
+				rates from ScanTab. We should report as is. And filter out
 				unsupported rates in MlmeAux
 				*/
 				/* Check against the supported rates*/
@@ -1033,10 +1033,10 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 
 			break;
 		case IE_ADD_HT:
-			if (pEid->Len >= sizeof(ADD_HT_INFO_IE))				
+			if (pEid->Len >= sizeof(ADD_HT_INFO_IE))
 			{
-				/* 
-				This IE allows extension, but we can ignore extra bytes beyond our 
+				/*
+				This IE allows extension, but we can ignore extra bytes beyond our
 				knowledge , so only copy first sizeof(ADD_HT_INFO_IE)
 				*/
 				NdisMoveMemory(&ie_list->AddHtInfo, pEid->Octet, sizeof(ADD_HT_INFO_IE));
@@ -1146,7 +1146,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 				ie_list->NewChannel = pEid->Octet[1];	/*extract new channel number*/
 			break;
 
-			/* 
+			/*
 			New for WPA
 			CCX v2 has the same IE, we need to parse that too
 			Wifi WMM use the same IE vale, need to parse that too
@@ -1297,7 +1297,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 				break;
 
 			/* 1. Copy CKIP flag byte to buffer for process*/
-			ie_list->CkipFlag = *(pEid->Octet + 8);				
+			ie_list->CkipFlag = *(pEid->Octet + 8);
 			break;
 
 		case IE_AP_TX_POWER:
@@ -1308,7 +1308,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 
 			/* Get cell power limit in dBm*/
 			if (NdisEqualMemory(pEid->Octet, CISCO_OUI, 3) == 1)
-				ie_list->AironetCellPowerLimit = *(pEid->Octet + 4);	
+				ie_list->AironetCellPowerLimit = *(pEid->Octet + 4);
 			break;
 
 		/* WPA2 & 802.11i RSN*/
@@ -1376,9 +1376,9 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 		default:
 			break;
 		}
-        
+
 		Length = Length + 2 + pEid->Len;  /* Eid[1] + Len[1]+ content[Len]*/
-		pEid = (PEID_STRUCT)((UCHAR*)pEid + 2 + pEid->Len);        
+		pEid = (PEID_STRUCT)((UCHAR*)pEid + 2 + pEid->Len);
     }
 
 	LatchRfChannel = MsgChannel;
@@ -1401,7 +1401,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity(
 		NdisMoveMemory(Ptr + *LengthVIE + 6, pPeerWscIe, PeerWscIeLen);
 		*LengthVIE += (PeerWscIeLen + 6);
 	}
-		
+
 
 SanityCheck:
 	if (pPeerWscIe)
@@ -1420,7 +1420,7 @@ SanityCheck:
 
 
 #ifdef DOT11N_DRAFT3
-/* 
+/*
 	==========================================================================
 	Description:
 		MLME message sanity check for some IE addressed  in 802.11n d3.03.
@@ -1432,16 +1432,16 @@ SanityCheck:
 	==========================================================================
  */
 BOOLEAN PeerBeaconAndProbeRspSanity2(
-	IN PRTMP_ADAPTER pAd, 
-	IN VOID *Msg, 
-	IN ULONG MsgLen, 
+	IN PRTMP_ADAPTER pAd,
+	IN VOID *Msg,
+	IN ULONG MsgLen,
 	IN OVERLAP_BSS_SCAN_IE *BssScan,
 	OUT UCHAR 	*RegClass)
 {
 	CHAR				*Ptr;
 	PFRAME_802_11		pFrame;
 	PEID_STRUCT			pEid;
-	ULONG				Length = 0;	
+	ULONG				Length = 0;
 	BOOLEAN				brc;
 
 	pFrame = (PFRAME_802_11)Msg;
@@ -1467,8 +1467,8 @@ BOOLEAN PeerBeaconAndProbeRspSanity2(
 
 	RTMPZeroMemory(BssScan, sizeof(OVERLAP_BSS_SCAN_IE));
 	/* get variable fields from payload and advance the pointer*/
-	while ((Length + 2 + pEid->Len) <= MsgLen)	  
-	{	
+	while ((Length + 2 + pEid->Len) <= MsgLen)
+	{
 		switch(pEid->Eid)
 		{
 			case IE_SUPP_REG_CLASS:
@@ -1500,7 +1500,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity2(
 		}
 
 		Length = Length + 2 + pEid->Len;  /* Eid[1] + Len[1]+ content[Len]	*/
-		pEid = (PEID_STRUCT)((UCHAR*)pEid + 2 + pEid->Len); 	   
+		pEid = (PEID_STRUCT)((UCHAR*)pEid + 2 + pEid->Len);
 	}
 
 	return brc;
@@ -1509,7 +1509,7 @@ BOOLEAN PeerBeaconAndProbeRspSanity2(
 #endif /* DOT11N_DRAFT3 */
 
 #if defined(AP_SCAN_SUPPORT) || defined(CONFIG_STA_SUPPORT)
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
@@ -1518,19 +1518,19 @@ BOOLEAN PeerBeaconAndProbeRspSanity2(
     ==========================================================================
  */
 BOOLEAN MlmeScanReqSanity(
-	IN PRTMP_ADAPTER pAd, 
-	IN VOID *Msg, 
-	IN ULONG MsgLen, 
-	OUT UCHAR *pBssType, 
-	OUT CHAR Ssid[], 
-	OUT UCHAR *pSsidLen, 
-	OUT UCHAR *pScanType) 
+	IN PRTMP_ADAPTER pAd,
+	IN VOID *Msg,
+	IN ULONG MsgLen,
+	OUT UCHAR *pBssType,
+	OUT CHAR Ssid[],
+	OUT UCHAR *pSsidLen,
+	OUT UCHAR *pScanType)
 {
 	MLME_SCAN_REQ_STRUCT *Info;
 
 	Info = (MLME_SCAN_REQ_STRUCT *)(Msg);
 	*pBssType = Info->BssType;
-	*pSsidLen = Info->SsidLen;	
+	*pSsidLen = Info->SsidLen;
 	NdisMoveMemory(Ssid, Info->Ssid, *pSsidLen);
 	*pScanType = Info->ScanType;
 
@@ -1550,7 +1550,7 @@ BOOLEAN MlmeScanReqSanity(
 
 /* IRQL = DISPATCH_LEVEL*/
 UCHAR ChannelSanity(
-    IN PRTMP_ADAPTER pAd, 
+    IN PRTMP_ADAPTER pAd,
     IN UCHAR channel)
 {
     int i;
@@ -1563,25 +1563,25 @@ UCHAR ChannelSanity(
     return 0;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN PeerDeauthSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
-    OUT PUCHAR pAddr1, 
-    OUT PUCHAR pAddr2, 
-    OUT PUCHAR pAddr3, 
-    OUT USHORT *pReason) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
+    OUT PUCHAR pAddr1,
+    OUT PUCHAR pAddr2,
+    OUT PUCHAR pAddr3,
+    OUT USHORT *pReason)
 {
     PFRAME_802_11 pFrame = (PFRAME_802_11)Msg;
 
@@ -1593,26 +1593,26 @@ BOOLEAN PeerDeauthSanity(
     return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN PeerAuthSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
-    OUT PUCHAR pAddr, 
-    OUT USHORT *pAlg, 
-    OUT USHORT *pSeq, 
-    OUT USHORT *pStatus, 
-    CHAR *pChlgText) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
+    OUT PUCHAR pAddr,
+    OUT USHORT *pAlg,
+    OUT USHORT *pSeq,
+    OUT USHORT *pStatus,
+    CHAR *pChlgText)
 {
     PFRAME_802_11 pFrame = (PFRAME_802_11)Msg;
 
@@ -1623,41 +1623,41 @@ BOOLEAN PeerAuthSanity(
 
     if (*pAlg == AUTH_MODE_OPEN)
     {
-        if (*pSeq == 1 || *pSeq == 2) 
+        if (*pSeq == 1 || *pSeq == 2)
         {
             return TRUE;
-        } 
-        else 
+        }
+        else
         {
             DBGPRINT(RT_DEBUG_TRACE, ("PeerAuthSanity fail - wrong Seg#\n"));
             return FALSE;
         }
-    } 
-    else if (*pAlg == AUTH_MODE_KEY) 
+    }
+    else if (*pAlg == AUTH_MODE_KEY)
     {
-        if (*pSeq == 1 || *pSeq == 4) 
+        if (*pSeq == 1 || *pSeq == 4)
         {
             return TRUE;
-        } 
-        else if (*pSeq == 2 || *pSeq == 3) 
+        }
+        else if (*pSeq == 2 || *pSeq == 3)
         {
             NdisMoveMemory(pChlgText, &pFrame->Octet[8], CIPHER_TEXT_LEN);
             return TRUE;
-        } 
-        else 
+        }
+        else
         {
             DBGPRINT(RT_DEBUG_TRACE, ("PeerAuthSanity fail - wrong Seg#\n"));
             return FALSE;
         }
-    } 
-    else 
+    }
+    else
     {
         DBGPRINT(RT_DEBUG_TRACE, ("PeerAuthSanity fail - wrong algorithm\n"));
         return FALSE;
     }
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
@@ -1666,12 +1666,12 @@ BOOLEAN PeerAuthSanity(
     ==========================================================================
  */
 BOOLEAN MlmeAuthReqSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
-    OUT PUCHAR pAddr, 
-    OUT ULONG *pTimeout, 
-    OUT USHORT *pAlg) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
+    OUT PUCHAR pAddr,
+    OUT ULONG *pTimeout,
+    OUT USHORT *pAlg)
 {
     MLME_AUTH_REQ_STRUCT *pInfo;
 
@@ -1679,41 +1679,41 @@ BOOLEAN MlmeAuthReqSanity(
     COPY_MAC_ADDR(pAddr, pInfo->Addr);
     *pTimeout = pInfo->Timeout;
     *pAlg = pInfo->Alg;
-    
+
     if (((*pAlg == AUTH_MODE_KEY) ||(*pAlg == AUTH_MODE_OPEN)
-     	) && 
-        ((*pAddr & 0x01) == 0)) 
+     	) &&
+        ((*pAddr & 0x01) == 0))
     {
 #ifdef CONFIG_STA_SUPPORT
 #endif /* CONFIG_STA_SUPPORT */
         return TRUE;
-    } 
-    else 
+    }
+    else
     {
         DBGPRINT(RT_DEBUG_TRACE, ("MlmeAuthReqSanity fail - wrong algorithm\n"));
         return FALSE;
     }
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN MlmeAssocReqSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
-    OUT PUCHAR pApAddr, 
-    OUT USHORT *pCapabilityInfo, 
-    OUT ULONG *pTimeout, 
-    OUT USHORT *pListenIntv) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
+    OUT PUCHAR pApAddr,
+    OUT USHORT *pCapabilityInfo,
+    OUT ULONG *pTimeout,
+    OUT USHORT *pListenIntv)
 {
     MLME_ASSOC_REQ_STRUCT *pInfo;
 
@@ -1722,27 +1722,27 @@ BOOLEAN MlmeAssocReqSanity(
     COPY_MAC_ADDR(pApAddr, pInfo->Addr);                   /* AP address*/
     *pCapabilityInfo = pInfo->CapabilityInfo;               /* capability info*/
     *pListenIntv = pInfo->ListenIntv;
-    
+
     return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
     Return:
         TRUE if all parameters are OK, FALSE otherwise
-        
+
 	IRQL = DISPATCH_LEVEL
 
     ==========================================================================
  */
 BOOLEAN PeerDisassocSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
-    OUT PUCHAR pAddr2, 
-    OUT USHORT *pReason) 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
+    OUT PUCHAR pAddr2,
+    OUT USHORT *pReason)
 {
     PFRAME_802_11 pFrame = (PFRAME_802_11)Msg;
 
@@ -1756,7 +1756,7 @@ BOOLEAN PeerDisassocSanity(
 	========================================================================
 	Routine Description:
 		Sanity check NetworkType (11b, 11g or 11a)
-		
+
 	Arguments:
 		pBss - Pointer to BSS table.
 
@@ -1764,9 +1764,9 @@ BOOLEAN PeerDisassocSanity(
         Ndis802_11DS .......(11b)
         Ndis802_11OFDM24....(11g)
         Ndis802_11OFDM5.....(11a)
-        
+
 	IRQL = DISPATCH_LEVEL
-	
+
 	========================================================================
 */
 NDIS_802_11_NETWORK_TYPE NetworkTypeInUseSanity(
@@ -1776,10 +1776,10 @@ NDIS_802_11_NETWORK_TYPE NetworkTypeInUseSanity(
 	UCHAR						rate, i;
 
 	NetWorkType = Ndis802_11DS;
-	
+
 	if (pBss->Channel <= 14)
 	{
-		
+
 		/* First check support Rate.*/
 		for (i = 0; i < pBss->SupRateLen; i++)
 		{
@@ -1790,14 +1790,14 @@ NDIS_802_11_NETWORK_TYPE NetworkTypeInUseSanity(
 			}
 			else
 			{
-				
+
 				/* Otherwise (even rate > 108) means Ndis802_11OFDM24*/
 				NetWorkType = Ndis802_11OFDM24;
 				break;
-			}	
+			}
 		}
 
-		
+
 		/* Second check Extend Rate.*/
 		if (NetWorkType != Ndis802_11OFDM24)
 		{
@@ -1810,7 +1810,7 @@ NDIS_802_11_NETWORK_TYPE NetworkTypeInUseSanity(
 				}
 				else
 				{
-					
+
 					/* Otherwise (even rate > 108) means Ndis802_11OFDM24*/
 					NetWorkType = Ndis802_11OFDM24;
 					break;
@@ -1832,13 +1832,13 @@ NDIS_802_11_NETWORK_TYPE NetworkTypeInUseSanity(
     }
 
 	return NetWorkType;
-}	
+}
 
 #ifdef CONFIG_STA_SUPPORT
 #ifdef QOS_DLS_SUPPORT
 BOOLEAN MlmeDlsReqSanity(
-	IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
+	IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
     IN ULONG MsgLen,
     OUT PRT_802_11_DLS *pDLS,
     OUT PUSHORT pReason)
@@ -1846,7 +1846,7 @@ BOOLEAN MlmeDlsReqSanity(
 	MLME_DLS_REQ_STRUCT *pInfo;
 
     pInfo = (MLME_DLS_REQ_STRUCT *)Msg;
-    
+
 	*pDLS = pInfo->pDLS;
 	*pReason = pInfo->Reason;
 
@@ -1857,12 +1857,12 @@ BOOLEAN MlmeDlsReqSanity(
 
 #ifdef QOS_DLS_SUPPORT
 BOOLEAN PeerDlsReqSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
     IN ULONG MsgLen,
     OUT PUCHAR pDA,
     OUT PUCHAR pSA,
-    OUT USHORT *pCapabilityInfo, 
+    OUT USHORT *pCapabilityInfo,
     OUT USHORT *pDlsTimeout,
     OUT UCHAR *pRatesLen,
     OUT UCHAR Rates[],
@@ -1900,7 +1900,7 @@ BOOLEAN PeerDlsReqSanity(
     Ptr += 2;
 
 	/* Category and Action field + DA + SA + capability + Timeout*/
-	eid_ptr = (PEID_STRUCT) &Fr->Octet[18];	
+	eid_ptr = (PEID_STRUCT) &Fr->Octet[18];
 
 	while (((UCHAR*)eid_ptr + eid_ptr->Len + 1) < ((UCHAR*)Fr + MsgLen))
 	{
@@ -1954,9 +1954,9 @@ BOOLEAN PeerDlsReqSanity(
 
 						NdisMoveMemory((PUCHAR)(&extHtCapInfo), (PUCHAR)(&pHtCapability->ExtHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 						*(USHORT *)(&extHtCapInfo) = cpu2le16(*(USHORT *)(&extHtCapInfo));
-						NdisMoveMemory((PUCHAR)(&pHtCapability->ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));		
+						NdisMoveMemory((PUCHAR)(&pHtCapability->ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 					}
-#else				
+#else
 					*(USHORT *)(&pHtCapability->ExtHtCapInfo) = cpu2le16(*(USHORT *)(&pHtCapability->ExtHtCapInfo));
 #endif /* UNALIGNMENT_SUPPORT */
 					*pHtCapabilityLen = sizeof(HT_CAPABILITY_IE);
@@ -1980,17 +1980,17 @@ BOOLEAN PeerDlsReqSanity(
 }
 
 BOOLEAN PeerDlsRspSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
     IN ULONG MsgLen,
     OUT PUCHAR pDA,
     OUT PUCHAR pSA,
-    OUT USHORT *pCapabilityInfo, 
+    OUT USHORT *pCapabilityInfo,
     OUT USHORT *pStatus,
     OUT UCHAR *pRatesLen,
     OUT UCHAR Rates[],
     OUT UCHAR *pHtCapabilityLen,
-    OUT HT_CAPABILITY_IE *pHtCapability) 
+    OUT HT_CAPABILITY_IE *pHtCapability)
 {
     CHAR            *Ptr;
     PFRAME_802_11	Fr = (PFRAME_802_11)Msg;
@@ -2028,7 +2028,7 @@ BOOLEAN PeerDlsRspSanity(
 	}
 
 	/* Category and Action field + status code + DA + SA + capability*/
-	eid_ptr = (PEID_STRUCT) &Fr->Octet[18];	
+	eid_ptr = (PEID_STRUCT) &Fr->Octet[18];
 
 	while (((UCHAR*)eid_ptr + eid_ptr->Len + 1) < ((UCHAR*)Fr + MsgLen))
 	{
@@ -2082,9 +2082,9 @@ BOOLEAN PeerDlsRspSanity(
 
 						NdisMoveMemory((PUCHAR)(&extHtCapInfo), (PUCHAR)(&pHtCapability->ExtHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 						*(USHORT *)(&extHtCapInfo) = cpu2le16(*(USHORT *)(&extHtCapInfo));
-						NdisMoveMemory((PUCHAR)(&pHtCapability->ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));		
+						NdisMoveMemory((PUCHAR)(&pHtCapability->ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 					}
-#else				
+#else
 					*(USHORT *)(&pHtCapability->ExtHtCapInfo) = cpu2le16(*(USHORT *)(&pHtCapability->ExtHtCapInfo));
 #endif /* UNALIGNMENT_SUPPORT */
 					*pHtCapabilityLen = sizeof(HT_CAPABILITY_IE);
@@ -2108,12 +2108,12 @@ BOOLEAN PeerDlsRspSanity(
 }
 
 BOOLEAN PeerDlsTearDownSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
     IN ULONG MsgLen,
     OUT PUCHAR pDA,
     OUT PUCHAR pSA,
-    OUT USHORT *pReason) 
+    OUT USHORT *pReason)
 {
     CHAR            *Ptr;
     PFRAME_802_11	Fr = (PFRAME_802_11)Msg;
@@ -2142,7 +2142,7 @@ BOOLEAN PeerDlsTearDownSanity(
 }
 #endif /* QOS_DLS_SUPPORT */
 
-/* 
+/*
     ==========================================================================
     Description:
         MLME message sanity check
@@ -2151,43 +2151,43 @@ BOOLEAN PeerDlsTearDownSanity(
     ==========================================================================
  */
 BOOLEAN PeerProbeReqSanity(
-    IN PRTMP_ADAPTER pAd, 
-    IN VOID *Msg, 
-    IN ULONG MsgLen, 
+    IN PRTMP_ADAPTER pAd,
+    IN VOID *Msg,
+    IN ULONG MsgLen,
     OUT PUCHAR pAddr2,
-    OUT CHAR Ssid[], 
-    OUT UCHAR *SsidLen, 
+    OUT CHAR Ssid[],
+    OUT UCHAR *SsidLen,
     OUT BOOLEAN *bRssiRequested)
 {
     PFRAME_802_11 Fr = (PFRAME_802_11)Msg;
     UCHAR		*Ptr;
     UCHAR		eid =0, eid_len = 0, *eid_data;
-	UINT		total_ie_len = 0;	
+	UINT		total_ie_len = 0;
 
     /* to prevent caller from using garbage output value*/
     *SsidLen = 0;
 
     COPY_MAC_ADDR(pAddr2, &Fr->Hdr.Addr2);
 
-    if (Fr->Octet[0] != IE_SSID || Fr->Octet[1] > MAX_LEN_OF_SSID) 
+    if (Fr->Octet[0] != IE_SSID || Fr->Octet[1] > MAX_LEN_OF_SSID)
     {
         DBGPRINT(RT_DEBUG_TRACE, ("APPeerProbeReqSanity fail - wrong SSID IE\n"));
         return FALSE;
-    } 
-    
+    }
+
     *SsidLen = Fr->Octet[1];
     NdisMoveMemory(Ssid, &Fr->Octet[2], *SsidLen);
-	
+
 
     Ptr = Fr->Octet;
     eid = Ptr[0];
     eid_len = Ptr[1];
 	total_ie_len = eid_len + 2;
 	eid_data = Ptr+2;
-    
+
     /* get variable fields from payload and advance the pointer*/
 	while((eid_data + eid_len) <= ((UCHAR*)Fr + MsgLen))
-    {    	
+    {
         switch(eid)
         {
 	        case IE_VENDOR_SPECIFIC:

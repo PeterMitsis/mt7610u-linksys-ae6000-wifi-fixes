@@ -81,7 +81,7 @@ typedef union  _MCU_LEDCS_STRUC {
 		UCHAR		Polarity:1;
 		UCHAR		LedMode:7;
 #else
-		UCHAR		LedMode:7;		
+		UCHAR		LedMode:7;
 		UCHAR		Polarity:1;
 #endif /* RT_BIG_ENDIAN */
 	} field;
@@ -93,7 +93,7 @@ void RTMPInitLEDMode(IN RTMP_ADAPTER *pAd);
 void RTMPExitLEDMode(IN RTMP_ADAPTER *pAd);
 
 VOID RTMPSetLEDStatus(
-	IN PRTMP_ADAPTER 	pAd, 
+	IN PRTMP_ADAPTER 	pAd,
 	IN UCHAR			Status);
 
 #ifdef RTMP_MAC_USB
@@ -106,12 +106,12 @@ do{								\
 	else\
 		RTEnqueueInternalCmd(pAd, CMDTHREAD_SET_LED_STATUS, &LEDStatus, sizeof(LEDStatus));	\
 }while(0)
-	
+
 #endif /* RTMP_MAC_USB */
 
 
 VOID RTMPSetSignalLED(
-	IN PRTMP_ADAPTER 	pAd, 
+	IN PRTMP_ADAPTER 	pAd,
 	IN NDIS_802_11_RSSI Dbm);
 
 

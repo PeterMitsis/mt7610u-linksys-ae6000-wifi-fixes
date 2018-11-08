@@ -320,15 +320,15 @@ VOID TDLS_UAPSDP_PsmModeChange(
 
 	/* sanity check */
     /* WPA 802.1x secured port control */
-    if (((pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPA) || 
+    if (((pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPA) ||
          (pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPAPSK) ||
-         (pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPA2) || 
+         (pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPA2) ||
          (pAd->StaCfg.AuthMode == Ndis802_11AuthModeWPA2PSK)
 #ifdef WPA_SUPPLICANT_SUPPORT
-			  || (pAd->StaCfg.IEEE8021X == TRUE)		
-#endif 		
+			  || (pAd->StaCfg.IEEE8021X == TRUE)
+#endif
         ) &&
-       (pAd->StaCfg.PortSecured == WPA_802_1X_PORT_NOT_SECURED)) 
+       (pAd->StaCfg.PortSecured == WPA_802_1X_PORT_NOT_SECURED))
 	{
 		return; /* port not yet secure */
 	}
@@ -976,7 +976,7 @@ static NDIS_STATUS TDLS_UAPSD_TrafficRspSend(
 	IN	UCHAR						*pPeerMac,
 	IN	UCHAR						PeerToken)
 {
-	MAC_TABLE_ENTRY	*pMacEntry; 
+	MAC_TABLE_ENTRY	*pMacEntry;
 	RT_802_11_TDLS *pTDLS = NULL;
 	UCHAR	TDLS_ETHERTYPE[] = {0x89, 0x0d};
 	UCHAR	Header802_3[14];
@@ -1205,7 +1205,7 @@ static VOID TDLS_UAPSD_PeerTrafficRspAction(
 	/* Not TDLS Capable, ignore it */
 	if (!IS_TDLS_SUPPORT(pAd))
 		return;
-	
+
 	/* Not BSS mode, ignore it */
 	if (!INFRA_ON(pAd))
 		return;
@@ -1463,7 +1463,7 @@ static VOID TDLS_UAPSD_CmdSimSetupReqSend(
 
 	/* allocate buffer for transmitting message */
 	NStatus = MlmeAllocateMemory(pAd, &pOutBuffer);
-	if (NStatus	!= NDIS_STATUS_SUCCESS)	
+	if (NStatus	!= NDIS_STATUS_SUCCESS)
 		return;
 
 	os_alloc_mem(NULL, (UCHAR **)&pElem, sizeof(MLME_QUEUE_ELEM));

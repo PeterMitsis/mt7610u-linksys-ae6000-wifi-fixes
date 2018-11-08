@@ -241,7 +241,7 @@ VOID mt76x0_ate_update_per_rate_pwr(
 	rate_pwr_table.TxPwrCtrlOverMAC[2].MACRegisterOffset = TX_PWR_CFG_2;
 	rate_pwr_table.TxPwrCtrlOverMAC[3].MACRegisterOffset = TX_PWR_CFG_3;
 	rate_pwr_table.TxPwrCtrlOverMAC[4].MACRegisterOffset = TX_PWR_CFG_4;
-	
+
 	if (pATEInfo->TxWI.TXWI_N.BW == BW_20) {
 		if (pATEInfo->Channel > 14) {
 			for (idx = 0; idx < rate_pwr_table.NumOfEntries; idx++)
@@ -259,7 +259,7 @@ VOID mt76x0_ate_update_per_rate_pwr(
 				rate_pwr_table.TxPwrCtrlOverMAC[idx].RegisterValue = pAd->Tx40MPwrCfgGBand[idx];
 		}
 	}
-	
+
 	NdisCopyMemory(per_rate_pwr, (UCHAR *)&rate_pwr_table, sizeof(rate_pwr_table));
 	DBGPRINT(RT_DEBUG_INFO, ("<--%s\n", __FUNCTION__));
 }
@@ -279,7 +279,7 @@ void mt76x0_ate_adjust_per_rate_pwr(
 	{
 		TX_POWER_CONTROL_OVER_MAC_ENTRY *rate_pwr_entry;
 		rate_pwr_entry = &rate_pwr_table.TxPwrCtrlOverMAC[mac_idx];
-		
+
 		if (rate_pwr_entry->RegisterValue != 0xFFFFFFFF) {
 			RTMP_IO_WRITE32(pAd, rate_pwr_entry->MACRegisterOffset, rate_pwr_entry->RegisterValue);
 		}

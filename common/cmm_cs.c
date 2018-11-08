@@ -37,12 +37,12 @@ static void ToneRadarProgram(PRTMP_ADAPTER pAd);
 
 
 #ifdef CARRIER_DETECTION_FIRMWARE_SUPPORT
-/* 
+/*
     ==========================================================================
     Description:
-        When h/w interrupt is not available for CS, f/w take care of the operation, this function monitor necessary 
+        When h/w interrupt is not available for CS, f/w take care of the operation, this function monitor necessary
         parameters that determine the CS state periodically. (every 100ms)
-        
+
 	Arguments:
 	    pAd                    Pointer to our adapter
 
@@ -59,8 +59,8 @@ VOID CarrierDetectionPeriodicStateCtrl(
 	ULONG *pOneSecIntCount = &pAd->CommonCfg.CarrierDetect.OneSecIntCount;
 	CARRIER_DETECT_PARAM CarrDetectParam;
 
-			
-#ifdef RALINK_ATE		
+
+#ifdef RALINK_ATE
 	/* Nothing to do in ATE mode */
 	if (ATE_ON(pAd))
 		return;
@@ -88,11 +88,11 @@ VOID CarrierDetectionPeriodicStateCtrl(
 		case CD_NORMAL:
 			if (CarrDetectParam.ReCheck == 0)
 			{
-				*pCD_State = CD_SILENCE;				
+				*pCD_State = CD_SILENCE;
 				if (pAd->CommonCfg.CarrierDetect.Debug != RT_DEBUG_TRACE)
 				{
 					DBGPRINT(RT_DEBUG_TRACE, ("Carrier Detected\n"));
-				
+
 					/* stop all TX actions including Beacon sending.*/
 					AsicDisableSync(pAd);
 				}
@@ -100,23 +100,23 @@ VOID CarrierDetectionPeriodicStateCtrl(
 				printk("Carrier Detected\n");
 			}
 			break;
-			
+
 		case CD_SILENCE:
                      *pOneSecIntCount += CarrDetectParam.RadarToneCount;
 			break;
-			
+
 		default:
 			break;
-	}			 
+	}
 }
 #endif /* CARRIER_DETECTION_FIRMWARE_SUPPORT */
 
-/* 
+/*
     ==========================================================================
     Description:
         When there is no f/w taking care of CS operation, this function depends on h/w interrupts for every possible carrier
-        tone to judge the CS state 
-                
+        tone to judge the CS state
+
 	Arguments:
 	    pAd                    Pointer to our adapter
 
@@ -173,7 +173,7 @@ VOID RTMPHandleRadarInterrupt(PRTMP_ADAPTER  pAd)
 				printk("%3d %4ld %ld %ld\n", i, time[i], idle[i], busy[i]);
 			}
 			cd_idx = 0;
-			
+
 		}
 	}
 
@@ -183,7 +183,7 @@ VOID RTMPHandleRadarInterrupt(PRTMP_ADAPTER  pAd)
 			pCarrierDetect->recheck --;
 		else
 			pCarrierDetect->recheck = pCarrierDetect->recheck1;
-		
+
 		if (pCarrierDetect->recheck == 0)
 		{
 			/* declare carrier sense*/
@@ -192,7 +192,7 @@ VOID RTMPHandleRadarInterrupt(PRTMP_ADAPTER  pAd)
 			if (pCarrierDetect->Debug != RT_DEBUG_TRACE)
 			{
 				DBGPRINT(RT_DEBUG_TRACE, ("Carrier Detected\n"));
-				
+
 				/* stop all TX actions including Beacon sending.*/
 				AsicDisableSync(pAd);
 			}
@@ -220,7 +220,7 @@ VOID RTMPHandleRadarInterrupt(PRTMP_ADAPTER  pAd)
 	}
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	Reset CS state to NORMAL state.
@@ -240,16 +240,16 @@ INT CarrierDetectReset(
 	return 0;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
-	Criteria in CS is a timing difference threshold for a pair of carrier tones. This function is a ioctl uesed to adjust the 
+	Criteria in CS is a timing difference threshold for a pair of carrier tones. This function is a ioctl uesed to adjust the
 	Criteria. (unit: 16us)
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
 	    arg			Pointer to the ioctl argument
-	    
+
     Return Value:
         None
 
@@ -257,7 +257,7 @@ INT CarrierDetectReset(
     ==========================================================================
 */
 INT Set_CarrierCriteria_Proc(
-	IN PRTMP_ADAPTER 	pAd, 
+	IN PRTMP_ADAPTER 	pAd,
 	IN PSTRING			arg)
 {
 	UINT32 Value;
@@ -276,16 +276,16 @@ INT Set_CarrierCriteria_Proc(
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
-	ReCheck in CS is a value indicating how many continuous incoming carrier tones is enough us to announce  that there 
+	ReCheck in CS is a value indicating how many continuous incoming carrier tones is enough us to announce  that there
 	is carrier tone (and hence enter SILENT state). This function is a ioctl uesed to adjust the ReCheck value.
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
 	    arg			Pointer to the ioctl argument
-	    
+
     Return Value:
         None
 
@@ -293,7 +293,7 @@ INT Set_CarrierCriteria_Proc(
     ==========================================================================
 */
 INT Set_CarrierReCheck_Proc(
-	IN PRTMP_ADAPTER pAd, 
+	IN PRTMP_ADAPTER pAd,
 	IN PSTRING arg)
 {
 	pAd->CommonCfg.CarrierDetect.recheck1 = simple_strtol(arg, 0, 10);
@@ -303,21 +303,21 @@ INT Set_CarrierReCheck_Proc(
 	/* send enable cmd to mcu to take effect */
 	AsicSendCommandToMcu(pAd, CD_ONOFF_MCU_CMD, 0xff, 0x01, 0x00, FALSE);
 #endif /* CARRIER_DETECTION_FIRMWARE_SUPPORT */
-	
+
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
-	CarrierGoneThreshold is used to determine whether we should leave SILENT state. When the number of carrier 
-	tones in a certain period of time is less than CarrierGoneThreshold, we should return to NORMAL state. This function 
+	CarrierGoneThreshold is used to determine whether we should leave SILENT state. When the number of carrier
+	tones in a certain period of time is less than CarrierGoneThreshold, we should return to NORMAL state. This function
 	is a ioctl uesed to adjust the CarrierGoneThreshold.
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
 	    arg			Pointer to the ioctl argument
-	    
+
     Return Value:
         None
 
@@ -325,7 +325,7 @@ INT Set_CarrierReCheck_Proc(
     ==========================================================================
 */
 INT Set_CarrierGoneThreshold_Proc(
-	IN PRTMP_ADAPTER pAd, 
+	IN PRTMP_ADAPTER pAd,
 	IN PSTRING arg)
 {
 	pAd->CommonCfg.CarrierDetect.CarrierGoneThreshold = simple_strtol(arg, 0, 10);
@@ -333,15 +333,15 @@ INT Set_CarrierGoneThreshold_Proc(
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	Setting up the carrier debug level. set 0 means to turning off the carrier debug
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
 	    arg			Pointer to the ioctl argument
-	    
+
     Return Value:
         None
 
@@ -349,7 +349,7 @@ INT Set_CarrierGoneThreshold_Proc(
     ==========================================================================
 */
 INT	Set_CarrierDebug_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	pAd->CommonCfg.CarrierDetect.Debug = simple_strtol(arg, 0, 10);
@@ -357,16 +357,16 @@ INT	Set_CarrierDebug_Proc(
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	Delta control the delay line characteristic of the cross correlation energy calculation.
 	This function is a ioctl uesed to adjust the Delta value.
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
 	    arg			Pointer to the ioctl argument
-	    
+
     Return Value:
         None
 
@@ -374,7 +374,7 @@ INT	Set_CarrierDebug_Proc(
     ==========================================================================
 */
 INT	Set_CarrierDelta_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	pAd->CommonCfg.CarrierDetect.delta = simple_strtol(arg, 0, 10);
@@ -384,15 +384,15 @@ INT	Set_CarrierDelta_Proc(
 	return TRUE;
 }
 
-/* 
+/*
 	==========================================================================
 	Description:
 	To set ON/OFF of the "Not Divide Flag"
-	
+
 	Arguments:
 		pAd 		Pointer to our adapter
 		arg 		Pointer to the ioctl argument
-		
+
 	Return Value:
 		None
 
@@ -400,7 +400,7 @@ INT	Set_CarrierDelta_Proc(
 	==========================================================================
 */
 INT	Set_CarrierDivFlag_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	pAd->CommonCfg.CarrierDetect.div_flag = simple_strtol(arg, 0, 10);
@@ -410,16 +410,16 @@ INT	Set_CarrierDivFlag_Proc(
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	Carrier Threshold is the energy threshold for h/w to determine a carrier tone or not.
 	This function is a ioctl uesed to adjust the Threshold value.
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
 	    arg			Pointer to the ioctl argument
-	    
+
     Return Value:
         None
 
@@ -427,7 +427,7 @@ INT	Set_CarrierDivFlag_Proc(
     ==========================================================================
 */
 INT	Set_CarrierThrd_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	pAd->CommonCfg.CarrierDetect.threshold = simple_strtol(arg, 0, 10);
@@ -437,16 +437,16 @@ INT	Set_CarrierThrd_Proc(
 	return TRUE;
 }
 
-/* 
+/*
 	==========================================================================
 	Description:
 	Carrier SymRund is the number of round bits in Radar Symmetric Round Bits Option.
 	This function is a ioctl uesed to adjust the SymRund. (unit: bit)
-	
+
 	Arguments:
 		pAd 		Pointer to our adapter
 		arg 		Pointer to the ioctl argument
-		
+
 	Return Value:
 		None
 
@@ -454,7 +454,7 @@ INT	Set_CarrierThrd_Proc(
 	==========================================================================
 */
 INT	Set_CarrierSymRund_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	pAd->CommonCfg.CarrierDetect.SymRund= simple_strtol(arg, 0, 10);
@@ -464,16 +464,16 @@ INT	Set_CarrierSymRund_Proc(
 	return TRUE;
 }
 
-/* 
+/*
 	==========================================================================
 	Description:
 	Carrier Masks are used to prevent false trigger while doing Rx_PE, Packet_End, and AGC tuning.
 	This function is a ioctl uesed to adjust these three mask. (unit: 100ns)
-	
+
 	Arguments:
 		pAd 		Pointer to our adapter
 		arg 		Pointer to the ioctl argument
-		
+
 	Return Value:
 		None
 
@@ -493,14 +493,14 @@ INT Set_CarrierMask_Proc(
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	Initialize CS parameters.
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -517,14 +517,14 @@ VOID CSInit(
 	pCarrierDetect->OneSecIntCount = 0;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	To trigger CS start
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -532,7 +532,7 @@ VOID CSInit(
     ==========================================================================
 */
 VOID CarrierDetectionStart(PRTMP_ADAPTER pAd)
-{		
+{
 	/*ULONG Value;*/
 	/* Enable Bandwidth usage monitor*/
 	DBGPRINT(RT_DEBUG_TRACE, ("CarrierDetectionStart\n"));
@@ -551,24 +551,24 @@ VOID CarrierDetectionStart(PRTMP_ADAPTER pAd)
 		RTMP_IO_WRITE8(pAd, CD_CHECK_COUNT, pAd->CommonCfg.CarrierDetect.recheck1);
 		AsicSendCommandToMcu(pAd, CD_ONOFF_MCU_CMD, 0xff, 0x01, 0x00, FALSE);
 		}
-#else 
+#else
 #ifndef MT760x
 		/* trun on interrupt polling for pcie device */
 		if (pAd->infType == RTMP_DEV_INF_PCIE)
 			AsicSendCommandToMcu(pAd, CD_INT_POLLING_CMD, 0xff, 0x01, 0x00, FALSE);
 #endif /* MT760x */
-#endif /* CARRIER_DETECTION_FIRMWARE_SUPPORT */	
+#endif /* CARRIER_DETECTION_FIRMWARE_SUPPORT */
 	}
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	To stop CS
-	
+
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -585,14 +585,14 @@ VOID CarrierDetectionStop(IN PRTMP_ADAPTER	pAd)
 	return;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	To program CS related BBP registers (CS initialization)
 
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -602,23 +602,23 @@ VOID CarrierDetectionStop(IN PRTMP_ADAPTER	pAd)
 static VOID ToneRadarProgram(PRTMP_ADAPTER pAd)
 {
 	ULONG threshold;
-	/* if wireless mode is 20Mhz mode, then the threshold should div by 2 */	
-	if (pAd->CommonCfg.HtCapability.HtCapInfo.ChannelWidth  == BW_20)		
-		threshold = pAd->CommonCfg.CarrierDetect.threshold >> 1;	
-	else		
+	/* if wireless mode is 20Mhz mode, then the threshold should div by 2 */
+	if (pAd->CommonCfg.HtCapability.HtCapInfo.ChannelWidth  == BW_20)
+		threshold = pAd->CommonCfg.CarrierDetect.threshold >> 1;
+	else
 		threshold = pAd->CommonCfg.CarrierDetect.threshold;
 	/* Call ToneRadarProgram_v1/ToneRadarProgram_v2*/
 	RTMP_CHIP_CARRIER_PROGRAM(pAd, threshold);
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	To program CS v1 related BBP registers (CS initialization)
 
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -653,14 +653,14 @@ VOID ToneRadarProgram_v1(PRTMP_ADAPTER pAd, ULONG threshold)
 	BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R184, 0x05);
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	To program CS v2 related BBP registers (CS initialization)
 
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -678,7 +678,7 @@ VOID ToneRadarProgram_v2(PRTMP_ADAPTER pAd, ULONG threshold)
 			((pAd->CommonCfg.CarrierDetect.div_flag & 0x1) << 6) |		\
 			0x80;	/* Full 40MHz Detection Mode */
 	RTMP_CARRIER_IO_WRITE8(pAd, 5, bbp);
-	
+
 	/* program *_mask*/
 	RTMP_CARRIER_IO_WRITE8(pAd, 2, pAd->CommonCfg.CarrierDetect.VGA_Mask);
 	RTMP_CARRIER_IO_WRITE8(pAd, 3, pAd->CommonCfg.CarrierDetect.Packet_End_Mask);
@@ -694,14 +694,14 @@ VOID ToneRadarProgram_v2(PRTMP_ADAPTER pAd, ULONG threshold)
 	RTMP_CARRIER_IO_WRITE8(pAd, 0, 1);
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 	To program CS v3 related BBP registers (CS initialization)
 
 	Arguments:
 	    pAd			Pointer to our adapter
-	    
+
     Return Value:
         None
 
@@ -712,8 +712,8 @@ VOID ToneRadarProgram_v3(PRTMP_ADAPTER pAd, ULONG threshold)
 {
 	UCHAR bbp;
 
-	/* 
-		Carrier Sense (Tone Radar) BBP initialization 
+	/*
+		Carrier Sense (Tone Radar) BBP initialization
 		(MT7650 Carrier sense programming guide_v1_20120824.docx)
 	*/
 	RTMP_BBP_IO_WRITE32(pAd, TR_R2, 0x002d002d);

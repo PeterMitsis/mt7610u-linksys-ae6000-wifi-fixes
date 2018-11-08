@@ -247,7 +247,7 @@ typedef union _EEPROM_TX_PWR_OFFSET_STRUC
 		UCHAR	Byte1;	/* High Byte */
 		UCHAR	Byte0;	/* Low Byte */
 	} field;
-	
+
 	USHORT		word;
 } EEPROM_TX_PWR_OFFSET_STRUC, *PEEPROM_TX_PWR_OFFSET_STRUC;
 #else
@@ -275,8 +275,8 @@ NTSTATUS RTUSBReadEEPROM16(
 	OUT	USHORT *pData);
 
 NTSTATUS RTUSBWriteEEPROM16(
-	IN struct _RTMP_ADAPTER *pAd, 
-	IN USHORT offset, 
+	IN struct _RTMP_ADAPTER *pAd,
+	IN USHORT offset,
 	IN USHORT value);
 #endif /* RTMP_USB_SUPPORT */
 

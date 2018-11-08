@@ -111,7 +111,7 @@ ULONG JapRadarType(
 }
 
 
-/* 
+/*
     ==========================================================================
     Description:
         Set channel switch Period
@@ -120,7 +120,7 @@ ULONG JapRadarType(
     ==========================================================================
 */
 INT	Set_CSPeriod_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	pAd->Dot11_H.CSPeriod = (USHORT) simple_strtol(arg, 0, 10);
@@ -130,7 +130,7 @@ INT	Set_CSPeriod_Proc(
 	return TRUE;
 }
 
-/* 
+/*
     ==========================================================================
     Description:
 		change channel moving time for DFS testing.
@@ -143,12 +143,12 @@ INT	Set_CSPeriod_Proc(
         None
 
     Note:
-        Usage: 
+        Usage:
                1.) iwpriv ra0 set ChMovTime=[value]
     ==========================================================================
 */
 INT Set_ChMovingTime_Proc(
-	IN PRTMP_ADAPTER pAd, 
+	IN PRTMP_ADAPTER pAd,
 	IN PSTRING arg)
 {
 	UINT8 Value;
@@ -164,7 +164,7 @@ INT Set_ChMovingTime_Proc(
 }
 
 
-/* 
+/*
     ==========================================================================
     Description:
 		Reset channel block status.
@@ -176,18 +176,18 @@ INT Set_ChMovingTime_Proc(
         None
 
     Note:
-        Usage: 
+        Usage:
                1.) iwpriv ra0 set ChMovTime=[value]
     ==========================================================================
 */
 INT Set_BlockChReset_Proc(
-	IN PRTMP_ADAPTER pAd, 
+	IN PRTMP_ADAPTER pAd,
 	IN PSTRING arg)
 {
 	INT i;
 
-	DBGPRINT(RT_DEBUG_TRACE, ("%s: Reset channel block status.\n", __FUNCTION__));	
-	
+	DBGPRINT(RT_DEBUG_TRACE, ("%s: Reset channel block status.\n", __FUNCTION__));
+
 	for (i=0; i<pAd->ChannelListNum; i++)
 		pAd->ChannelList[i].RemainingTimeForUse = 0;
 
@@ -198,7 +198,7 @@ INT Set_BlockChReset_Proc(
 #if defined(DFS_SUPPORT) || defined(CARRIER_DETECTION_SUPPORT)
 
 INT	Set_RadarShow_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 #ifdef DFS_SUPPORT
@@ -248,7 +248,7 @@ INT	Set_RadarShow_Proc(
 		printk("T_Matched_2 = %lu\n", pDfsSwParam->T_Matched_2);
 		printk("T_Matched_3 = %lu\n", pDfsSwParam->T_Matched_3);
 		printk("T_Matched_4 = %lu\n", pDfsSwParam->T_Matched_4);
-		printk("T_Matched_5 = %lu\n", pDfsSwParam->T_Matched_5);		
+		printk("T_Matched_5 = %lu\n", pDfsSwParam->T_Matched_5);
 #endif /* DFS_DEBUG */
 
 	printk("pAd->Dot11_H.ChMovingTime = %d\n", pAd->Dot11_H.ChMovingTime);

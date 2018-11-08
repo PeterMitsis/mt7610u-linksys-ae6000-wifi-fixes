@@ -35,10 +35,10 @@ static INT scan_ch_restore(RTMP_ADAPTER *pAd, UCHAR OpMode)
 	USHORT Status;
 #endif /* CONFIG_STA_SUPPORT */
 	INT bw, ch;
-	
-	//printk("pAd->hw_cfg.bbp_bw = %d\n", pAd->hw_cfg.bbp_bw);	
+
+	//printk("pAd->hw_cfg.bbp_bw = %d\n", pAd->hw_cfg.bbp_bw);
 	if (pAd->CommonCfg.BBPCurrentBW != pAd->hw_cfg.bbp_bw)
-	{	
+	{
 		rtmp_bbp_set_bw(pAd, pAd->hw_cfg.bbp_bw);
 
 		AsicSwitchChannel(pAd, pAd->CommonCfg.CentralChannel, FALSE);
@@ -78,7 +78,7 @@ static INT scan_ch_restore(RTMP_ADAPTER *pAd, UCHAR OpMode)
 	{
 		/*
 		If all peer Ad-hoc clients leave, driver would do LinkDown and LinkUp.
-		In LinkUp, CommonCfg.Ssid would copy SSID from MlmeAux. 
+		In LinkUp, CommonCfg.Ssid would copy SSID from MlmeAux.
 		To prevent SSID is zero or wrong in Beacon, need to recover MlmeAux.SSID here.
 		*/
 		if (ADHOC_ON(pAd))
@@ -92,12 +92,12 @@ static INT scan_ch_restore(RTMP_ADAPTER *pAd, UCHAR OpMode)
 		/*
 		To prevent data lost.
 		Send an NULL data with turned PSM bit on to current associated AP before SCAN progress.
-		Now, we need to send an NULL data with turned PSM bit off to AP, when scan progress done 
+		Now, we need to send an NULL data with turned PSM bit off to AP, when scan progress done
 		*/
 		if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED) && (INFRA_ON(pAd)))
 		{
-			RTMPSendNullFrame(pAd, 
-								pAd->CommonCfg.TxRate, 
+			RTMPSendNullFrame(pAd,
+								pAd->CommonCfg.TxRate,
 								(OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_WMM_INUSED) ? TRUE:FALSE),
 								pAd->CommonCfg.bAPSDForcePowerSave ? PWR_SAVE : pAd->StaCfg.Psm);
 			DBGPRINT(RT_DEBUG_TRACE, ("%s -- Send null frame\n", __FUNCTION__));
@@ -178,7 +178,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 	}
 #endif /* DOT11N_DRAFT3 */
 #endif /* DOT11_N_SUPPORT */
-	
+
 	/* There is no need to send broadcast probe request if active scan is in effect.*/
 	SsidLen = 0;
 	if ((ScanType == SCAN_ACTIVE) || (ScanType == FAST_SCAN_ACTIVE)
@@ -190,7 +190,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 		/*IF_DEV_CONFIG_OPMODE_ON_STA(pAd) */
 		if (OpMode == OPMODE_STA)
 		{
-			MgtMacHeaderInit(pAd, &Hdr80211, SUBTYPE_PROBE_REQ, 0, BROADCAST_ADDR, 
+			MgtMacHeaderInit(pAd, &Hdr80211, SUBTYPE_PROBE_REQ, 0, BROADCAST_ADDR,
 								BROADCAST_ADDR);
 		}
 #endif /* CONFIG_STA_SUPPORT */
@@ -202,7 +202,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 						  SsidLen,			        pAd->MlmeAux.Ssid,
 						  1,                        &SupRateIe,
 						  1,                        &pAd->CommonCfg.SupRateLen,
-						  pAd->CommonCfg.SupRateLen,  pAd->CommonCfg.SupRate, 
+						  pAd->CommonCfg.SupRateLen,  pAd->CommonCfg.SupRate,
 						  END_OF_ARGS);
 
 		if (pAd->CommonCfg.ExtRateLen)
@@ -211,7 +211,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 			MakeOutgoingFrame(frm_buf + FrameLen,            &Tmp,
 							  1,                                &ExtRateIe,
 							  1,                                &pAd->CommonCfg.ExtRateLen,
-							  pAd->CommonCfg.ExtRateLen,          pAd->CommonCfg.ExtRate, 
+							  pAd->CommonCfg.ExtRateLen,          pAd->CommonCfg.ExtRate,
 							  END_OF_ARGS);
 			FrameLen += Tmp;
 		}
@@ -237,9 +237,9 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 
 				NdisMoveMemory((PUCHAR)(&extHtCapInfo), (PUCHAR)(&HtCapabilityTmp.ExtHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 				*(USHORT *)(&extHtCapInfo) = cpu2le16(*(USHORT *)(&extHtCapInfo));
-				NdisMoveMemory((PUCHAR)(&HtCapabilityTmp.ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));		
+				NdisMoveMemory((PUCHAR)(&HtCapabilityTmp.ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 			}
-#else				
+#else
 			*(USHORT *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(USHORT *)(&HtCapabilityTmp.ExtHtCapInfo));
 #endif /* UNALIGNMENT_SUPPORT */
 
@@ -247,18 +247,18 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 							1,                                &WpaIe,
 							1,                                &HtLen,
 							4,                                &BROADCOM[0],
-							pAd->MlmeAux.HtCapabilityLen,     &HtCapabilityTmp, 
+							pAd->MlmeAux.HtCapabilityLen,     &HtCapabilityTmp,
 							END_OF_ARGS);
 #else
 			MakeOutgoingFrame(frm_buf + FrameLen,          &Tmp,
 							1,                                &WpaIe,
 							1,                                &HtLen,
 							4,                                &BROADCOM[0],
-							pAd->MlmeAux.HtCapabilityLen,     &pAd->MlmeAux.HtCapability, 
+							pAd->MlmeAux.HtCapabilityLen,     &pAd->MlmeAux.HtCapability,
 							END_OF_ARGS);
 #endif /* RT_BIG_ENDIAN */
 		}
-		else				
+		else
 		{
 			HtLen = sizeof(HT_CAPABILITY_IE);
 #ifdef RT_BIG_ENDIAN
@@ -270,22 +270,22 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 
 				NdisMoveMemory((PUCHAR)(&extHtCapInfo), (PUCHAR)(&HtCapabilityTmp.ExtHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 				*(USHORT *)(&extHtCapInfo) = cpu2le16(*(USHORT *)(&extHtCapInfo));
-				NdisMoveMemory((PUCHAR)(&HtCapabilityTmp.ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));		
+				NdisMoveMemory((PUCHAR)(&HtCapabilityTmp.ExtHtCapInfo), (PUCHAR)(&extHtCapInfo), sizeof(EXT_HT_CAP_INFO));
 			}
-#else				
+#else
 			*(USHORT *)(&HtCapabilityTmp.ExtHtCapInfo) = cpu2le16(*(USHORT *)(&HtCapabilityTmp.ExtHtCapInfo));
 #endif /* UNALIGNMENT_SUPPORT */
 
 			MakeOutgoingFrame(frm_buf + FrameLen,          &Tmp,
 							1,                                &HtCapIe,
 							1,                                &HtLen,
-							HtLen,                            &HtCapabilityTmp, 
+							HtLen,                            &HtCapabilityTmp,
 							END_OF_ARGS);
 #else
 			MakeOutgoingFrame(frm_buf + FrameLen,          &Tmp,
 							1,                                &HtCapIe,
 							1,                                &HtLen,
-							HtLen,                            &pAd->CommonCfg.HtCapability, 
+							HtLen,                            &pAd->CommonCfg.HtCapability,
 							END_OF_ARGS);
 #endif /* RT_BIG_ENDIAN */
 		}
@@ -299,7 +299,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 			MakeOutgoingFrame(frm_buf + FrameLen,            &Tmp,
 							  1,					&ExtHtCapIe,
 							  1,					&HtLen,
-							  1,          			&pAd->CommonCfg.BSSCoexist2040.word, 
+							  1,          			&pAd->CommonCfg.BSSCoexist2040.word,
 							  END_OF_ARGS);
 
 			FrameLen += Tmp;
@@ -310,7 +310,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 
 #ifdef DOT11_VHT_AC
 	if (WMODE_CAP_AC(pAd->CommonCfg.PhyMode) &&
-		(pAd->MlmeAux.Channel > 14)) {		
+		(pAd->MlmeAux.Channel > 14)) {
 		FrameLen += build_vht_ies(pAd, (UCHAR *)(frm_buf + FrameLen), SUBTYPE_PROBE_REQ);
 	}
 #endif /* DOT11_VHT_AC */
@@ -322,7 +322,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 		(pAd->StaCfg.WpsProbeReqIeLen != 0))
 	{
 		ULONG 		WpsTmpLen = 0;
-		
+
 		MakeOutgoingFrame(frm_buf + FrameLen,              &WpsTmpLen,
 						pAd->StaCfg.WpsProbeReqIeLen,	pAd->StaCfg.pWpsProbeReqIe,
 						END_OF_ARGS);
@@ -342,12 +342,12 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
 			Send an NULL data with turned PSM bit on to current associated AP when SCAN in the channel where
 			associated AP located.
 		*/
-		if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED) && 
+		if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED) &&
 			(INFRA_ON(pAd)) &&
 			(pAd->CommonCfg.Channel == pAd->MlmeAux.Channel))
 		{
-			RTMPSendNullFrame(pAd, 
-						  pAd->CommonCfg.TxRate, 
+			RTMPSendNullFrame(pAd,
+						  pAd->CommonCfg.TxRate,
 						  (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_WMM_INUSED) ? TRUE:FALSE),
 						  PWR_SAVE);
 			DBGPRINT(RT_DEBUG_TRACE, ("ScanNextChannel():Send PWA NullData frame to notify the associated AP!\n"));
@@ -369,7 +369,7 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType)
  */
 VOID ScanNextChannel(
 	IN PRTMP_ADAPTER pAd,
-	IN UCHAR OpMode) 
+	IN UCHAR OpMode)
 {
 	UCHAR ScanType = pAd->MlmeAux.ScanType;
 	UINT ScanTimeIn5gChannel = SHORT_CHANNEL_TIME;
@@ -377,7 +377,7 @@ VOID ScanNextChannel(
 	RALINK_TIMER_STRUCT *sc_timer;
 	UINT stay_time = 0;
 	UCHAR ImprovedScan_MaxScanChannelCnt;
-			
+
 
 #ifdef RALINK_ATE
 	/* Nothing to do in ATE mode. */
@@ -402,10 +402,10 @@ VOID ScanNextChannel(
 #endif /* CONFIG_STA_SUPPORT */
 
 
-	if ((pAd->MlmeAux.Channel == 0) || ScanPending) 
+	if ((pAd->MlmeAux.Channel == 0) || ScanPending)
 	{
 		scan_ch_restore(pAd, OpMode);
-	} 
+	}
 #ifdef RTMP_MAC_USB
 #ifdef CONFIG_STA_SUPPORT
 	else if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_NIC_NOT_EXIST) &&
@@ -413,10 +413,10 @@ VOID ScanNextChannel(
 	{
 		pAd->Mlme.SyncMachine.CurrState = SYNC_IDLE;
 		MlmeCntlConfirm(pAd, MT2_SCAN_CONF, MLME_FAIL_NO_RESOURCE);
-	}	
+	}
 #endif /* CONFIG_STA_SUPPORT */
 #endif /* RTMP_MAC_USB */
-	else 
+	else
 	{
 #ifdef CONFIG_STA_SUPPORT
 		if (OpMode == OPMODE_STA)
@@ -447,7 +447,7 @@ VOID ScanNextChannel(
 #ifdef CARRIER_DETECTION_SUPPORT
 			if (pAd->CommonCfg.CarrierDetect.Enable == TRUE)
 				bScanPassive = TRUE;
-#endif /* CARRIER_DETECTION_SUPPORT */ 
+#endif /* CARRIER_DETECTION_SUPPORT */
 
 			if (bScanPassive)
 			{
@@ -467,7 +467,7 @@ VOID ScanNextChannel(
 			sc_timer = &pAd->MlmeAux.APScanTimer;
 		else
 			sc_timer = &pAd->MlmeAux.ScanTimer;
-			
+
 		/* We need to shorten active scan time in order for WZC connect issue */
 		/* Chnage the channel scan time for CISCO stuff based on its IAPP announcement */
 		if (ScanType == FAST_SCAN_ACTIVE)
@@ -494,9 +494,9 @@ VOID ScanNextChannel(
 			else
 				stay_time = MAX_CHANNEL_TIME;
 		}
-				
+
 		RTMPSetTimer(sc_timer, stay_time);
-			
+
 		if (SCAN_MODE_ACT(ScanType))
 		{
 			if (scan_active(pAd, OpMode, ScanType) == FALSE)
@@ -504,7 +504,7 @@ VOID ScanNextChannel(
 		}
 
 		/* For SCAN_CISCO_PASSIVE, do nothing and silently wait for beacon or other probe reponse*/
-		
+
 #ifdef CONFIG_STA_SUPPORT
 		if (OpMode == OPMODE_STA)
 			pAd->Mlme.SyncMachine.CurrState = SCAN_LISTEN;

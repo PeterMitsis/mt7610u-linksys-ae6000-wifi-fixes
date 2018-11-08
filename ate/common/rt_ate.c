@@ -26,7 +26,7 @@
 
 
 #include "rt_config.h"
- 
+
 #define ATE_BBP_REG_NUM	168
 UCHAR restore_BBP[ATE_BBP_REG_NUM]={0};
 
@@ -91,26 +91,26 @@ CHAR ATEGetDesiredTSSI(
 	UCHAR MaxMCS = 7;
 
 	MCS = (UCHAR)(pATEInfo->TxWI.TxWIMCS);
-	
+
 	if (pATEInfo->TxWI.TxWIPHYMODE == MODE_CCK)
 	{
 		if (MCS > 3) /* boundary verification */
 		{
-			DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n", 
-				__FUNCTION__, 
+			DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n",
+				__FUNCTION__,
 				MCS));
-			
+
 			MCS = 0;
 		}
-	
+
 		desiredTSSI = desiredTSSIOverCCK[MCS];
 	}
 	else if (pATEInfo->TxWI.TxWIPHYMODE == MODE_OFDM)
 	{
 		if (MCS > 7) /* boundary verification */
 		{
-			DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n", 
-				__FUNCTION__, 
+			DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n",
+				__FUNCTION__,
 				MCS));
 
 			MCS = 0;
@@ -124,8 +124,8 @@ CHAR ATEGetDesiredTSSI(
 		{
 			if (MCS > MaxMCS) /* boundary verification */
 			{
-				DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n", 
-					__FUNCTION__, 
+				DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n",
+					__FUNCTION__,
 					MCS));
 
 				MCS = 0;
@@ -137,8 +137,8 @@ CHAR ATEGetDesiredTSSI(
 		{
 			if (MCS > MaxMCS) /* boundary verification */
 			{
-				DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n", 
-					__FUNCTION__, 
+				DBGPRINT_ERR(("%s: incorrect MCS: MCS = %d\n",
+					__FUNCTION__,
 					MCS));
 
 				MCS = 0;
@@ -147,9 +147,9 @@ CHAR ATEGetDesiredTSSI(
 			desiredTSSI = desiredTSSIOverHTUsingSTBC[MCS];
 		}
 
-		
-		/* 
-			For HT BW40 MCS 7 with/without STBC configuration, 
+
+		/*
+			For HT BW40 MCS 7 with/without STBC configuration,
 			the desired TSSI value should subtract one from the formula.
 		*/
 		if ((pATEInfo->TxWI.TxWIBW == BW_40) && (MCS == MCS_7))
@@ -158,11 +158,11 @@ CHAR ATEGetDesiredTSSI(
 		}
 	}
 
-	DBGPRINT(RT_DEBUG_TRACE, ("%s: desiredTSSI = %d, Latest Tx setting: MODE = %d, MCS = %d, STBC = %d\n", 
-		__FUNCTION__, 
-		desiredTSSI, 
-		pATEInfo->TxWI.TxWIPHYMODE, 
-		pATEInfo->TxWI.TxWIMCS, 
+	DBGPRINT(RT_DEBUG_TRACE, ("%s: desiredTSSI = %d, Latest Tx setting: MODE = %d, MCS = %d, STBC = %d\n",
+		__FUNCTION__,
+		desiredTSSI,
+		pATEInfo->TxWI.TxWIPHYMODE,
+		pATEInfo->TxWI.TxWIMCS,
 		pATEInfo->TxWI.TxWISTBC));
 
 
@@ -188,7 +188,7 @@ CHAR ATEGetDesiredTSSI(
 ==========================================================================
 */
 VOID DefaultATEAsicAdjustTxPower(
-	IN PRTMP_ADAPTER pAd) 
+	IN PRTMP_ADAPTER pAd)
 {
 	PATE_INFO   pATEInfo = &(pAd->ate);
 	PATE_CHIP_STRUCT pChipStruct = pATEInfo->pChipStruct;
@@ -201,12 +201,12 @@ VOID DefaultATEAsicAdjustTxPower(
 	ULONG		TxPwr[9];	/* NOTE: the TxPwr array size should be the maxima value of all supported chipset!!!! */
 	CHAR		Value;
 #ifdef RTMP_INTERNAL_TX_ALC
-	/* (non-positive number) including the transmit power controlled by the MAC and the BBP R1 */    
-	CHAR TotalDeltaPower = 0; 
+	/* (non-positive number) including the transmit power controlled by the MAC and the BBP R1 */
+	CHAR TotalDeltaPower = 0;
 	UCHAR desiredTSSI = 0, currentTSSI = 0;
 	const TX_POWER_TUNING_ENTRY_STRUCT *TxPowerTuningTable = pAd->chipCap.TxPowerTuningTable_2G;
 	PTX_POWER_TUNING_ENTRY_STRUCT pTxPowerTuningEntry = NULL;
-	UCHAR RFValue = 0, TmpValue = 0;   
+	UCHAR RFValue = 0, TmpValue = 0;
 #endif /* RTMP_INTERNAL_TX_ALC */
 
 	maxTxPwrCnt = pChipStruct->maxTxPwrCnt;
@@ -217,14 +217,14 @@ VOID DefaultATEAsicAdjustTxPower(
 		{
 			for (index =0 ; index < maxTxPwrCnt; index ++)
 			{
-				TxPwr[index] = pAd->Tx40MPwrCfgABand[index];	
+				TxPwr[index] = pAd->Tx40MPwrCfgABand[index];
 			}
 		}
 		else
 		{
 			for (index =0 ; index < maxTxPwrCnt; index ++)
 			{
-				TxPwr[index] = pAd->Tx40MPwrCfgGBand[index];	
+				TxPwr[index] = pAd->Tx40MPwrCfgGBand[index];
 			}
 		}
 	}
@@ -234,14 +234,14 @@ VOID DefaultATEAsicAdjustTxPower(
 		{
 			for (index =0 ; index < maxTxPwrCnt; index ++)
 			{
-				TxPwr[index] = pAd->Tx20MPwrCfgABand[index];	
+				TxPwr[index] = pAd->Tx20MPwrCfgABand[index];
 			}
 		}
 		else
 		{
 			for (index =0 ; index < maxTxPwrCnt; index ++)
 			{
-				TxPwr[index] = pAd->Tx20MPwrCfgGBand[index];	
+				TxPwr[index] = pAd->Tx20MPwrCfgGBand[index];
 			}
 		}
 	}
@@ -259,13 +259,13 @@ VOID DefaultATEAsicAdjustTxPower(
 
 			if (pAd->TxPowerCtrl.bExtendedTssiMode == TRUE) /* Per-channel TSSI */
 			{
-				if ((pATEInfo->Channel >= 1) && (pATEInfo->Channel <= 14))	
+				if ((pATEInfo->Channel >= 1) && (pATEInfo->Channel <= 14))
 				{
-					DBGPRINT(RT_DEBUG_TRACE, ("%s: bExtendedTssiMode = %d, original desiredTSSI = %d, CentralChannel = %d, PerChTxPwrOffset = %d\n", 
-						__FUNCTION__, 
-						pAd->TxPowerCtrl.bExtendedTssiMode, 
-						desiredTSSI, 
-						pATEInfo->Channel, 
+					DBGPRINT(RT_DEBUG_TRACE, ("%s: bExtendedTssiMode = %d, original desiredTSSI = %d, CentralChannel = %d, PerChTxPwrOffset = %d\n",
+						__FUNCTION__,
+						pAd->TxPowerCtrl.bExtendedTssiMode,
+						desiredTSSI,
+						pATEInfo->Channel,
 						pAd->TxPowerCtrl.PerChTxPwrOffset[pATEInfo->Channel]));
 
 					desiredTSSI += pAd->TxPowerCtrl.PerChTxPwrOffset[pATEInfo->Channel];
@@ -302,7 +302,7 @@ VOID DefaultATEAsicAdjustTxPower(
 			pAd->TxPowerCtrl.RF_TX_ALC = pTxPowerTuningEntry->RF_TX_ALC;
 			pAd->TxPowerCtrl.MAC_PowerDelta = pTxPowerTuningEntry->MAC_PowerDelta;
 
-			DBGPRINT(RT_DEBUG_TRACE, ("pAd->TxPowerCtrl.idxTxPowerTable = %d, pAd->TxPowerCtrl.RF_TX_ALC = %d, pAd->TxPowerCtrl.MAC_PowerDelta = %d\n", 
+			DBGPRINT(RT_DEBUG_TRACE, ("pAd->TxPowerCtrl.idxTxPowerTable = %d, pAd->TxPowerCtrl.RF_TX_ALC = %d, pAd->TxPowerCtrl.MAC_PowerDelta = %d\n",
 			        pAd->TxPowerCtrl.idxTxPowerTable, pAd->TxPowerCtrl.RF_TX_ALC, pAd->TxPowerCtrl.MAC_PowerDelta  ));
 
 			/* Tx power adjustment over RF */
@@ -328,19 +328,19 @@ VOID DefaultATEAsicAdjustTxPower(
 				ATE_RF_IO_READ8_BY_REG_ID(pAd, RF_R12, (PUCHAR)(&RFValue));
 				TmpValue = (RFValue & 0xE0);
 				RFValue = (TmpValue | (pAd->TxPowerCtrl.RF_TX_ALC & 0x1F));
-				DBGPRINT(RT_DEBUG_TRACE, ("Write RF_R12 = 0x%x\n", RFValue));            
+				DBGPRINT(RT_DEBUG_TRACE, ("Write RF_R12 = 0x%x\n", RFValue));
 				ATE_RF_IO_WRITE8_BY_REG_ID(pAd, RF_R12, (UCHAR)(RFValue));
 			}
 
 			/* Tx power adjustment over MAC */
  			TotalDeltaPower += pAd->TxPowerCtrl.MAC_PowerDelta;
 
-			DBGPRINT(RT_DEBUG_TRACE, ("%s: desiredTSSI = %d, currentTSSI = %d, idxTxPowerTable = %d, {RF_TX_ALC = %d, MAC_PowerDelta = %d}\n", 
-			        __FUNCTION__, 
-			        desiredTSSI, 
-			        currentTSSI, 
-			        pAd->TxPowerCtrl.idxTxPowerTable, 
-			        pTxPowerTuningEntry->RF_TX_ALC, 
+			DBGPRINT(RT_DEBUG_TRACE, ("%s: desiredTSSI = %d, currentTSSI = %d, idxTxPowerTable = %d, {RF_TX_ALC = %d, MAC_PowerDelta = %d}\n",
+			        __FUNCTION__,
+			        desiredTSSI,
+			        currentTSSI,
+			        pAd->TxPowerCtrl.idxTxPowerTable,
+			        pTxPowerTuningEntry->RF_TX_ALC,
 			        pTxPowerTuningEntry->MAC_PowerDelta));
 		}
 	}
@@ -396,16 +396,16 @@ VOID DefaultATEAsicAdjustTxPower(
 				for (idx = 1; idx < 5; idx++)
 				{
 					/* Found the range. */
-					if (BbpR49 <= pTssiMinusBoundary[idx])  
+					if (BbpR49 <= pTssiMinusBoundary[idx])
 						break;
 				}
 
 				/* The index is the step we should decrease, idx = 0 means there is nothing to compensate. */
 				*pTxAgcCompensate = -(TxAgcStep * (idx-1));
-				
+
 				DeltaPwr += (*pTxAgcCompensate);
 				DBGPRINT(RT_DEBUG_TRACE, ("-- Tx Power, BBP R1=%x, TssiRef=%x, TxAgcStep=%x, step = -%d\n",
-					BbpR49, TssiRef, TxAgcStep, idx-1));                    
+					BbpR49, TssiRef, TxAgcStep, idx-1));
 			}
 			else if (BbpR49 < pTssiPlusBoundary[1])
 			{
@@ -414,7 +414,7 @@ VOID DefaultATEAsicAdjustTxPower(
 				for (idx = 1; idx < 5; idx++)
 				{
 					/* Found the range. */
-					if (BbpR49 >= pTssiPlusBoundary[idx])   
+					if (BbpR49 >= pTssiPlusBoundary[idx])
 						break;
 				}
 
@@ -460,14 +460,14 @@ VOID DefaultATEAsicAdjustTxPower(
 
 #ifdef RTMP_INTERNAL_TX_ALC
 				/*
-					The upper bounds of the MAC 0x1314~0x1324 
+					The upper bounds of the MAC 0x1314~0x1324
 					are variable when the STA uses the internal Tx ALC.
 				*/
 				if (pAd->TxPowerCtrl.bInternalTxALC == TRUE)
 				{
 					switch (TX_PWR_CFG_0 + (index * 4))
 					{
-						case TX_PWR_CFG_0: 
+						case TX_PWR_CFG_0:
 						{
 							if ((Value + TotalDeltaPower) < 0)
 							{
@@ -484,7 +484,7 @@ VOID DefaultATEAsicAdjustTxPower(
 						}
 						break;
 
-						case TX_PWR_CFG_1: 
+						case TX_PWR_CFG_1:
 						{
 							if ((inner_index >= 0) && (inner_index <= 3))
 							{
@@ -519,7 +519,7 @@ VOID DefaultATEAsicAdjustTxPower(
 						}
 						break;
 
-						case TX_PWR_CFG_2: 
+						case TX_PWR_CFG_2:
 						{
 							if ((inner_index == 0) || (inner_index == 2) || (inner_index == 3))
 							{
@@ -554,9 +554,9 @@ VOID DefaultATEAsicAdjustTxPower(
 						}
 						break;
 
-						case TX_PWR_CFG_3: 
+						case TX_PWR_CFG_3:
 						{
-							if ((inner_index == 0) || (inner_index == 2) || (inner_index == 3) || 
+							if ((inner_index == 0) || (inner_index == 2) || (inner_index == 3) ||
 							((inner_index >= 4) && (inner_index <= 7)))
 							{
 								if ((Value + TotalDeltaPower) < 0)
@@ -590,7 +590,7 @@ VOID DefaultATEAsicAdjustTxPower(
 						}
 						break;
 
-						case TX_PWR_CFG_4: 
+						case TX_PWR_CFG_4:
 						{
 							if ((Value + TotalDeltaPower) < 0)
 							{
@@ -607,11 +607,11 @@ VOID DefaultATEAsicAdjustTxPower(
 						}
 						break;
 
-						default: 
-						{                                                      
+						default:
+						{
 							/* do nothing */
-							DBGPRINT_ERR(("%s : unknown register = 0x%X\n", 
-								__FUNCTION__, 
+							DBGPRINT_ERR(("%s : unknown register = 0x%X\n",
+								__FUNCTION__,
 							(TX_PWR_CFG_0 + (index << 2))));
 						}
 						break;
@@ -639,7 +639,7 @@ VOID DefaultATEAsicAdjustTxPower(
 			}
 
 			/* write tx power value to CSR */
-			/* 
+			/*
 				TX_PWR_CFG_0 (8 tx rate) for	TX power for OFDM 12M/18M
 												TX power for OFDM 6M/9M
 												TX power for CCK5.5M/11M
@@ -666,14 +666,14 @@ VOID DefaultATEAsicAdjustTxPower(
 			else
 			{
 				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + (index << 2), TxPwr[index]);
-			}	
+			}
 #else
 			RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + (index << 2), TxPwr[index]);
 #endif /* DOT11N_SS3_SUPPORT */
 
 			DBGPRINT(RT_DEBUG_TRACE, ("ATEAsicAdjustTxPower - DeltaPwr=%d, offset=0x%x, TxPwr=%lx, BbpR1=%x, round=%ld, pTxAgcCompensate=%d \n",
 				DeltaPwr, TX_PWR_CFG_0 + (index << 2), TxPwr[index], BbpR49, pATEInfo->OneSecPeriodicRound, *pTxAgcCompensate));
-			
+
 		}
 	}
 
@@ -695,7 +695,7 @@ VOID DefaultATEAsicAdjustTxPower(
 ==========================================================================
 */
 VOID ATEAsicAdjustTxPower(
-	IN PRTMP_ADAPTER pAd) 
+	IN PRTMP_ADAPTER pAd)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 
@@ -718,7 +718,7 @@ CHAR ATEConvertToRssi(
 	/* Rssi equals to zero should be an invalid value */
 	if (Rssi == 0 || (RssiNumber >= 3))
 		return -99;
-	
+
 	LNAGain = GET_LNA_GAIN(pAd);
 	if (pAd->LatchRfRegs.Channel > 14)
 		RssiOffset = pAd->ARssiOffset[RssiNumber];
@@ -779,7 +779,7 @@ VOID rt_ee_read_all(PRTMP_ADAPTER pAd, USHORT *Data)
 	USHORT value;
 
 #ifdef RTMP_FLASH_SUPPORT
-	{	
+	{
 		rtmp_ee_flash_read_all(pAd, Data);
 		return;
 	}
@@ -844,7 +844,7 @@ VOID rt_ee_write_bulk(PRTMP_ADAPTER pAd, USHORT *Data, USHORT offset, USHORT len
 			rtmp_ee_flash_write(pAd, offset+(pos*2), value);
 			pos++;
 		}
-		
+
 		return;
 	}
 #endif /* RTMP_FLASH_SUPPORT */
@@ -913,11 +913,11 @@ VOID ATEAsicSetTxRxPath(
     Description:
 
 	Default AsicSwitchChannel() dedicated for ATE.
-    
+
 ==========================================================================
 */
 VOID DefaultATEAsicSwitchChannel(
-    IN PRTMP_ADAPTER pAd) 
+    IN PRTMP_ADAPTER pAd)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	UINT32 Value = 0;
@@ -986,13 +986,13 @@ VOID DefaultATEAsicSwitchChannel(
 	else
 	{
 	    UINT32	TxPinCfg = 0x00050F05;/* 2007.10.09 by Brian : 0x00050505 ==> 0x00050F05 */
-		
+
 		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R62, (0x37 - GET_LNA_GAIN(pAd)));
 		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R63, (0x37 - GET_LNA_GAIN(pAd)));
 		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R64, (0x37 - GET_LNA_GAIN(pAd)));
 
 		/* According the Rory's suggestion to solve the middle range issue. */
-		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R86, 0);        
+		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R86, 0);
 
 		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R82, 0xF2);
 
@@ -1031,13 +1031,13 @@ VOID DefaultATEAsicSwitchChannel(
 
 	/* R66 should be set according to Channel. */
 	if (Channel <= 14)
-	{	
+	{
 		/* BG band */
 		R66 = 0x2E + GET_LNA_GAIN(pAd);
 		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R66, R66);
 	}
 	else
-	{	
+	{
 		/* A band, BW == 20 */
 		if (pATEInfo->TxWI.TxWIBW == BW_20)
 		{
@@ -1052,7 +1052,7 @@ VOID DefaultATEAsicSwitchChannel(
 		}
 	}
 
-	RtmpOsMsDelay(1);  
+	RtmpOsMsDelay(1);
 
 }
 
@@ -1062,11 +1062,11 @@ VOID DefaultATEAsicSwitchChannel(
     Description:
 
 	AsicSwitchChannel() dedicated for ATE.
-    
+
 ==========================================================================
 */
 VOID ATEAsicSwitchChannel(
-    IN PRTMP_ADAPTER pAd) 
+    IN PRTMP_ADAPTER pAd)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 
@@ -1116,7 +1116,7 @@ static VOID BbpHardReset(
 
 
 static int CheckMCSValid(
-	IN PRTMP_ADAPTER	pAd, 
+	IN PRTMP_ADAPTER	pAd,
 	IN UCHAR Mode,
 	IN UCHAR Mcs)
 {
@@ -1131,7 +1131,7 @@ static int CheckMCSValid(
 		case MODE_OFDM:
 			pRateTab = OFDMRateTable;
 			break;
-			
+
 		case 2: /*MODE_HTMIX*/
 		case 3: /*MODE_HTGREENFIELD*/
 #ifdef DOT11N_SS3_SUPPORT
@@ -1141,10 +1141,10 @@ static int CheckMCSValid(
 #endif /* DOT11N_SS3_SUPPORT */
 				pRateTab = HTMIXRateTable;
 			break;
-		case MODE_VHT: 
+		case MODE_VHT:
 			pRateTab = VHTACRateTable;
 			break;
-		default: 
+		default:
 			DBGPRINT_ERR(("unrecognizable Tx Mode %d\n", Mode));
 			return -1;
 			break;
@@ -1172,7 +1172,7 @@ INT DefaultATETxPwrHandler(
 #ifdef RALINK_QA
 	if ((pATEInfo->bQATxStart == TRUE) || (pATEInfo->bQARxStart == TRUE))
 	{
-		/* 
+		/*
 			When QA is used for Tx, pATEInfo->TxPower0/1 and real tx power
 			are not synchronized.
 		*/
@@ -1198,7 +1198,7 @@ INT DefaultATETxPwrHandler(
 
 
 	DBGPRINT(RT_DEBUG_TRACE, ("<--- %s\n", __FUNCTION__));
-	
+
 	return 0;
 }
 
@@ -1224,7 +1224,7 @@ INT ATETxPwrHandler(
 	Note:
 		This routine should only be called when
 		entering TXFRAME mode or TXCONT mode.
-				
+
 ========================================================================
 */
 static VOID SetJapanFilter(
@@ -1297,10 +1297,10 @@ VOID ATEDisableAsicProtect(
 	Protect[0] = ProtCfg.word;
 	Protect[1] = ProtCfg.word;
 	/* CTS-self is not used */
-	pAd->FlgCtsEnabled = 0; 
+	pAd->FlgCtsEnabled = 0;
 
 	/*
-		NO PROTECT 
+		NO PROTECT
 			1.All STAs in the BSS are 20/40 MHz HT
 			2. in a 20/40MHz BSS
 			3. all STAs are 20MHz in a 20MHz BSS
@@ -1314,14 +1314,14 @@ VOID ATEDisableAsicProtect(
 			PROT_CTRL(17:16) -- 00 (None)
 			PROT_RATE(15:0)  -- 0x4004 (OFDM 24M)
 	*/
-	Protect[2] = 0x01744004;	
+	Protect[2] = 0x01744004;
 
 	/*
 		MM40_PROT_CFG
 			Reserved (31:27)
 			PROT_TXOP(25:20) -- 111111
 			PROT_NAV(19:18)  -- 01 (Short NAV protection)
-			PROT_CTRL(17:16) -- 00 (None) 
+			PROT_CTRL(17:16) -- 00 (None)
 			PROT_RATE(15:0)  -- 0x4084 (duplicate OFDM 24M)
 	*/
 	Protect[3] = 0x03f44084;
@@ -1347,7 +1347,7 @@ VOID ATEDisableAsicProtect(
 	Protect[5] = 0x03f44084;
 
 	pAd->CommonCfg.IOTestParm.bRTSLongProtOn = FALSE;
-	
+
 	offset = CCK_PROT_CFG;
 	for (step = 0;step < 6;step++)
 		RTMP_IO_WRITE32(pAd, offset + step*4, Protect[step]);
@@ -1406,7 +1406,7 @@ static INT ate_bbp_core_soft_reset(RTMP_ADAPTER *pAd, BOOLEAN set_bw, INT bw)
 			case BW_20:
 			default:
 					break;
-		}			
+		}
 		RTMP_BBP_IO_WRITE32(pAd, CORE_R1, bbp_val);
 		RTMPusecDelay(1000);
 	}
@@ -1432,7 +1432,7 @@ static NDIS_STATUS ATESTART(
 #ifdef RLT_MAC
 	UINT32 bbp_val;
 #endif /* RLT_MAC */
-	
+
 	DBGPRINT(RT_DEBUG_TRACE, ("ATE : ===> %s\n", __FUNCTION__));
 
 
@@ -1448,7 +1448,7 @@ static NDIS_STATUS ATESTART(
 			RTMP_IO_READ32(pAd, TX_ALC_CFG_1, &mac_val);
 			mac_val &= 0xFFFFFFC0;
 			RTMP_IO_WRITE32(pAd, TX_ALC_CFG_1, mac_val);
-		} 
+		}
 		else
 #endif /* MT76x0 */
 		{
@@ -1468,7 +1468,7 @@ static NDIS_STATUS ATESTART(
 
 
 	/* one second is enough for waiting bulk-in urb */
-	while ((pAd->PendingRx > 0) && (LoopCount < 2))	
+	while ((pAd->PendingRx > 0) && (LoopCount < 2))
 	{
 		/* delay 0.5 seconds */
 		OS_WAIT(500);
@@ -1478,7 +1478,7 @@ static NDIS_STATUS ATESTART(
 
 	/* Disable Rx */
 	ATE_MAC_RX_DISABLE(pAd, MAC_SYS_CTRL, &MacData);
-	
+
 	/* Disable auto responder */
 	RTMP_IO_READ32(pAd, AUTO_RSP_CFG, &temp);
 	temp = temp & 0xFFFFFFFE;
@@ -1520,7 +1520,7 @@ static NDIS_STATUS ATESTART(
 #ifdef RTMP_MAC
 			/* No Carrier Test set BBP R22 bit6=0, bit[5~0]=0x0 */
 			ATE_BBP_IO_READ8_BY_REG_ID(pAd, BBP_R22, &BbpData);
-			BbpData &= 0xFFFFFF80; /* clear bit6, bit[5~0] */	
+			BbpData &= 0xFFFFFF80; /* clear bit6, bit[5~0] */
 			ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R22, BbpData);
 			BbpSoftReset(pAd);
 #endif /* RTMP_MAC */
@@ -1549,7 +1549,7 @@ static NDIS_STATUS ATESTART(
 				ATE_BBP_IO_WRITE8_BY_REG_ID(pAd,bbp_index,restore_BBP[bbp_index]);
 #endif /* RTMP_MAC */
 
-			pAd->RfIcType=RestoreRfICType;			
+			pAd->RfIcType=RestoreRfICType;
 		}
 
 #ifdef RT6352
@@ -1594,7 +1594,7 @@ static NDIS_STATUS ATESTART(
 #endif /* RTMP_MAC */
 			RTMP_IO_WRITE32(pAd, TX_PIN_CFG, (pATEInfo->Default_TX_PIN_CFG));
 		}
-	}		
+	}
 
 	/*
 		We should free some resource which was allocated
@@ -1694,8 +1694,8 @@ static NDIS_STATUS ATESTART(
 	/*
 		Make sure there are no pending bulk in/out IRPs before we go on.
 		pAd->BulkFlags != 0 : wait bulk out finish
-	*/	
-	while ((pAd->PendingRx > 0))	
+	*/
+	while ((pAd->PendingRx > 0))
 	{
 		ATE_RTUSBCancelPendingBulkInIRP(pAd);
 
@@ -1705,19 +1705,19 @@ static NDIS_STATUS ATESTART(
 	}
 
 	while (((pAd->BulkOutPending[0] == TRUE) ||
-			(pAd->BulkOutPending[1] == TRUE) || 
+			(pAd->BulkOutPending[1] == TRUE) ||
 			(pAd->BulkOutPending[2] == TRUE) ||
 			(pAd->BulkOutPending[3] == TRUE)) && (pAd->BulkFlags != 0))
-			/* pAd->BulkFlags != 0 : wait bulk out finish */	
+			/* pAd->BulkFlags != 0 : wait bulk out finish */
 	{
-		do 
+		do
 		{
-			/* 
+			/*
 				pAd->BulkOutPending[y] will be set to FALSE
 				in RTUSBCancelPendingBulkOutIRP(pAd)
 			*/
 			RTUSBCancelPendingBulkOutIRP(pAd);
-		} while (FALSE);			
+		} while (FALSE);
 
 	}
 
@@ -1745,7 +1745,7 @@ static NDIS_STATUS ATESTART(
 	/* Tx frame */
 	pATEInfo->bQATxStart = FALSE;
 	pATEInfo->bQARxStart = FALSE;
-	pATEInfo->seq = 0; 
+	pATEInfo->seq = 0;
 
 	/* counters */
 	pATEInfo->U2M = 0;
@@ -1778,7 +1778,7 @@ static NDIS_STATUS ATESTART(
 	}
 
 
-#ifdef CONFIG_STA_SUPPORT 
+#ifdef CONFIG_STA_SUPPORT
 	AsicDisableSync(pAd);
 	ATEDisableAsicProtect(pAd);
 	RTMPStationStop(pAd);
@@ -1789,10 +1789,10 @@ static NDIS_STATUS ATESTART(
 		/* Do it for the first time entering ATE mode */
 		pATEInfo->PeriodicTimer.State = TRUE;
 	}
-	
+
 	if (pATEInfo->PeriodicTimer.State == TRUE)
 	{
-		/* 
+		/*
 			For rx statistics, we cancel pAd->Mlme.PeriodicTimer
 			and set pAd->ate.PeriodicTimer.
 		*/
@@ -1825,8 +1825,8 @@ static NDIS_STATUS ATESTART(
 	InterlockedExchange(&pAd->BulkOutRemained, 0);
 
 	/* NdisAcquireSpinLock()/NdisReleaseSpinLock() need only one argument in RT28xx */
-	NdisAcquireSpinLock(&pAd->GenericLock);	
-	pAd->ContinBulkOut = FALSE;		
+	NdisAcquireSpinLock(&pAd->GenericLock);
+	pAd->ContinBulkOut = FALSE;
 	pAd->ContinBulkIn = FALSE;
 	NdisReleaseSpinLock(&pAd->GenericLock);
 
@@ -1849,7 +1849,7 @@ static NDIS_STATUS ATESTOP(
 #endif /* RTMP_MAC */
 	PATE_CHIP_STRUCT pChipStruct = pATEInfo->pChipStruct;
 	BOOLEAN Cancelled;
-	
+
 	DBGPRINT(RT_DEBUG_TRACE, ("ATE : ===> %s\n", __FUNCTION__));
 
 	if (pChipStruct->bBBPLoadATESTOP == TRUE)
@@ -1890,10 +1890,10 @@ static NDIS_STATUS ATESTOP(
 	{
 		/* Clear bit4 to stop continuous Tx production test. */
 		ATE_MAC_TX_CTS_DISABLE(pAd, MAC_SYS_CTRL, &MacData);
-	
+
 		/* Disable Rx */
 		ATE_MAC_RX_DISABLE(pAd, MAC_SYS_CTRL, &MacData);
-	
+
 		if (pAd->chipCap.MCUType != ANDES ) {
 			/* Abort TX, RX DMA. */
 			RtmpDmaEnable(pAd, 0);
@@ -1906,9 +1906,9 @@ static NDIS_STATUS ATESTOP(
 
 	if (pATEInfo->PeriodicTimer.State == FALSE)
 	{
-		/* 
+		/*
 			For rx statistics, we cancel pAd->Mlme.PeriodicTimer
-			and set pATEInfo->PeriodicTimer in stead of. 
+			and set pATEInfo->PeriodicTimer in stead of.
 			Now we recover it before we leave ATE mode.
 		*/
 		RTMPCancelTimer(&pATEInfo->PeriodicTimer, &Cancelled);
@@ -1924,11 +1924,11 @@ static NDIS_STATUS ATESTOP(
 		DBGPRINT_ERR(("Initialization of MLME periodic timer failed, Status[=0x%08x]\n", Status));
 
 		return Status;
-	}	
+	}
 
 
 #ifdef RTMP_MAC_USB
-	/* 
+	/*
 		Make sure there are no pending bulk in/out IRPs before we go on.
 		pAd->BulkFlags != 0 : wait bulk out finish
 	*/
@@ -1941,28 +1941,28 @@ static NDIS_STATUS ATESTOP(
 	}
 
 	while (((pAd->BulkOutPending[0] == TRUE) ||
-			(pAd->BulkOutPending[1] == TRUE) || 
+			(pAd->BulkOutPending[1] == TRUE) ||
 			(pAd->BulkOutPending[2] == TRUE) ||
 			(pAd->BulkOutPending[3] == TRUE)) && (pAd->BulkFlags != 0))
 			/* pAd->BulkFlags != 0 : wait bulk out finish */
 	{
-		do 
+		do
 		{
 			RTUSBCancelPendingBulkOutIRP(pAd);
-		} while (FALSE);			
+		} while (FALSE);
 
 		RtmpOsMsDelay(500);
 	}
 
 	ASSERT(pAd->PendingRx == 0);
 /*=========================================================================*/
-/*      Reset Rx RING                                                      */ 
+/*      Reset Rx RING                                                      */
 /*=========================================================================*/
 	pAd->PendingRx = 0;
 	/* Next Rx Read index */
-	pAd->NextRxBulkInReadIndex = 0;	
+	pAd->NextRxBulkInReadIndex = 0;
 	/* Rx Bulk pointer */
-	pAd->NextRxBulkInIndex = RX_RING_SIZE - 1;	
+	pAd->NextRxBulkInIndex = RX_RING_SIZE - 1;
 	pAd->NextRxBulkInPosition = 0;
 	for (ring_index = 0; ring_index < (RX_RING_SIZE); ring_index++)
 	{
@@ -1979,9 +1979,9 @@ static NDIS_STATUS ATESTOP(
 	}
 
 /*=========================================================================*/
-/*      Reset Tx RING                                                      */ 
+/*      Reset Tx RING                                                      */
 /*=========================================================================*/
-	do 
+	do
 	{
 		RTUSBCancelPendingBulkOutIRP(pAd);
 	} while (FALSE);
@@ -2009,8 +2009,8 @@ static NDIS_STATUS ATESTOP(
 			When we entered ATE_START mode, PeriodicTimer was not cancelled.
 			So we don't have to set it here.
 		*/
-		
-		ASSERT(pAd->CommonCfg.Channel != 0);			
+
+		ASSERT(pAd->CommonCfg.Channel != 0);
 
 		AsicSwitchChannel(pAd, pAd->CommonCfg.Channel, FALSE);
 
@@ -2018,17 +2018,17 @@ static NDIS_STATUS ATESTOP(
 		AsicLockChannel(pAd, pAd->CommonCfg.Channel);
 
 
-#ifdef CONFIG_STA_SUPPORT 
+#ifdef CONFIG_STA_SUPPORT
 	    RTMPStationStart(pAd);
 #endif /* CONFIG_STA_SUPPORT */
-	}	
+	}
 
 	/* Clear ATE Bulk in/out counter and continue setup. */
-	InterlockedExchange(&pAd->BulkOutRemained, 0);				
+	InterlockedExchange(&pAd->BulkOutRemained, 0);
 	NdisAcquireSpinLock(&pAd->GenericLock);
-	pAd->ContinBulkOut = FALSE;		
+	pAd->ContinBulkOut = FALSE;
 	pAd->ContinBulkIn = FALSE;
-	NdisReleaseSpinLock(&pAd->GenericLock);		
+	NdisReleaseSpinLock(&pAd->GenericLock);
 
 	/* Wait 50ms to prevent next URB to bulkout during HW reset. */
 	/* todo : remove this if not necessary */
@@ -2038,7 +2038,7 @@ static NDIS_STATUS ATESTOP(
 #endif /* RTMP_MAC_USB */
 
 
-#ifdef CONFIG_STA_SUPPORT 
+#ifdef CONFIG_STA_SUPPORT
 	/* restore RX_FILTR_CFG due to that QA maybe set it to 0x3 */
 	RTMP_IO_WRITE32(pAd, RX_FILTR_CFG, STANORMAL);
 #endif /* CONFIG_STA_SUPPORT */
@@ -2088,7 +2088,7 @@ static NDIS_STATUS TXCARR(
 	{
 		UINT32 bbp_index=0;
 
-		/* Zero All BBP Value */	
+		/* Zero All BBP Value */
 	for (bbp_index=0;bbp_index<ATE_BBP_REG_NUM;bbp_index++)
 		restore_BBP[bbp_index]=0;
 
@@ -2103,7 +2103,7 @@ static NDIS_STATUS TXCARR(
 #endif /* RTMP_MAC_USB */
 
 	/* QA has done the following steps if it is used. */
-	if (pATEInfo->bQATxStart == FALSE) 
+	if (pATEInfo->bQATxStart == FALSE)
 	{
 		if ((!IS_RT3883(pAd)) && (!IS_RT3352(pAd))
 			&& (!IS_RT5350(pAd)) && (!IS_RT3593(pAd)) && (!IS_MT76x0(pAd)))
@@ -2111,7 +2111,7 @@ static NDIS_STATUS TXCARR(
 
 		if (pATEInfo->TxMethod == TX_METHOD_1)
 		{
-			if (!IS_RT5592(pAd))			
+			if (!IS_RT5592(pAd))
 			{
 				/* store the original value of TX_PIN_CFG */
 				RTMP_IO_READ32(pAd, TX_PIN_CFG, &(pATEInfo->Default_TX_PIN_CFG));
@@ -2185,13 +2185,13 @@ static NDIS_STATUS TXCONT(
 	DBGPRINT(RT_DEBUG_TRACE, ("ATE : ===> %s\n", __FUNCTION__));
 
 	pATEInfo->Mode = ATE_TXCONT;
-	
+
 	if (pATEInfo->bQATxStart == TRUE)
 	{
 		/*
 			set MAC_SYS_CTRL(0x1004) bit4(Continuous Tx Production Test)
 			and bit2(MAC TX enable) back to zero.
-		*/ 
+		*/
 		ATE_MAC_TX_CTS_DISABLE(pAd, MAC_SYS_CTRL, &MacData);
 		ATE_MAC_TX_DISABLE(pAd, MAC_SYS_CTRL, &MacData);
 
@@ -2239,7 +2239,7 @@ static NDIS_STATUS TXCONT(
 
 	/* Do it after Tx/Rx DMA is aborted. */
 	pATEInfo->TxDoneCount = 0;
-	
+
 	/* Only needed if we have to send some normal frames. */
 	if (pATEInfo->bQAEnabled == FALSE)
 		SetJapanFilter(pAd);
@@ -2273,12 +2273,12 @@ static NDIS_STATUS TXCONT(
 
 #ifdef RTMP_MAC_USB
 	NdisAcquireSpinLock(&pAd->GenericLock);
-	pAd->ContinBulkOut = FALSE;		
+	pAd->ContinBulkOut = FALSE;
 	NdisReleaseSpinLock(&pAd->GenericLock);
 
 	RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_ATE);
 
-	/* Kick bulk out */ 
+	/* Kick bulk out */
 	RTUSBKickBulkOut(pAd);
 
 	/* To make sure all the 50 frames have been bulk out before executing step 2 */
@@ -2364,7 +2364,7 @@ static NDIS_STATUS TXCONT(
 
 #ifdef RTMP_MAC_USB
 		NdisAcquireSpinLock(&pAd->GenericLock);
-		pAd->ContinBulkOut = FALSE;		
+		pAd->ContinBulkOut = FALSE;
 		NdisReleaseSpinLock(&pAd->GenericLock);
 
 		RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_ATE);
@@ -2422,7 +2422,7 @@ static NDIS_STATUS TXCARS(
 #endif /* RTMP_MAC_USB */
 
 	/* QA has done the following steps if it is used. */
-	if (pATEInfo->bQATxStart == FALSE) 
+	if (pATEInfo->bQATxStart == FALSE)
 	{
 #if !defined(RT3883) && !defined(RT3593) && !defined(MT76x0)
 		if (!IS_RT3883(pAd) && !IS_RT3593(pAd) && !IS_MT76x0(pAd))
@@ -2520,7 +2520,7 @@ static NDIS_STATUS TXFRAME(
 #if defined(RT3350) || defined(RT3352)
 	if (pATEInfo->bTSSICalbrEnableG == TRUE)
 	{
-		if ((!IS_RT3350(pAd)) && (!IS_RT3352(pAd)))                  
+		if ((!IS_RT3350(pAd)) && (!IS_RT3352(pAd)))
 		{
 			DBGPRINT_ERR(("Not support TSSI calibration since not 3350/3352 chip!!!\n"));
 			Status = NDIS_STATUS_FAILURE;
@@ -2546,11 +2546,11 @@ static NDIS_STATUS TXFRAME(
 
 #ifdef RTMP_TEMPERATURE_COMPENSATION
 #endif /* RTMP_TEMPERATURE_COMPENSATION */
-	
+
 	DBGPRINT(RT_DEBUG_TRACE, ("ATE : ===> %s(Count=%u)\n", __FUNCTION__, pATEInfo->TxCount));
 	pATEInfo->Mode |= ATE_TXFRAME;
 
-	if (pATEInfo->bQATxStart == FALSE)  
+	if (pATEInfo->bQATxStart == FALSE)
 	{
 		/* set IPG to sync tx power with QA tools */
 		/* default value of IPG is 200 */
@@ -2575,7 +2575,7 @@ static NDIS_STATUS TXFRAME(
 
 #ifdef RALINK_QA
 	/* add this for LoopBack mode */
-	if (pATEInfo->bQARxStart == FALSE)  
+	if (pATEInfo->bQARxStart == FALSE)
 	{
 #ifdef TXBF_SUPPORT
 		/* Enable Rx if Sending Sounding. Otherwise Disable */
@@ -2591,7 +2591,7 @@ static NDIS_STATUS TXFRAME(
 		}
 	}
 
-	if (pATEInfo->bQATxStart == TRUE)  
+	if (pATEInfo->bQATxStart == TRUE)
 	{
 		pATEInfo->TxStatus = 1;
 	}
@@ -2617,14 +2617,14 @@ static NDIS_STATUS TXFRAME(
 
 	if (pATEInfo->bQAEnabled == FALSE)
 		SetJapanFilter(pAd);
-	
+
 	/* Abort Tx, RX DMA. */
 	RtmpDmaEnable(pAd, 0);
 
 	pATEInfo->TxDoneCount = 0;
 
 	/* Setup frame format. */
-	ATESetUpFrame(pAd, 0);	
+	ATESetUpFrame(pAd, 0);
 
 	/* Start Tx, RX DMA. */
 	RtmpDmaEnable(pAd, 1);
@@ -2649,7 +2649,7 @@ static NDIS_STATUS TXFRAME(
 		/* NdisAcquireSpinLock() == spin_lock_bh() */
 		/* NdisAcquireSpinLock only need one argument. */
 		NdisAcquireSpinLock(&pAd->GenericLock);
-		pAd->ContinBulkOut = TRUE;		
+		pAd->ContinBulkOut = TRUE;
 		NdisReleaseSpinLock(&pAd->GenericLock);
 
 		/* BULK_OUT_LOCK() == spin_lock_irqsave() */
@@ -2662,17 +2662,17 @@ static NDIS_STATUS TXFRAME(
 		DBGPRINT(RT_DEBUG_TRACE, ("Send packets depend on counter\n"));
 
 		NdisAcquireSpinLock(&pAd->GenericLock);
-		pAd->ContinBulkOut = FALSE;		
+		pAd->ContinBulkOut = FALSE;
 		NdisReleaseSpinLock(&pAd->GenericLock);
 
 		BULK_OUT_LOCK(&pAd->BulkOutLock[0], IrqFlags);
 		pAd->BulkOutPending[0] = FALSE;
 		BULK_OUT_UNLOCK(&pAd->BulkOutLock[0], IrqFlags);
-	}				
+	}
 
 	RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_ATE);
 
-	/* Kick bulk out */ 
+	/* Kick bulk out */
 	RTUSBKickBulkOut(pAd);
 #endif /* RTMP_MAC_USB */
 
@@ -2680,10 +2680,10 @@ static NDIS_STATUS TXFRAME(
 #if defined(RT3350) || defined(RT3352)
 	if (pATEInfo->bTSSICalbrEnableG == TRUE)
 	{
-		if ((IS_RT3350(pAd)) || (IS_RT3352(pAd))) 
+		if ((IS_RT3350(pAd)) || (IS_RT3352(pAd)))
 		{
 			if ((pATEInfo->TxWI.TXWI_O.MCS == 7)
-				&& (pATEInfo->TxWI.TXWI_O.BW == BW_20)	&& (pATEInfo->TxAntennaSel == 1))                  
+				&& (pATEInfo->TxWI.TXWI_O.BW == BW_20)	&& (pATEInfo->TxAntennaSel == 1))
 			{
 				if (pATEInfo->Channel == 7)
 				{
@@ -2693,10 +2693,10 @@ static NDIS_STATUS TXFRAME(
 
 					/* read BBP R49[4:0] and write to EEPROM 0x6E */
 					ATE_BBP_IO_READ8_BY_REG_ID(pAd, BBP_R49, &BbpData);
-					DBGPRINT(RT_DEBUG_TRACE, ("BBP R49 = 0x%02x\n", BbpData)); 
+					DBGPRINT(RT_DEBUG_TRACE, ("BBP R49 = 0x%02x\n", BbpData));
 					BbpData &= 0x1f;
 					TssiRefPerChannel[CurrentChannel-1] = BbpData;
-					DBGPRINT(RT_DEBUG_TRACE, ("TSSI = 0x%02x\n", TssiRefPerChannel[CurrentChannel-1]));  
+					DBGPRINT(RT_DEBUG_TRACE, ("TSSI = 0x%02x\n", TssiRefPerChannel[CurrentChannel-1]));
 				}
 
 				/* step 2: calibrate channel 1 and 13 TSSI delta values */
@@ -2708,7 +2708,7 @@ static NDIS_STATUS TXFRAME(
 
 					/* read BBP R49[4:0] */
 					ATE_BBP_IO_READ8_BY_REG_ID(pAd, BBP_R49, &BbpData);
-					DBGPRINT(RT_DEBUG_TRACE, ("BBP R49 = 0x%02x\n", BbpData)); 
+					DBGPRINT(RT_DEBUG_TRACE, ("BBP R49 = 0x%02x\n", BbpData));
 					BbpData &= 0x1f;
 					TssiRefPerChannel[CurrentChannel-1] = BbpData;
 					DBGPRINT(RT_DEBUG_TRACE, ("TSSI = 0x%02x\n", TssiRefPerChannel[CurrentChannel-1]));
@@ -2721,7 +2721,7 @@ static NDIS_STATUS TXFRAME(
 
 					/* read BBP R49[4:0] */
 					ATE_BBP_IO_READ8_BY_REG_ID(pAd, BBP_R49, &BbpData);
-					DBGPRINT(RT_DEBUG_TRACE, ("BBP R49 = 0x%02x\n", BbpData)); 
+					DBGPRINT(RT_DEBUG_TRACE, ("BBP R49 = 0x%02x\n", BbpData));
 					BbpData &= 0x1f;
 					TssiRefPerChannel[CurrentChannel-1] = BbpData;
 					DBGPRINT(RT_DEBUG_TRACE, ("TSSI = 0x%02x\n", TssiRefPerChannel[CurrentChannel-1]));
@@ -2805,8 +2805,8 @@ static NDIS_STATUS RXFRAME(
 		/* Next Rx Read index */
 		pAd->NextRxBulkInReadIndex = 0;
 		/* Rx Bulk pointer */
-		pAd->NextRxBulkInIndex		= RX_RING_SIZE - 1;	
-		pAd->NextRxBulkInPosition = 0;			
+		pAd->NextRxBulkInIndex		= RX_RING_SIZE - 1;
+		pAd->NextRxBulkInPosition = 0;
 	}
 
 	/* read to clear counters */
@@ -2846,7 +2846,7 @@ static NDIS_STATUS RXFRAME(
         5. RXFRAME   = Receive Frames
 #ifdef RALINK_QA
         6. TXSTOP    = Stop Any Type of Transmition
-        7. RXSTOP    = Stop Receiving Frames        
+        7. RXSTOP    = Stop Receiving Frames
 #endif
 
     Return:
@@ -2854,7 +2854,7 @@ static NDIS_STATUS RXFRAME(
 ==========================================================================
 */
 static NDIS_STATUS	ATECmdHandler(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	ATE_INFO *pATEInfo = &(pAd->ate);
@@ -2864,27 +2864,27 @@ static NDIS_STATUS	ATECmdHandler(
 	DBGPRINT(RT_DEBUG_TRACE, ("===> %s\n", __FUNCTION__));
 
 #ifdef CONFIG_RT2880_ATE_CMD_NEW
-	if (!strcmp(arg, "ATESTART")) 		
+	if (!strcmp(arg, "ATESTART"))
 	{
 		/* Enter/Reset ATE mode and set Tx/Rx Idle */
 		Status = ATESTART(pAd);
 	}
-	else if (!strcmp(arg, "ATESTOP")) 
+	else if (!strcmp(arg, "ATESTOP"))
 	{
 		/* Leave ATE mode */
 		Status = ATESTOP(pAd);
 	}
 #else
-	if (!strcmp(arg, "APSTOP")) 		
+	if (!strcmp(arg, "APSTOP"))
 	{
 		Status = ATESTART(pAd);
 	}
-	else if (!strcmp(arg, "APSTART")) 
+	else if (!strcmp(arg, "APSTART"))
 	{
 		Status = ATESTOP(pAd);
 	}
 #endif
-	else if (!strcmp(arg, "TXCARR"))	
+	else if (!strcmp(arg, "TXCARR"))
 	{
 #ifdef RT6352
 		if (IS_RT6352(pAd))
@@ -2918,7 +2918,7 @@ static NDIS_STATUS	ATECmdHandler(
 
 		Status = TXCARS(pAd);
 	}
-	else if (!strcmp(arg, "TXCONT"))	
+	else if (!strcmp(arg, "TXCONT"))
 	{
 #ifdef RT6352
 		if (IS_RT6352(pAd))
@@ -2935,7 +2935,7 @@ static NDIS_STATUS	ATECmdHandler(
 
 		Status = TXCONT(pAd);
 	}
-	else if (!strcmp(arg, "TXFRAME")) 
+	else if (!strcmp(arg, "TXFRAME"))
 	{
 #ifdef RT6352
 		if (IS_RT6352(pAd))
@@ -2952,7 +2952,7 @@ static NDIS_STATUS	ATECmdHandler(
 
 		Status = TXFRAME(pAd);
 	}
-	else if (!strcmp(arg, "RXFRAME")) 
+	else if (!strcmp(arg, "RXFRAME"))
 	{
 #ifdef RT6352
 		if (IS_RT6352(pAd))
@@ -2969,7 +2969,7 @@ static NDIS_STATUS	ATECmdHandler(
 
 		Status = RXFRAME(pAd);
 	}
-	else if (!strcmp(arg, "TXAPPLY")) 
+	else if (!strcmp(arg, "TXAPPLY"))
 	{
 		/* sanity check */
 		if ((pATEInfo->Mode != ATE_TXFRAME) || (pATEInfo->Mode == ATE_START))
@@ -2996,7 +2996,7 @@ static NDIS_STATUS	ATECmdHandler(
 		Status = TXFRAME(pAd);
 	}
 	}
-	else if (!strcmp(arg, "RXAPPLY")) 
+	else if (!strcmp(arg, "RXAPPLY"))
 	{
 		/* sanity check */
 		if ((pATEInfo->Mode != ATE_RXFRAME) || (pATEInfo->Mode == ATE_START))
@@ -3034,7 +3034,7 @@ static NDIS_STATUS	ATECmdHandler(
 	}
 #endif /* RALINK_QA */
 	else
-	{	
+	{
 		DBGPRINT_ERR(("ATE : Invalid arg in %s!\n", __FUNCTION__));
 		Status = NDIS_STATUS_INVALID_DATA;
 	}
@@ -3046,11 +3046,11 @@ static NDIS_STATUS	ATECmdHandler(
 
 
 INT	Set_ATE_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
-	
+
 	/* Handle ATEACTIVE and ATEPASSIVE commands as a special case */
 	if (!strcmp(arg, "ATEACTIVE"))
 	{
@@ -3082,35 +3082,35 @@ INT	Set_ATE_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE ADDR1=DA for TxFrame(AP  : To DS = 0 ; From DS = 1)
         or
-        Set ATE ADDR3=DA for TxFrame(STA : To DS = 1 ; From DS = 0)        
-        
+        Set ATE ADDR3=DA for TxFrame(STA : To DS = 1 ; From DS = 0)
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_DA_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	PSTRING				value;
 	INT					octet;
 
-	/* Mac address acceptable format 01:02:03:04:05:06 length 17 */	
-	if (strlen(arg) != 17)  
+	/* Mac address acceptable format 01:02:03:04:05:06 length 17 */
+	if (strlen(arg) != 17)
 		return FALSE;
 
-	for (octet = 0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":")) 
+	for (octet = 0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":"))
 	{
 		/* sanity check */
 		if ((strlen(value) != 2) || (!isxdigit(*value)) || (!isxdigit(*(value+1))))
 		{
-			return FALSE;  
+			return FALSE;
 		}
 
 #ifdef CONFIG_STA_SUPPORT
@@ -3121,50 +3121,50 @@ INT	Set_ATE_DA_Proc(
 	/* sanity check */
 	if (octet != MAC_ADDR_LEN)
 	{
-		return FALSE;  
+		return FALSE;
 	}
 
 #ifdef CONFIG_STA_SUPPORT
-	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_DA_Proc (DA = %02x:%02x:%02x:%02x:%02x:%02x)\n", 
+	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_DA_Proc (DA = %02x:%02x:%02x:%02x:%02x:%02x)\n",
 		pATEInfo->Addr3[0], pATEInfo->Addr3[1], pATEInfo->Addr3[2], pATEInfo->Addr3[3],
 		pATEInfo->Addr3[4], pATEInfo->Addr3[5]));
 #endif /* CONFIG_STA_SUPPORT */
-	
+
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_DA_Proc Success\n"));
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE ADDR3=SA for TxFrame(AP  : To DS = 0 ; From DS = 1)
         or
         Set ATE ADDR2=SA for TxFrame(STA : To DS = 1 ; From DS = 0)
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_SA_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	PSTRING				value;
 	INT					octet;
 
-	/* Mac address acceptable format 01:02:03:04:05:06 length 17 */	
-	if (strlen(arg) != 17)  
+	/* Mac address acceptable format 01:02:03:04:05:06 length 17 */
+	if (strlen(arg) != 17)
 		return FALSE;
 
-	for (octet=0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":")) 
+	for (octet=0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":"))
 	{
 		/* sanity check */
 		if ((strlen(value) != 2) || (!isxdigit(*value)) || (!isxdigit(*(value+1))))
 		{
-			return FALSE;  
+			return FALSE;
 		}
 
 #ifdef CONFIG_STA_SUPPORT
@@ -3179,7 +3179,7 @@ INT	Set_ATE_SA_Proc(
 	}
 
 #ifdef CONFIG_STA_SUPPORT
-	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_SA_Proc (SA = %02x:%02x:%02x:%02x:%02x:%02x)\n", 
+	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_SA_Proc (SA = %02x:%02x:%02x:%02x:%02x:%02x)\n",
 		pATEInfo->Addr2[0], pATEInfo->Addr2[1], pATEInfo->Addr2[2], pATEInfo->Addr2[3],
 		pATEInfo->Addr2[4], pATEInfo->Addr2[5]));
 #endif /* CONFIG_STA_SUPPORT */
@@ -3190,7 +3190,7 @@ INT	Set_ATE_SA_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE ADDR2=BSSID for TxFrame(AP  : To DS = 0 ; From DS = 1)
@@ -3202,23 +3202,23 @@ INT	Set_ATE_SA_Proc(
 ==========================================================================
 */
 INT	Set_ATE_BSSID_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	PSTRING				value;
 	INT					octet;
 
-	/* Mac address acceptable format 01:02:03:04:05:06 length 17 */	
-	if (strlen(arg) != 17)  
+	/* Mac address acceptable format 01:02:03:04:05:06 length 17 */
+	if (strlen(arg) != 17)
 		return FALSE;
 
-	for (octet=0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":")) 
+	for (octet=0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":"))
 	{
 		/* sanity check */
 		if ((strlen(value) != 2) || (!isxdigit(*value)) || (!isxdigit(*(value+1))))
 		{
-			return FALSE;  
+			return FALSE;
 		}
 
 #ifdef CONFIG_STA_SUPPORT
@@ -3233,7 +3233,7 @@ INT	Set_ATE_BSSID_Proc(
 	}
 
 #ifdef CONFIG_STA_SUPPORT
-	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_BSSID_Proc (BSSID = %02x:%02x:%02x:%02x:%02x:%02x)\n",	
+	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_BSSID_Proc (BSSID = %02x:%02x:%02x:%02x:%02x:%02x)\n",
 		pATEInfo->Addr1[0], pATEInfo->Addr1[1], pATEInfo->Addr1[2], pATEInfo->Addr1[3],
 		pATEInfo->Addr1[4], pATEInfo->Addr1[5]));
 #endif /* CONFIG_STA_SUPPORT */
@@ -3246,7 +3246,7 @@ INT	Set_ATE_BSSID_Proc(
 
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Channel
@@ -3256,12 +3256,12 @@ INT	Set_ATE_BSSID_Proc(
 ==========================================================================
 */
 INT	Set_ATE_CHANNEL_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	UCHAR channel;
-	
+
 
 	channel = simple_strtol(arg, 0, 10);
 
@@ -3278,18 +3278,18 @@ INT	Set_ATE_CHANNEL_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_CHANNEL_Proc (ATE Channel = %d)\n", pATEInfo->Channel));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_CHANNEL_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Initialize the channel - set the power and switch to selected channel
 			0 => use current value
 			else set channel to specified channel
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -3351,18 +3351,18 @@ INT	Set_ATE_INIT_CHAN_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Power
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 static INT ATESetAntennaTxPower(
 	IN	PRTMP_ADAPTER	pAd,
-	IN	PSTRING 		arg,	
+	IN	PSTRING 		arg,
 	IN  INT 		Antenna)
 
 {
@@ -3434,10 +3434,10 @@ static INT ATESetAntennaTxPower(
 #ifdef DOT11N_SS3_SUPPORT
 		case 2:
 			pATEInfo->TxPower2 = TxPower;
-			break;	
+			break;
 #endif /* DOT11N_SS3_SUPPORT */
-		default: 
-			return FALSE;	
+		default:
+			return FALSE;
 	}
 
 	ATETxPwrHandler(pAd, index);
@@ -3445,16 +3445,16 @@ static INT ATESetAntennaTxPower(
 
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_POWER%d_Proc Success\n", index));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Power0
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -3464,17 +3464,17 @@ INT	Set_ATE_TX_POWER0_Proc(
 	IN	PSTRING			arg)
 {
 	INT ret;
-	
+
 	ret = ATESetAntennaTxPower(pAd, arg, 0);
 	return ret;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Power1
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -3484,18 +3484,18 @@ INT	Set_ATE_TX_POWER1_Proc(
 	IN	PSTRING			arg)
 {
 	INT ret;
-	
+
 	ret = ATESetAntennaTxPower(pAd, arg, 1);
 	return ret;
 }
 
 
 #ifdef DOT11N_SS3_SUPPORT
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Power2
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -3505,18 +3505,18 @@ INT	Set_ATE_TX_POWER2_Proc(
 	IN	PSTRING			arg)
 {
 	INT ret;
-	
+
 	ret = ATESetAntennaTxPower(pAd, arg, 2);
 	return ret;
 }
 #endif /* DOT11N_SS3_SUPPORT */
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Antenna
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -3528,7 +3528,7 @@ INT	Set_ATE_TX_Antenna_Proc(
 	PATE_INFO pATEInfo = &(pAd->ate);
 	CHAR value;
 	INT maximun_index = pAd->Antenna.field.TxPath;
-	
+
 	value = simple_strtol(arg, 0, 10);
 
 	if ((value > maximun_index) || (value < 0))
@@ -3544,16 +3544,16 @@ INT	Set_ATE_TX_Antenna_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_Antenna_Proc (Antenna = %d)\n", pATEInfo->TxAntennaSel));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_Antenna_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Rx Antenna
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -3565,7 +3565,7 @@ INT	Set_ATE_RX_Antenna_Proc(
 	PATE_INFO pATEInfo = &(pAd->ate);
 	CHAR value;
 	INT maximun_index = pAd->Antenna.field.RxPath;
-	
+
 	value = simple_strtol(arg, 0, 10);
 
 	if ((value > maximun_index) || (value < 0))
@@ -3581,7 +3581,7 @@ INT	Set_ATE_RX_Antenna_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_RX_Antenna_Proc (Antenna = %d)\n", pATEInfo->RxAntennaSel));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_RX_Antenna_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
@@ -3593,29 +3593,29 @@ VOID DefaultATEAsicExtraPowerOverMAC(
 	UINT32 ExtraPwrOverTxPwrCfg7 = 0, ExtraPwrOverTxPwrCfg8 = 0, ExtraPwrOverTxPwrCfg9 = 0;
 
 	/* For OFDM_54 and HT_MCS_7, extra fill the corresponding register value into MAC 0x13D4 */
-	RTMP_IO_READ32(pAd, 0x1318, &ExtraPwrOverMAC);  
+	RTMP_IO_READ32(pAd, 0x1318, &ExtraPwrOverMAC);
 	ExtraPwrOverTxPwrCfg7 |= (ExtraPwrOverMAC & 0x0000FF00) >> 8; /* Get Tx power for OFDM 54 */
-	RTMP_IO_READ32(pAd, 0x131C, &ExtraPwrOverMAC);  
-	ExtraPwrOverTxPwrCfg7 |= (ExtraPwrOverMAC & 0x0000FF00) << 8; /* Get Tx power for HT MCS 7 */			
+	RTMP_IO_READ32(pAd, 0x131C, &ExtraPwrOverMAC);
+	ExtraPwrOverTxPwrCfg7 |= (ExtraPwrOverMAC & 0x0000FF00) << 8; /* Get Tx power for HT MCS 7 */
 	RTMP_IO_WRITE32(pAd, TX_PWR_CFG_7, ExtraPwrOverTxPwrCfg7);
 
 	/* For STBC_MCS_7, extra fill the corresponding register value into MAC 0x13DC */
-	RTMP_IO_READ32(pAd, 0x1324, &ExtraPwrOverMAC);  
+	RTMP_IO_READ32(pAd, 0x1324, &ExtraPwrOverMAC);
 	ExtraPwrOverTxPwrCfg9 |= (ExtraPwrOverMAC & 0x0000FF00) >> 8; /* Get Tx power for STBC MCS 7 */
 	RTMP_IO_WRITE32(pAd, TX_PWR_CFG_9, ExtraPwrOverTxPwrCfg9);
 
 	if (IS_RT5392(pAd))
-	{	
+	{
 		/*  For HT_MCS_15, extra fill the corresponding register value into MAC 0x13DC */
-		RTMP_IO_READ32(pAd, 0x1320, &ExtraPwrOverMAC);  
+		RTMP_IO_READ32(pAd, 0x1320, &ExtraPwrOverMAC);
 		ExtraPwrOverTxPwrCfg8 |= (ExtraPwrOverMAC & 0x0000FF00) >> 8; /* Get Tx power for HT MCS 15 */
 		RTMP_IO_WRITE32(pAd, TX_PWR_CFG_8, ExtraPwrOverTxPwrCfg8);
-		
+
 		DBGPRINT(RT_DEBUG_TRACE, ("Offset =0x13D8, TxPwr = 0x%08X, ", (UINT)ExtraPwrOverTxPwrCfg8));
 	}
-	
-	DBGPRINT(RT_DEBUG_TRACE, ("Offset = 0x13D4, TxPwr = 0x%08X, Offset = 0x13DC, TxPwr = 0x%08X\n", 
-		(UINT)ExtraPwrOverTxPwrCfg7, 
+
+	DBGPRINT(RT_DEBUG_TRACE, ("Offset = 0x13D4, TxPwr = 0x%08X, Offset = 0x13DC, TxPwr = 0x%08X\n",
+		(UINT)ExtraPwrOverTxPwrCfg7,
 		(UINT)ExtraPwrOverTxPwrCfg9));
 }
 
@@ -3633,23 +3633,23 @@ VOID ATEAsicExtraPowerOverMAC(
 
 
 #ifdef RT3350
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE PA bias to improve EVM
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT Set_ATE_PA_Bias_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	UCHAR PABias = 0;
 	UCHAR RFValue;
-	
+
 	PABias = simple_strtol(arg, 0, 10);
 
 	if (PABias >= 16)
@@ -3669,23 +3669,23 @@ INT Set_ATE_PA_Bias_Proc(
 #endif /* RT3350 */
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE RF BW(default)
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Default_Set_ATE_TX_FREQ_OFFSET_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	UCHAR RFFreqOffset = 0;
 
-	
+
 	RFFreqOffset = simple_strtol(arg, 0, 10);
 
 	if (RFFreqOffset >= 64)
@@ -3700,22 +3700,22 @@ INT	Default_Set_ATE_TX_FREQ_OFFSET_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_FREQOFFSET_Proc (RFFreqOffset = %d)\n", pATEInfo->RFFreqOffset));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_FREQOFFSET_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE RF frequence offset
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_TX_FREQ_OFFSET_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -3737,24 +3737,24 @@ INT	Set_ATE_TX_FREQ_OFFSET_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE RF BW(default)
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Default_Set_ATE_TX_BW_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	INT powerIndex;
 	UCHAR value = 0;
 	UCHAR BBPCurrentBW;
-	
+
 	BBPCurrentBW = simple_strtol(arg, 0, 10);
 
 	if ((BBPCurrentBW == 0)
@@ -3784,8 +3784,8 @@ INT	Default_Set_ATE_TX_BW_Proc(
 				if (pAd->Tx20MPwrCfgGBand[powerIndex] == 0xffffffff)
 					continue;
 
-				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx20MPwrCfgGBand[powerIndex]);	
-				RtmpOsMsDelay(5);				
+				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx20MPwrCfgGBand[powerIndex]);
+				RtmpOsMsDelay(5);
 			}
 		}
 		else
@@ -3796,8 +3796,8 @@ INT	Default_Set_ATE_TX_BW_Proc(
 				if (pAd->Tx20MPwrCfgABand[powerIndex] == 0xffffffff)
 					continue;
 
-				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx20MPwrCfgABand[powerIndex]);	
- 				RtmpOsMsDelay(5);				
+				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx20MPwrCfgABand[powerIndex]);
+ 				RtmpOsMsDelay(5);
  			}
 		}
 
@@ -3845,7 +3845,7 @@ INT	Default_Set_ATE_TX_BW_Proc(
 				/* when Channel==14 && Mode==CCK && BandWidth==20M, BBP R4 bit5=1 */
  				ATE_BBP_IO_READ8_BY_REG_ID(pAd, BBP_R4, &value);
 				value |= 0x20; /* set bit5=1 */
- 				ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R4, value);				
+ 				ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R4, value);
 			}
 		}
 	}
@@ -3860,8 +3860,8 @@ INT	Default_Set_ATE_TX_BW_Proc(
 				if (pAd->Tx40MPwrCfgGBand[powerIndex] == 0xffffffff)
 					continue;
 
-				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx40MPwrCfgGBand[powerIndex]);	
-				RtmpOsMsDelay(5);				
+				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx40MPwrCfgGBand[powerIndex]);
+				RtmpOsMsDelay(5);
 			}
 		}
 		else
@@ -3872,9 +3872,9 @@ INT	Default_Set_ATE_TX_BW_Proc(
 				if (pAd->Tx40MPwrCfgABand[powerIndex] == 0xffffffff)
 					continue;
 
-				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx40MPwrCfgABand[powerIndex]);	
-				RtmpOsMsDelay(5);				
-			}		
+				RTMP_IO_WRITE32(pAd, TX_PWR_CFG_0 + powerIndex*4, pAd->Tx40MPwrCfgABand[powerIndex]);
+				RtmpOsMsDelay(5);
+			}
 
 			if ((pATEInfo->TxWI.TxWIPHYMODE >= 2) && (pATEInfo->TxWI.TxWIMCS == 7))
 			{
@@ -3914,22 +3914,22 @@ INT	Default_Set_ATE_TX_BW_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_BW_Proc (BBPCurrentBW = %d)\n", pATEInfo->TxWI.TxWIBW));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_BW_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE RF BW
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_TX_BW_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -3949,7 +3949,7 @@ INT	Set_ATE_TX_BW_Proc(
 #endif /* RTMP_MAC */
 
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_BW_Proc (BBPCurrentBW = %d)\n", bw));
-	}	
+	}
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_BW_Proc %s\n", status == TRUE ? "success" : "failed"));
 
 
@@ -3957,17 +3957,17 @@ INT	Set_ATE_TX_BW_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame length
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_TX_LENGTH_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -3984,42 +3984,42 @@ INT	Set_ATE_TX_LENGTH_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_LENGTH_Proc (TxLength = %d)\n", pATEInfo->TxLength));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_LENGTH_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame count
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_TX_COUNT_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
-	
+
 	pATEInfo->TxCount = simple_strtol(arg, 0, 10);
 
 
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_COUNT_Proc (TxCount = %d)\n", pATEInfo->TxCount));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_COUNT_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame MCS
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -4062,16 +4062,16 @@ INT	Set_ATE_TX_MCS_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_MCS_Proc (MCS = %d)\n", MCS));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_MCS_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame STBC
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -4088,7 +4088,7 @@ INT	Set_ATE_TX_STBC_Proc(
 		DBGPRINT_ERR(("Set_ATE_TX_STBC_Proc::Out of range\n"));
 		return FALSE;
 	}
-	
+
 #ifdef RLT_MAC
 	pATEInfo->TxWI.TXWI_N.STBC = stbc;
 #endif /* RLT_MAC */
@@ -4100,12 +4100,12 @@ INT	Set_ATE_TX_STBC_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_STBC_Proc (GI = %d)\n", stbc));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_STBC_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame Mode
@@ -4113,7 +4113,7 @@ INT	Set_ATE_TX_STBC_Proc(
         1: MODE_OFDM
         2: MODE_HTMIX
         3: MODE_HTGREENFIELD
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -4125,7 +4125,7 @@ INT	Set_ATE_TX_MODE_Proc(
 	PATE_INFO pATEInfo = &(pAd->ate);
 	UCHAR BbpData = 0;
 	UCHAR phy_mode, bw = BW_20;
-	
+
 	phy_mode = simple_strtol(arg, 0, 10);
 
 	if (phy_mode > MODE_VHT)
@@ -4215,7 +4215,7 @@ INT	Set_ATE_TX_MODE_Proc(
 			if(rf_value == 0xff)
 			    rf_value = 0x4F;
 			ATE_RF_IO_WRITE8_BY_REG_ID(pAd, rf_offset, (UCHAR)rf_value);
-		
+
 			RT28xx_EEPROM_READ16(pAd, 0x12a, value);
 			rf_value = value & 0x00FF;
 			rf_offset = (value & 0xFF00) >> 8;
@@ -4225,11 +4225,11 @@ INT	Set_ATE_TX_MODE_Proc(
 			if(rf_value == 0xff)
 			    rf_value = 0x07;
 			ATE_RF_IO_WRITE8_BY_REG_ID(pAd, rf_offset, (UCHAR)rf_value);
-		
+
 
 			/* set RF_R24 */
 			if (bw == BW_40)
-			{    
+			{
 				value = 0x3F;
 			}
 			else
@@ -4253,7 +4253,7 @@ INT	Set_ATE_TX_MODE_Proc(
 			if(rf_value == 0xff)
 			    rf_value = 0x6F;
 			ATE_RF_IO_WRITE8_BY_REG_ID(pAd, rf_offset, (UCHAR)rf_value);
-		
+
 			RT28xx_EEPROM_READ16(pAd, 0x128, value);
 			rf_value = value & 0x00FF;
 			rf_offset = (value & 0xFF00) >> 8;
@@ -4263,10 +4263,10 @@ INT	Set_ATE_TX_MODE_Proc(
 			if(rf_value == 0xff)
 			    rf_value = 0x07;
 			ATE_RF_IO_WRITE8_BY_REG_ID(pAd, rf_offset, (UCHAR)rf_value);
-		
+
 			/* set RF_R24 */
 			if (bw == BW_40)
-			{    
+			{
 				value = 0x28;
 			}
 			else
@@ -4281,16 +4281,16 @@ INT	Set_ATE_TX_MODE_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_MODE_Proc (TxMode = %d)\n", phy_mode));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_MODE_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame GI
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -4320,13 +4320,13 @@ INT	Set_ATE_TX_GI_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_TX_GI_Proc (GI = %d)\n", sgi));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_TX_GI_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
 INT	Set_ATE_RX_FER_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -4342,13 +4342,13 @@ INT	Set_ATE_RX_FER_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_RX_FER_Proc (bRxFER = %d)\n", pATEInfo->bRxFER));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_RX_FER_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
 
 INT Set_ATE_Read_RF_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	{
@@ -4364,10 +4364,10 @@ INT Set_ATE_Read_RF_Proc(
 
 #if (!defined(RTMP_RF_RW_SUPPORT)) && (!defined(RLT_RF))
 INT Set_ATE_Write_RF1_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
-	UINT32 value = (UINT32) simple_strtol(arg, 0, 16);	
+	UINT32 value = (UINT32) simple_strtol(arg, 0, 16);
 
 	pAd->LatchRfRegs.R1 = value;
 	RtmpRfIoWrite(pAd);
@@ -4377,7 +4377,7 @@ INT Set_ATE_Write_RF1_Proc(
 
 
 INT Set_ATE_Write_RF2_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UINT32 value = (UINT32) simple_strtol(arg, 0, 16);
@@ -4390,7 +4390,7 @@ INT Set_ATE_Write_RF2_Proc(
 
 
 INT Set_ATE_Write_RF3_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UINT32 value = (UINT32) simple_strtol(arg, 0, 16);
@@ -4403,7 +4403,7 @@ INT Set_ATE_Write_RF3_Proc(
 
 
 INT Set_ATE_Write_RF4_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UINT32 value = (UINT32) simple_strtol(arg, 0, 16);
@@ -4416,17 +4416,17 @@ INT Set_ATE_Write_RF4_Proc(
  #endif /* !defined(RTMP_RF_RW_SUPPORT) && !defined(RLT_RF) */
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Load and Write EEPROM from a binary file prepared in advance.
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT Set_ATE_Load_E2P_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	BOOLEAN		    	ret = FALSE;
@@ -4452,7 +4452,7 @@ INT Set_ATE_Load_E2P_Proc(
 			/* open the bin file */
 			srcf = RtmpOSFileOpen(src, O_RDONLY, 0);
 
-			if (IS_FILE_OPEN_ERR(srcf)) 
+			if (IS_FILE_OPEN_ERR(srcf))
 			{
 				DBGPRINT_ERR(("%s - Error opening file %s\n", __FUNCTION__, src));
 				break;
@@ -4483,17 +4483,17 @@ INT Set_ATE_Load_E2P_Proc(
 		}
 		else
 		{
-			retval = RtmpOSFileClose(srcf);			
+			retval = RtmpOSFileClose(srcf);
 
 			if (retval)
 			{
 				DBGPRINT_ERR(("--> Error %d closing %s\n", -retval, src));
-				
-			} 
+
+			}
 		}
 
 		/* restore */
-		RtmpOSFSInfoChange(&osFSInfo, FALSE);		
+		RtmpOSFSInfoChange(&osFSInfo, FALSE);
 	}
 
     DBGPRINT(RT_DEBUG_OFF, ("<=== %s (ret=%d)\n", __FUNCTION__, ret));
@@ -4503,13 +4503,13 @@ INT Set_ATE_Load_E2P_Proc(
 
 
 INT Set_ATE_Read_E2P_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	USHORT buffer[EEPROM_SIZE >> 1];
 	USHORT *p;
 	int i;
-	
+
 	rt_ee_read_all(pAd, (USHORT *)buffer);
 	p = buffer;
 	for (i = 0; i < (EEPROM_SIZE >> 1); i++)
@@ -4527,21 +4527,21 @@ INT Set_ATE_Read_E2P_Proc(
 #endif /* LED_CONTROL_SUPPORT */
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Enable ATE auto Tx alc (Tx auto level control).
-        According to the chip temperature, auto adjust the transmit power.  
-        
+        According to the chip temperature, auto adjust the transmit power.
+
         0: disable
         1: enable
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_AUTO_ALC_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -4556,7 +4556,7 @@ INT	Set_ATE_AUTO_ALC_Proc(
 	{
 		pATEInfo->bAutoTxAlc = FALSE;
 		DBGPRINT(RT_DEBUG_TRACE, ("ATEAUTOALC = FALSE , auto alc disabled!\n"));
-	}	
+	}
 
 
 	return TRUE;
@@ -4566,22 +4566,22 @@ INT	Set_ATE_AUTO_ALC_Proc(
 
 
 #ifdef TXBF_SUPPORT
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx Beamforming mode
-        
+
         Return:
         	TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_TXBF_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	CHAR value;
-	
+
 	value = simple_strtol(arg, 0, 10);
 
 	switch (value)
@@ -4611,12 +4611,12 @@ INT	Set_ATE_TXBF_Proc(
 			break;
 	}
 
-	
+
 	return TRUE;
 	}
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Sounding type
@@ -4624,7 +4624,7 @@ INT	Set_ATE_TXBF_Proc(
 			1 => Data sounding
 			2 => 2 stream NDP sounding
 			3 => 3 stream NDP Sounding
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
@@ -4635,14 +4635,14 @@ INT	Set_ATE_TXSOUNDING_Proc(
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	CHAR value;
-	
+
 	value = simple_strtol(arg, 0, 10);
 
 	if (value<0 || value>3)
 	{
 		DBGPRINT_ERR(("Set_ATE_TXSOUNDING_Proc: Invalid parameter %d\n", value));
 		return FALSE;
-	}	
+	}
 
 	pATEInfo->txSoundingMode = value;
 
@@ -4651,7 +4651,7 @@ INT	Set_ATE_TXSOUNDING_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Do a Divider Calibration on calibration channels and save in EEPROM
@@ -4774,15 +4774,15 @@ INT	Set_ATE_TXBF_LNACAL_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
 	Sanity check for the channel of Implicit TxBF calibration.
-        	
+
     Return:
 	TRUE if all parameters are OK, FALSE otherwise
 
-    Note: 
+    Note:
 	1. This sanity check function only work for Implicit TxBF calibration.
 	2. Currently supported channels are:
         	1, 14, 36, 64, 128, 132, 165
@@ -4814,33 +4814,33 @@ static BOOLEAN rtmp_ate_txbf_cal_valid_ch(
 			break;
 	}
 
-	return bValidCh;	
+	return bValidCh;
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set to start the initialization procedures of iTxBf calibration in DUT side
 			0 => do nothing
 			1 => do following initializations
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 
-    Note: 
+    Note:
    	This cmd shall only used in DUT side for calibration
 ==========================================================================
 */
 INT Set_ATE_TXBF_INIT_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
 	int val;
 	USHORT eepromVal;
 	UCHAR cmdStr[32];
-	
+
 	val = simple_strtol(arg, 0, 10);
 	if (val != 1)
 		return FALSE;
@@ -4872,35 +4872,35 @@ INT Set_ATE_TXBF_INIT_Proc(
 
 	/* set ATETXMODE=2 */
 	Set_ATE_TX_MODE_Proc(pAd, "2");
-	
+
 	/* set ATETXMCS=16 */
 	Set_ATE_TX_MCS_Proc(pAd, "16");
-	
+
 	/* set ATETXBW=0 */
 	Set_ATE_TX_BW_Proc(pAd, "0");
-	
+
 	/* set ATETXGI=0 */
 	Set_ATE_TX_GI_Proc(pAd, "0");
-	
+
 	/* set ATETXANT=0 */
 	Set_ATE_TX_Antenna_Proc(pAd, "0");
-	
+
 	/* set ATERXANT=0 */
 	Set_ATE_RX_Antenna_Proc(pAd, "0");
-	
+
 	/* set ATETXFREQOFFSET=eeprom */
 	/* read EEPROM Frequency offset from EEPROM and set it to BBP */
 	RT28xx_EEPROM_READ16(pAd, 0x44, eepromVal);
 	snprintf(cmdStr, sizeof(cmdStr), "%d\n", (eepromVal & 0xff));
 	Set_ATE_TX_FREQ_OFFSET_Proc(pAd, cmdStr);
-	
+
 #ifdef RTMP_MAC
 	/* bbp 65=29 */
 	RTMP_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R65, 0x29);
-	
+
 	/* bbp 163=bd */
 	RTMP_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R163, 0xbd);
-	
+
 	/* bbp 173=28 */
 	RTMP_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R173, 0x28);
 #endif /* RTMP_MAC */
@@ -4909,7 +4909,7 @@ INT Set_ATE_TXBF_INIT_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set to do iTxBF calibration procedures for specific channel, following show us the supported channels.
@@ -4918,17 +4918,17 @@ INT Set_ATE_TXBF_INIT_Proc(
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 
-    Note: 
+    Note:
    	This cmd shall only used in DUT side for calibration
 ==========================================================================
 */
 INT Set_ATE_TXBF_CAL_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UCHAR ch;
 	UCHAR cmdStr[32];
-	
+
 	ch = simple_strtol(arg, 0, 10);
 	if (rtmp_ate_txbf_cal_valid_ch(pAd, ch) == FALSE)
 		return FALSE;
@@ -4937,69 +4937,69 @@ INT Set_ATE_TXBF_CAL_Proc(
 	snprintf(cmdStr, sizeof(cmdStr), "%d\n", ch);
 	if (Set_ATE_CHANNEL_Proc(pAd, cmdStr) == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATEINITCHAN =0 */
 	if (Set_ATE_INIT_CHAN_Proc(pAd, "0") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXSOUNDING=3 */
 	if (Set_ATE_TXSOUNDING_Proc(pAd, "3") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ETxBfNoncompress=0 */
 	if (Set_ETxBfNoncompress_Proc(pAd, "0") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXMCS=0 */
 	if (Set_ATE_TX_MCS_Proc(pAd, "0") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXCNT=1 */
 	if (Set_ATE_TX_COUNT_Proc(pAd, "1") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXLEN=258 */
 	if (Set_ATE_TX_LENGTH_Proc(pAd, "258") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set InvTxBfTag=0 */
 	if (Set_InvTxBfTag_Proc(pAd, "0") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATE=TXFRAME */
 	if (Set_ATE_Proc(pAd, "TXFRAME") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ITxBfCal=1 */
 	return Set_ITxBfCal_Proc(pAd, "1");
-	
+
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set to start the initialization procedures of iTxBf calibration in Golden side at specified channel
 			arg => valid values are "1, 14, 36, 64, 128, 132, 165"
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 
-    Note: 
+    Note:
    	This cmd shall only used in GOLDEN side for calibration feedback
 ==========================================================================
 */
 INT Set_ATE_TXBF_GOLDEN_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UCHAR ch;
 	UCHAR cmdStr[32];
 	USHORT eepromVal;
-	
+
 	ch = simple_strtol(arg, 0, 10);
 	if (rtmp_ate_txbf_cal_valid_ch(pAd, ch) == FALSE)
-		return FALSE;	
+		return FALSE;
 
 	/* iwpriv ra0 set ATE=ATESTART */
 #ifdef	CONFIG_RT2880_ATE_CMD_NEW
@@ -5013,25 +5013,25 @@ INT Set_ATE_TXBF_GOLDEN_Proc(
 	/* iwpriv ra0 set ATETXPOWER=0 */
 	snprintf(cmdStr, sizeof(cmdStr), "%d\n", ch);
 	Set_ATE_INIT_CHAN_Proc(pAd, cmdStr);
-	
+
 
 	/* Set self mac address as 11:11:11:11:11:11 */
 	/* iwpriv ra0 set ATESA=11:11:11:11:11:11 */
 	RTMP_IO_WRITE32(pAd, 0x1008, 0x11111111);
 	RTMP_IO_WRITE32(pAd, 0x100c, 0x00001111);
-	
+
 	/* iwpriv ra0 set ATETXMODE=2 */
 	Set_ATE_TX_MODE_Proc(pAd, "2");
-	
+
 	/* iwpriv ra0 set ATETXBW=0 */
 	Set_ATE_TX_BW_Proc(pAd, "0");
-	
+
 	/* iwpriv ra0 set ATETXGI=0 */
 	Set_ATE_TX_GI_Proc(pAd, "0");
-	
+
 	/* iwpriv ra0 set ATETXANT=1 */
 	Set_ATE_TX_Antenna_Proc(pAd, "1");
-	
+
 	/* iwpriv ra0 set ATERXANT=1 */
 	Set_ATE_RX_Antenna_Proc(pAd, "1");
 
@@ -5039,7 +5039,7 @@ INT Set_ATE_TXBF_GOLDEN_Proc(
 	RT28xx_EEPROM_READ16(pAd, 0x44, eepromVal);
 	snprintf(cmdStr, sizeof(cmdStr), "%d\n", (eepromVal & 0xff));
 	Set_ATE_TX_FREQ_OFFSET_Proc(pAd, cmdStr);
-	
+
 #ifdef RTMP_MAC
 	/* iwpriv ra0 bbp 65=29 */
 	/* iwpriv ra0 bbp 163=9d */
@@ -5048,21 +5048,21 @@ INT Set_ATE_TXBF_GOLDEN_Proc(
 	RTMP_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R163, 0x9d);
 	RTMP_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R173, 0x00);
 #endif /* RTMP_MAC */
-	
+
 	/* iwpriv ra0 set ATE=RXFRAME */
 	Set_ATE_Proc(pAd, "RXFRAME");
-	
-#ifdef RTMP_MAC	
+
+#ifdef RTMP_MAC
 	/* reset the BBP_R173 as 0 to eliminate the compensation */
 	RTMP_BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R173, 0x00);
 #endif /* RTMP_MAC */
-	
+
 	return TRUE;
 
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
 	Set to do iTxBF calibration verification procedures at sepcified channel, following show us the supported channels.
@@ -5071,17 +5071,17 @@ INT Set_ATE_TXBF_GOLDEN_Proc(
     Return:
 	TRUE if all parameters are OK, FALSE otherwise
 
-    Note: 
+    Note:
 	This cmd shall only used in GOLDEN side for calibration verification
 ==========================================================================
 */
 INT Set_ATE_TXBF_VERIFY_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UCHAR ch;
 	UCHAR cmdStr[32];
-	
+
 	ch = simple_strtol(arg, 0, 10);
 	if (rtmp_ate_txbf_cal_valid_ch(pAd, ch) == FALSE)
 		return FALSE;
@@ -5090,27 +5090,27 @@ INT Set_ATE_TXBF_VERIFY_Proc(
 	snprintf(cmdStr, sizeof(cmdStr), "%d\n", ch);
 	if (Set_ATE_CHANNEL_Proc(pAd, cmdStr) == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXSOUNDING=3 */
 	if (Set_ATE_TXSOUNDING_Proc(pAd, "3") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ETxBfNoncompress=0 */
 	if (Set_ETxBfNoncompress_Proc(pAd, "0") == FALSE)
 		return FALSE;
 
-	/* iwpriv ra0 set ATETXMCS=0 */	
+	/* iwpriv ra0 set ATETXMCS=0 */
 	if (Set_ATE_TX_MCS_Proc(pAd, "0") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXCNT=1 */
 	if (Set_ATE_TX_COUNT_Proc(pAd, "1") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXLEN=258 */
 	if (Set_ATE_TX_LENGTH_Proc(pAd, "258") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set InvTxBfTag=0 */
 	if (Set_InvTxBfTag_Proc(pAd, "0") == FALSE)
 		return FALSE;
@@ -5118,14 +5118,14 @@ INT Set_ATE_TXBF_VERIFY_Proc(
 	/* iwpriv ra0 set ATE=TXFRAME */
 	if (Set_ATE_Proc(pAd, "TXFRAME") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ITxBfCal=0 */
 	return Set_ITxBfCal_Proc(pAd, "0");
 }
 
 
 INT Set_ATE_ForceBBP_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -5136,8 +5136,8 @@ INT Set_ATE_ForceBBP_Proc(
 	/*
 		0: no any restriction for BBP writing
 		1~255: force to not allow to change this specific BBP register.
-		
-		Note: 
+
+		Note:
 			BBP_R0 is not write-able, so use 0 as the rest operation shall be safe enough
 	*/
 	pATEInfo->forceBBPReg = bbpReg;
@@ -5147,7 +5147,7 @@ INT Set_ATE_ForceBBP_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
 	Set to do iTxBF calibration verification without R173 compensation procedures at sepcified channel, following show us the supported channels.
@@ -5156,19 +5156,19 @@ INT Set_ATE_ForceBBP_Proc(
     Return:
 	TRUE if all parameters are OK, FALSE otherwise
 
-    Note: 
+    Note:
 	This cmd shall only used in GOLDEN side for calibration verification
 ==========================================================================
 */
 INT Set_ATE_TXBF_VERIFY_NoComp_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	UCHAR ch;
 	UCHAR cmdStr[32];
 	UCHAR bbpR173 = 0;
 	int retval;
-	
+
 	ch = simple_strtol(arg, 0, 10);
 	if (rtmp_ate_txbf_cal_valid_ch(pAd, ch) == FALSE)
 		return FALSE;
@@ -5177,27 +5177,27 @@ INT Set_ATE_TXBF_VERIFY_NoComp_Proc(
 	snprintf(cmdStr, sizeof(cmdStr), "%d\n", ch);
 	if (Set_ATE_CHANNEL_Proc(pAd, cmdStr) == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXSOUNDING=3 */
 	if (Set_ATE_TXSOUNDING_Proc(pAd, "3") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ETxBfNoncompress=0 */
 	if (Set_ETxBfNoncompress_Proc(pAd, "0") == FALSE)
 		return FALSE;
 
-	/* iwpriv ra0 set ATETXMCS=0 */	
+	/* iwpriv ra0 set ATETXMCS=0 */
 	if (Set_ATE_TX_MCS_Proc(pAd, "0") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXCNT=1 */
 	if (Set_ATE_TX_COUNT_Proc(pAd, "1") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set ATETXLEN=258 */
 	if (Set_ATE_TX_LENGTH_Proc(pAd, "258") == FALSE)
 		return FALSE;
-	
+
 	/* iwpriv ra0 set InvTxBfTag=0 */
 	if (Set_InvTxBfTag_Proc(pAd, "0") == FALSE)
 		return FALSE;
@@ -5210,7 +5210,7 @@ INT Set_ATE_TXBF_VERIFY_NoComp_Proc(
 
 	/* force BBP_R173 value when do following procedures. */
 	Set_ATE_ForceBBP_Proc(pAd, "173");
-	
+
 	/* iwpriv ra0 set ATE=TXFRAME */
 	if (Set_ATE_Proc(pAd, "TXFRAME") == FALSE)
 	{
@@ -5220,7 +5220,7 @@ INT Set_ATE_TXBF_VERIFY_NoComp_Proc(
 
 	/* enable the update of BBP_R173 */
 	Set_ATE_ForceBBP_Proc(pAd, "0");
-	
+
 	/* iwpriv ra0 set ITxBfCal=0 */
 	retval = Set_ITxBfCal_Proc(pAd, "0");
 
@@ -5231,22 +5231,22 @@ INT Set_ATE_TXBF_VERIFY_NoComp_Proc(
 
 	/* done and return */
 	return retval;
-	
+
 }
-#endif /* TXBF_SUPPORT */	
+#endif /* TXBF_SUPPORT */
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE Tx frame IPG
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_IPG_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -5266,7 +5266,7 @@ INT	Set_ATE_IPG_Proc(
 	ASSERT(value > 0);
 
 	if ((value > 0) && (value < 256))
-	{               
+	{
 	    RTMP_IO_READ32(pAd, EDCA_AC0_CFG, &data);
 	    data &= 0x0;
 	    RTMP_IO_WRITE32(pAd, EDCA_AC0_CFG, data);
@@ -5290,7 +5290,7 @@ INT	Set_ATE_IPG_Proc(
 	    RTMP_IO_READ32(pAd, BKOFF_SLOT_CFG, &slottime);
 	    slottime &= 0x000000FF;
 
-	    aifsn = value / slottime;                  
+	    aifsn = value / slottime;
 	    value = value % slottime;
 
 	    RTMP_IO_READ32(pAd, EDCA_AC0_CFG, &data);
@@ -5325,17 +5325,17 @@ INT	Set_ATE_IPG_Proc(
 }
 
 
-/* 
+/*
 ==========================================================================
     Description:
         Set ATE payload pattern for TxFrame
-        
+
     Return:
         TRUE if all parameters are OK, FALSE otherwise
 ==========================================================================
 */
 INT	Set_ATE_Payload_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -5343,8 +5343,8 @@ INT	Set_ATE_Payload_Proc(
 
 	value = arg;
 
-	/* only one octet acceptable */	
-	if (strlen(value) != 2)  
+	/* only one octet acceptable */
+	if (strlen(value) != 2)
 		return FALSE;
 
 	AtoH(value, &(pATEInfo->Payload), 1);
@@ -5352,7 +5352,7 @@ INT	Set_ATE_Payload_Proc(
 	DBGPRINT(RT_DEBUG_TRACE, ("Set_ATE_Payload_Proc (repeated pattern = 0x%2x)\n", pATEInfo->Payload));
 	DBGPRINT(RT_DEBUG_TRACE, ("Ralink: Set_ATE_Payload_Proc Success\n"));
 
-	
+
 	return TRUE;
 }
 
@@ -5360,7 +5360,7 @@ INT	Set_ATE_Payload_Proc(
 
 
 INT	Set_ATE_Show_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 	PATE_INFO pATEInfo = &(pAd->ate);
@@ -5386,7 +5386,7 @@ INT	Set_ATE_Show_Proc(
 	}
 #endif /* RTMP_MAC */
 
-	
+
 	switch (pATEInfo->Mode)
 	{
 #ifdef CONFIG_RT2880_ATE_CMD_NEW
@@ -5425,7 +5425,7 @@ INT	Set_ATE_Show_Proc(
 			DBGPRINT(RT_DEBUG_OFF, ("ERROR! Unknown ATE mode!\n"));
 			break;
 		}
-	}	
+	}
 	DBGPRINT(RT_DEBUG_OFF, ("ATE Mode=%s\n", Mode_String));
 #ifdef RT3350
 	if (IS_RT3350(pAd))
@@ -5463,7 +5463,7 @@ INT	Set_ATE_Show_Proc(
 			break;
 		}
 	}
-	
+
 	DBGPRINT(RT_DEBUG_OFF, ("TxMode=%s\n", TxMode_String));
 	DBGPRINT(RT_DEBUG_OFF, ("Addr1=%02x:%02x:%02x:%02x:%02x:%02x\n",
 		pATEInfo->Addr1[0], pATEInfo->Addr1[1], pATEInfo->Addr1[2], pATEInfo->Addr1[3], pATEInfo->Addr1[4], pATEInfo->Addr1[5]));
@@ -5488,7 +5488,7 @@ INT	Set_ATE_Show_Proc(
 
 
 INT	Set_ATE_Help_Proc(
-	IN	PRTMP_ADAPTER	pAd, 
+	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
 {
 #ifdef CONFIG_RT2880_ATE_CMD_NEW
@@ -5540,7 +5540,7 @@ INT	Set_ATE_Help_Proc(
 #ifdef TXBF_SUPPORT
 	DBGPRINT(RT_DEBUG_OFF, ("ATETXBF, enable ATE Tx beam forming.\n"));
 	DBGPRINT(RT_DEBUG_OFF, ("ATETXSOUNDING, Sounding mode 0:none, 1:Data sounding, 2:2 stream NDP, 3:3 stream NDP.\n"));
-#endif /* TXBF_SUPPORT */ 
+#endif /* TXBF_SUPPORT */
 #ifdef RTMP_INTERNAL_TX_ALC
 	DBGPRINT(RT_DEBUG_OFF, ("ATETSSICBA, start internal TSSI calibration.\n"));
 	DBGPRINT(RT_DEBUG_OFF, ("ATETSSICBAEX, start extended internal TSSI calibration.\n"));
@@ -5561,7 +5561,7 @@ INT	Set_ATE_Help_Proc(
 INT Set_ATE_TSSI_CALIBRATION_Proc(
 	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
-{    
+{
 	PATE_INFO pATEInfo = &(pAd->ate);
 
 	if (pATEInfo->pChipStruct->TssiCalibration != NULL)
@@ -5575,12 +5575,12 @@ INT Set_ATE_TSSI_CALIBRATION_Proc(
 
 	return TRUE;
 }
-	
+
 
 INT Set_ATE_TSSI_CALIBRATION_EX_Proc(
 	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
-{    
+{
 	PATE_INFO pATEInfo = &(pAd->ate);
 
 	if (pATEInfo->pChipStruct->ExtendedTssiCalibration != NULL)
@@ -5602,14 +5602,14 @@ INT RT335x2_Set_ATE_TSSI_CALIBRATION_ENABLE_Proc(
 	IN	PSTRING			arg)
 		{
 	BOOLEAN	bTSSICalbrEnableG = FALSE;
-	
-	if (pAd->TxPowerCtrl.bInternalTxALC == FALSE)                  
+
+	if (pAd->TxPowerCtrl.bInternalTxALC == FALSE)
 			{
 		DBGPRINT_ERR(("Please set e2p 0x36 as 0x2024!!!\n"));
 		return FALSE;
 		}
 
-	if ((!IS_RT3350(pAd)) && (!IS_RT3352(pAd)))                  
+	if ((!IS_RT3350(pAd)) && (!IS_RT3352(pAd)))
 	{
 		DBGPRINT_ERR(("Not support TSSI calibration since not 3350/3352 chip!!!\n"));
 		return FALSE;
@@ -5631,7 +5631,7 @@ INT RT335x2_Set_ATE_TSSI_CALIBRATION_ENABLE_Proc(
 		}
 
 	pAd->ate.bTSSICalbrEnableG = bTSSICalbrEnableG;
-			
+
 
 	return TRUE;
 	}
@@ -5656,7 +5656,7 @@ CHAR InsertTssi(UCHAR InChannel, UCHAR Channel0, UCHAR Channel1,CHAR Tssi0, CHAR
 INT RT335xATETssiCalibrationExtend(
 	IN	PRTMP_ADAPTER	pAd,
 	IN	PSTRING			arg)
-{    
+{
 	CHAR		TssiRefPerChannel[CFG80211_NUM_OF_CHAN_2GHZ], TssiDeltaPerChannel[CFG80211_NUM_OF_CHAN_2GHZ];
 	UCHAR		CurrentChannel;
 	UCHAR		BbpData = 0;
@@ -5680,11 +5680,11 @@ INT RT335xATETssiCalibrationExtend(
 	/* step 1: write TSSI_ref to EEPROM 0x6E */
 	CurrentChannel = 7;
 	BbpData = TssiRefPerChannel[CurrentChannel-1];
-	DBGPRINT(RT_DEBUG_TRACE, ("TSSI_ref = 0x%02x\n", TssiRefPerChannel[CurrentChannel-1]));  
+	DBGPRINT(RT_DEBUG_TRACE, ("TSSI_ref = 0x%02x\n", TssiRefPerChannel[CurrentChannel-1]));
 	RT28xx_EEPROM_READ16(pAd, EEPROM_TSSI_OVER_OFDM_54, EEPData);
 	EEPData &= 0xff00;
 	EEPData |= BbpData;
-	DBGPRINT(RT_DEBUG_TRACE, ("Write  E2P 0x6e: 0x%04x\n", EEPData));  
+	DBGPRINT(RT_DEBUG_TRACE, ("Write  E2P 0x6e: 0x%04x\n", EEPData));
 #ifdef RTMP_EFUSE_SUPPORT
 	if(pAd->bUseEfuse)
 	{
@@ -5724,8 +5724,8 @@ INT RT335xATETssiCalibrationExtend(
 
 		/* eeprom only use 4 bit for TSSI delta */
 		TssiDeltaPerChannel[CurrentChannel-1]  &= 0x0f;
-		DBGPRINT(RT_DEBUG_TRACE, ("Channel %d, TSSI= 0x%x, TssiDelta=0x%x\n", 
-		CurrentChannel, TssiRefPerChannel[CurrentChannel-1], TssiDeltaPerChannel[CurrentChannel-1]));    
+		DBGPRINT(RT_DEBUG_TRACE, ("Channel %d, TSSI= 0x%x, TssiDelta=0x%x\n",
+		CurrentChannel, TssiRefPerChannel[CurrentChannel-1], TssiDeltaPerChannel[CurrentChannel-1]));
 	}
 
 	/* step 3: store TSSI delta values to EEPROM */
@@ -5843,7 +5843,7 @@ struct _ATE_CHIP_STRUCT RALINKDefault =
 	.ExtendedTssiCalibration = NULL,
 	.RxVGAInit = NULL,
 	.AsicSetTxRxPath = NULL,
-	.AdjustTxPower = NULL,	
+	.AdjustTxPower = NULL,
 	.AsicExtraPowerOverMAC = NULL,
 
 	/* command handlers */
@@ -5853,7 +5853,7 @@ struct _ATE_CHIP_STRUCT RALINKDefault =
 	/* variables */
 	.maxTxPwrCnt = 5,
 	.bBBPStoreTXCARR = FALSE,
-	.bBBPStoreTXCARRSUPP = FALSE,	
+	.bBBPStoreTXCARRSUPP = FALSE,
 	.bBBPStoreTXCONT = FALSE,
 	.bBBPLoadATESTOP = FALSE,
 };
@@ -5916,8 +5916,8 @@ NDIS_STATUS ChipStructAssign(
 #ifdef RT6352
 	if (IS_RT6352(pAd))
 		{
-		/* 
-			Notice: IS_RT6352(_pAd) is currently defined 
+		/*
+			Notice: IS_RT6352(_pAd) is currently defined
 			as (((_pAd)->MACVersion & 0xFFFF0000) == 0x53900000)
 		*/
 		pATEInfo->pChipStruct = &RALINK6352;
@@ -5977,7 +5977,7 @@ NDIS_STATUS ATEInit(
 		DBGPRINT_ERR(("%s failed !\n", __FUNCTION__));
 		return NDIS_STATUS_FAILURE;
 	}
-	
+
 	pATEInfo->Mode = ATE_STOP;
 #ifdef RT3350
 	pATEInfo->PABias = 0;
@@ -5990,8 +5990,8 @@ NDIS_STATUS ATEInit(
 		pATEInfo->Payload = 0xAA;
 	else
 #endif /* MT76x0 */
-	        pATEInfo->Payload = 0xA5;/* to be backward compatible */	
-	pATEInfo->IPG = 200;/* 200 : sync with QA */	
+	        pATEInfo->Payload = 0xA5;/* to be backward compatible */
+	pATEInfo->IPG = 200;/* 200 : sync with QA */
 	pATEInfo->TxLength = 1058;/* sync with QA */
 #ifdef RLT_MAC
 	{
@@ -6037,15 +6037,15 @@ NDIS_STATUS ATEInit(
 
 	NdisMoveMemory(pATEInfo->Addr3, pATEInfo->Addr2, MAC_ADDR_LEN);
 
-	{		
+	{
 		UINT32 data;
 
 		data = 0xFFFFFFFF;
-    	RTMP_IO_WRITE32(pAd, 0x1044, data); 
-    	RTMP_IO_READ32(pAd, 0x1048, &data); 
+    	RTMP_IO_WRITE32(pAd, 0x1044, data);
+    	RTMP_IO_READ32(pAd, 0x1048, &data);
 
     	data = data | 0x0000FFFF;
-    	RTMP_IO_WRITE32(pAd, 0x1048, data); 
+    	RTMP_IO_WRITE32(pAd, 0x1048, data);
 	}
 	/* For stream mode in 3T/3R -- */
 #else
@@ -6092,7 +6092,7 @@ NDIS_STATUS ATEInit(
 	}
 
 #ifdef TXBF_SUPPORT
-	pATEInfo->bTxBF = FALSE;	
+	pATEInfo->bTxBF = FALSE;
 #endif /* TXBF_SUPPORT */
 
 
@@ -6206,7 +6206,7 @@ VOID ReadQATxTypeFromBBP(
 						break;
 				}
 			}
-			break;	
+			break;
 
 		case BBP22_TXCARR:
 			{
@@ -6218,7 +6218,7 @@ VOID ReadQATxTypeFromBBP(
 					Set_ATE_Proc(pAd, "TXCARR");
 				}
 			}
-			break;							
+			break;
 
 		default:
 			{
@@ -6240,18 +6240,18 @@ NDIS_STATUS ATEBBPWriteWithRxChain(
 {
 	UCHAR idx = 0, val = 0;
 
-	if (((pAd->MACVersion & 0xffff0000) < 0x28830000) || 
+	if (((pAd->MACVersion & 0xffff0000) < 0x28830000) ||
 		(pAd->Antenna.field.RxPath == 1))
 	{
 		ATE_BBP_IO_WRITE8_BY_REG_ID(pAd, bbpId, bbpVal);
 		return NDIS_STATUS_SUCCESS;
 	}
-	
+
 	while (rx_ch_idx != 0)
 	{
 		if (idx >= pAd->Antenna.field.RxPath)
 			break;
-		
+
 		if (rx_ch_idx & 0x01)
 		{
 			ATE_BBP_IO_READ8_BY_REG_ID(pAd, BBP_R27, &val);
@@ -6265,7 +6265,7 @@ NDIS_STATUS ATEBBPWriteWithRxChain(
 #endif /* RTMP_MAC_USB */
 
 
-			DBGPRINT(RT_DEBUG_INFO, 
+			DBGPRINT(RT_DEBUG_INFO,
 					("%s(Idx):Write(R%d,val:0x%x) to Chain(0x%x, idx:%d)\n",
 						__FUNCTION__, bbpId, bbpVal, rx_ch_idx, idx));
 		}
@@ -6299,7 +6299,7 @@ INT Set_ADCDump_Proc(
 	UINT32 CaptureModeOffset=0,CaptureStartAddr=0;
 	UINT32 SMM_Addr;
 	UINT32 PKT_Addr;
-	int i = 0; 
+	int i = 0;
 	PSTRING					src = "ADCDump.txt";
 	RTMP_OS_FD				srcf;
 	RTMP_OS_FS_INFO			osFSInfo;
@@ -6310,7 +6310,7 @@ INT Set_ADCDump_Proc(
 	CAPTURE_MODE_PACKET_BUFFER    PKTValue2d;
 	UCHAR retval=0;
 	UCHAR DataSourceADC6=simple_strtol(arg, 0, 10);
-	
+
 	pAd->ate.Mode = ATE_START;
 
 	/* Disable Tx/Rx */
@@ -6318,7 +6318,7 @@ INT Set_ADCDump_Proc(
 	BBP_IO_READ8_BY_REG_ID(pAd, BBP_R21, &BBP_R21_Ori);
 
 	/* Disable BBP power saving */
-	   
+
 	/* disable all Tx/Rx Queue */
 	RTMP_IO_WRITE32(pAd, PBF_CFG, 0x00000000);
 
@@ -6331,7 +6331,7 @@ INT Set_ADCDump_Proc(
 	/* capture setting */
 	if (DataSourceADC6 == 1)
 	{
-		BBP_IO_READ8_BY_REG_ID(pAd, BBP_R60, &BBP_R60_Ori);                              
+		BBP_IO_READ8_BY_REG_ID(pAd, BBP_R60, &BBP_R60_Ori);
 		BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R60, 0x80);
 		BBP_IO_READ8_BY_REG_ID(pAd, BBP_R142, &BBP_R142_ORI);
 		BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R142, 0x10);
@@ -6356,7 +6356,7 @@ INT Set_ADCDump_Proc(
 	RTMP_IO_READ32(pAd, PBF_CAP_CTRL, &MACValue);
 	MACValue &= ~(0x1FFF0000);
 	RTMP_IO_WRITE32(pAd, PBF_CAP_CTRL, MACValue);
-						
+
 	if ((CaptureModeOffset > 0) && (CaptureModeOffset <= 0x1FFF))
 	{
 		RTMP_IO_READ32(pAd, PBF_CAP_CTRL, &MACValue);
@@ -6379,7 +6379,7 @@ INT Set_ADCDump_Proc(
 		/* start RX */
 		RTMP_IO_WRITE32(pAd, MAC_SYS_CTRL, 0x8);
 	}
-                        
+
 	/* Wait until [0x440] bit30=0 */
 	do
 	{
@@ -6418,7 +6418,7 @@ INT Set_ADCDump_Proc(
 
 	SMM_Addr=SMM_BASEADDR+CaptureStartAddr*2;
 	PKT_Addr=PKT_BASEADDR+CaptureStartAddr*4;
-	
+
 	/* SMM Address must be four byte alignment*/
 	SMM_Addr=(SMM_Addr/4)*4;
 
@@ -6427,12 +6427,12 @@ INT Set_ADCDump_Proc(
 	{
 		srcf = RtmpOSFileOpen(src, O_WRONLY|O_CREAT, 0);
 
-		if (IS_FILE_OPEN_ERR(srcf)) 
+		if (IS_FILE_OPEN_ERR(srcf))
 		{
 			DBGPRINT(RT_DEBUG_ERROR, ("--> Error opening %s\n", src));
 			return FALSE;
 		}
-		else 
+		else
 		{
 			memset(msg, 0x00, 128);
 			memset(msg1, 0x00, 128);
@@ -6466,7 +6466,7 @@ INT Set_ADCDump_Proc(
 
 				retval=RtmpOSFileWrite(srcf, (PSTRING)msg, strlen(msg));
 				retval=RtmpOSFileWrite(srcf, (PSTRING)msg1, strlen(msg1));
-			}           
+			}
 		}
 	}
 	else
@@ -6476,7 +6476,7 @@ INT Set_ADCDump_Proc(
 	}
 
 	retval=RtmpOSFileClose(srcf);
-			
+
 	if (retval)
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("--> Error %d closing %s\n", -retval, src));
@@ -6485,7 +6485,7 @@ INT Set_ADCDump_Proc(
 	RtmpOSFSInfoChange(&osFSInfo, FALSE);
 
 	BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R21, BBP_R21_Ori);
-	BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R60, BBP_R60_Ori); 
+	BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R60, BBP_R60_Ori);
 
 	BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R142, BBP_R142_ORI);
 	BBP_IO_WRITE8_BY_REG_ID(pAd, BBP_R142, BBP_R142_ORI);
@@ -6516,14 +6516,14 @@ INT Set_ADCDump_Proc(
 
 /* 100ms periodic execution */
 VOID ATEPeriodicExec(
-	IN PVOID SystemSpecific1, 
-	IN PVOID FunctionContext, 
-	IN PVOID SystemSpecific2, 
+	IN PVOID SystemSpecific1,
+	IN PVOID FunctionContext,
+	IN PVOID SystemSpecific2,
 	IN PVOID SystemSpecific3)
 {
 	PRTMP_ADAPTER pAd = (RTMP_ADAPTER *)FunctionContext;
 	PATE_INFO pATEInfo = &(pAd->ate);
-	
+
 	if (ATE_ON(pAd))
 	{
 		pATEInfo->OneSecPeriodicRound++;
@@ -6566,8 +6566,8 @@ VOID ATEPeriodicExec(
 		{
 			ATEAsicAdjustTxPower(pAd);
 		}
-		
-		ATEAsicExtraPowerOverMAC(pAd);		
+
+		ATEAsicExtraPowerOverMAC(pAd);
 
 	}
 	else

@@ -31,11 +31,11 @@
 VOID mgmt_tb_set_mcast_entry(RTMP_ADAPTER *pAd)
 {
 	MAC_TABLE_ENTRY *pEntry = &pAd->MacTab.Content[MCAST_WCID];
-	
+
 	pEntry->Sst = SST_ASSOC;
 	pEntry->Aid = MCAST_WCID;	/* Softap supports 1 BSSID and use WCID=0 as multicast Wcid index*/
 	pEntry->PsMode = PWR_ACTIVE;
-	pEntry->CurrTxRate = pAd->CommonCfg.MlmeRate; 
+	pEntry->CurrTxRate = pAd->CommonCfg.MlmeRate;
 }
 
 
@@ -78,7 +78,7 @@ MAC_TABLE_ENTRY *MacTableLookup(
 {
 	ULONG HashIdx;
 	MAC_TABLE_ENTRY *pEntry = NULL;
-	
+
 	HashIdx = MAC_ADDR_HASH_INDEX(pAddr);
 	pEntry = pAd->MacTab.Hash[HashIdx];
 
@@ -115,7 +115,7 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 #endif /* MAC_REPEATER_SUPPORT */
 
 #ifdef MAC_REPEATER_SUPPORT
-	if ((apidx >= MIN_NET_DEVICE_FOR_APCLI) && 
+	if ((apidx >= MIN_NET_DEVICE_FOR_APCLI) &&
 		(apidx < MIN_NET_DEVICE_FOR_MESH) &&
 		(pAd->ApCfg.bMACRepeaterEn == TRUE))
 	{
@@ -160,7 +160,7 @@ MAC_TABLE_ENTRY *MacTableInsertEntry(
 			if (pEntry->ip_queue_inited == 0) {
 				int q_idx, ac_idx;
 				struct ip_frag_q *fragQ = &pEntry->ip_fragQ[q_idx];
-				
+
 				for (ac_idx = 0; ac_idx < 4; ac_idx++) {
 					InitializeQueueHeader(&pEntry->ip_queue1[ac_idx]);
 					InitializeQueueHeader(&pEntry->ip_queue2[ac_idx]);
@@ -419,7 +419,7 @@ BOOLEAN MacTableDeleteEntry(
 #ifdef CONFIG_STA_SUPPORT
 #endif /* CONFIG_STA_SUPPORT */
 
-           
+
 			pPrevEntry = NULL;
 			pProbeEntry = pAd->MacTab.Hash[HashIdx];
 			ASSERT(pProbeEntry);
@@ -539,7 +539,7 @@ VOID MacTableReset(
 	IN  PRTMP_ADAPTER  pAd)
 {
 	int         i;
-	BOOLEAN     Cancelled;    
+	BOOLEAN     Cancelled;
 
 	DBGPRINT(RT_DEBUG_TRACE, ("MacTableReset\n"));
 	/*NdisAcquireSpinLock(&pAd->MacTabLock);*/

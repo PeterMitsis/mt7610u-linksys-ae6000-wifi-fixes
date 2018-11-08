@@ -57,17 +57,17 @@ NDIS_STATUS	 RtmpMgmtTaskInit(
 	pTask = &pAd->timerTask;
 	RTMP_OS_TASK_INIT(pTask, "RtmpTimerTask", pAd);
 	status = RtmpOSTaskAttach(pTask, RtmpTimerQThread, (ULONG)pTask);
-	if (status == NDIS_STATUS_FAILURE) 
+	if (status == NDIS_STATUS_FAILURE)
 	{
 		printk (KERN_WARNING "%s: unable to start RtmpTimerQThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
 		return NDIS_STATUS_FAILURE;
 	}
-	
+
 	/* Creat MLME Thread */
 	pTask = &pAd->mlmeTask;
 	RTMP_OS_TASK_INIT(pTask, "RtmpMlmeTask", pAd);
 	status = RtmpOSTaskAttach(pTask, MlmeThread, (ULONG)pTask);
-	if (status == NDIS_STATUS_FAILURE) 
+	if (status == NDIS_STATUS_FAILURE)
 	{
 		printk (KERN_WARNING "%s: unable to start MlmeThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
 		return NDIS_STATUS_FAILURE;
@@ -77,7 +77,7 @@ NDIS_STATUS	 RtmpMgmtTaskInit(
 	pTask = &pAd->cmdQTask;
 	RTMP_OS_TASK_INIT(pTask, "RtmpCmdQTask", pAd);
 	status = RtmpOSTaskAttach(pTask, RTUSBCmdThread, (ULONG)pTask);
-	if (status == NDIS_STATUS_FAILURE) 
+	if (status == NDIS_STATUS_FAILURE)
 	{
 		printk (KERN_WARNING "%s: unable to start RTUSBCmdThread\n", RTMP_OS_NETDEV_GET_DEVNAME(pAd->net_dev));
 		return NDIS_STATUS_FAILURE;
@@ -108,7 +108,7 @@ VOID RtmpMgmtTaskExit(
 {
 	INT			ret;
 	RTMP_OS_TASK	*pTask;
-	
+
 	/* Sleep 50 milliseconds so pending io might finish normally */
 	RTMPusecDelay(50000);
 
@@ -193,16 +193,16 @@ static void rtusb_dataout_complete(unsigned long data)
 	pAd->BulkOutPending[BulkOutPipeId] = FALSE;
 	pHTTXContext->IRPPending = FALSE;
 	pAd->watchDogTxPendingCnt[BulkOutPipeId] = 0;
-	
+
 	if (Status == USB_ST_NOERROR)
-	{		
+	{
 		pAd->BulkOutComplete++;
 
 		RTMP_IRQ_UNLOCK(&pAd->BulkOutLock[BulkOutPipeId], IrqFlags);
-	
+
 		pAd->Counters8023.GoodTransmits++;
 		/*RTMP_IRQ_LOCK(&pAd->TxContextQueueLock[BulkOutPipeId], IrqFlags); */
-		FREE_HTTX_RING(pAd, BulkOutPipeId, pHTTXContext);			
+		FREE_HTTX_RING(pAd, BulkOutPipeId, pHTTXContext);
 		/*RTMP_IRQ_UNLOCK(&pAd->TxContextQueueLock[BulkOutPipeId], IrqFlags); */
 
 #ifdef UAPSD_SUPPORT
@@ -212,11 +212,11 @@ static void rtusb_dataout_complete(unsigned long data)
 	else	/* STATUS_OTHER */
 	{
 		PUCHAR	pBuf;
-		
+
 		pAd->BulkOutCompleteOther++;
-		
+
 		pBuf = &pHTTXContext->TransferBuffer->field.WirelessPacket[pHTTXContext->NextBulkOutPosition];
-		
+
 		if (!RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
 									fRTMP_ADAPTER_HALT_IN_PROGRESS |
 									fRTMP_ADAPTER_NIC_NOT_EXIST |
@@ -232,7 +232,7 @@ static void rtusb_dataout_complete(unsigned long data)
 		DBGPRINT_RAW(RT_DEBUG_ERROR, ("\t>>BulkOut Req=0x%lx, Complete=0x%lx, Other=0x%lx\n", pAd->BulkOutReq, pAd->BulkOutComplete, pAd->BulkOutCompleteOther));
 		DBGPRINT_RAW(RT_DEBUG_ERROR, ("\t>>BulkOut Header:%x %x %x %x %x %x %x %x\n", pBuf[0], pBuf[1], pBuf[2], pBuf[3], pBuf[4], pBuf[5], pBuf[6], pBuf[7]));
 		/*DBGPRINT_RAW(RT_DEBUG_ERROR, (">>BulkOutCompleteCancel=0x%x, BulkOutCompleteOther=0x%x\n", pAd->BulkOutCompleteCancel, pAd->BulkOutCompleteOther)); */
-		
+
 	}
 
 	/* */
@@ -240,8 +240,8 @@ static void rtusb_dataout_complete(unsigned long data)
 	/* bWaitingBulkOut = TRUE, means the TX data are waiting for bulk out. */
 	/* */
 	/*RTMP_IRQ_LOCK(&pAd->TxContextQueueLock[BulkOutPipeId], IrqFlags); */
-	if (((pHTTXContext->ENextBulkOutPosition != pHTTXContext->CurWritePosition) && 
-		(pHTTXContext->ENextBulkOutPosition != (pHTTXContext->CurWritePosition+8)) && 
+	if (((pHTTXContext->ENextBulkOutPosition != pHTTXContext->CurWritePosition) &&
+		(pHTTXContext->ENextBulkOutPosition != (pHTTXContext->CurWritePosition+8)) &&
 		!RTUSB_TEST_BULK_FLAG(pAd, (fRTUSB_BULK_OUT_DATA_FRAG << BulkOutPipeId)))
 #ifdef USB_BULK_BUF_ALIGMENT
 				||	(pHTTXContext->NextBulkIdx != pHTTXContext->CurWriteIdx)
@@ -285,7 +285,7 @@ static void rtusb_null_frame_done_tasklet(unsigned long data)
 	if (Status == USB_ST_NOERROR)
 	{
 		RTMP_IRQ_UNLOCK(&pAd->BulkOutLock[0], irqFlag);
-		
+
 		RTMPDeQueuePacket(pAd, FALSE, NUM_OF_TX_RING, MAX_TX_PROCESS);
 	}
 	else	/* STATUS_OTHER */
@@ -333,7 +333,7 @@ static void rtusb_pspoll_frame_done_tasklet(unsigned long data)
 	pPsPollContext->IRPPending	= FALSE;
 	pPsPollContext->InUse		= FALSE;
 	pAd->watchDogTxPendingCnt[0] = 0;
-	
+
 	if (Status == USB_ST_NOERROR)
 	{
 		RTMPDeQueuePacket(pAd, FALSE, NUM_OF_TX_RING, MAX_TX_PROCESS);
@@ -398,7 +398,7 @@ static void rx_done_tasklet(unsigned long data)
 	pRxContext->IRPPending = FALSE;
 	pRxContext->BulkInOffset += RTMP_USB_URB_LEN_GET(pUrb); /*pUrb->actual_length; */
 	/*NdisInterlockedDecrement(&pAd->PendingRx); */
-	
+
 	if (pAd->PendingRx > 0) {
 		pAd->PendingRx--;
 	}
@@ -428,22 +428,22 @@ static void rx_done_tasklet(unsigned long data)
 									fRTMP_ADAPTER_RADIO_OFF |
 									fRTMP_ADAPTER_NIC_NOT_EXIST))))
 		{
-			
-			DBGPRINT_RAW(RT_DEBUG_ERROR, ("Bulk In Failed. Status=%d, BIIdx=0x%x, BIRIdx=0x%x, actual_length= 0x%x\n", 
+
+			DBGPRINT_RAW(RT_DEBUG_ERROR, ("Bulk In Failed. Status=%d, BIIdx=0x%x, BIRIdx=0x%x, actual_length= 0x%x\n",
 							Status, pAd->NextRxBulkInIndex, pAd->NextRxBulkInReadIndex, RTMP_USB_URB_LEN_GET(pRxContext->pUrb))); /*->actual_length)); */
 
 			RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_BULKIN_RESET);
 			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_IN, NULL, 0);
 		}
 	}
-	
+
 	ASSERT((pRxContext->InUse == pRxContext->IRPPending));
 
 #ifdef RALINK_ATE
 	if (ATE_ON(pAd))
 	{
 		/* If the driver is in ATE mode and Rx frame is set into here. */
-		if (pAd->ContinBulkIn == TRUE)		
+		if (pAd->ContinBulkIn == TRUE)
 		{
 			RTUSBBulkReceive(pAd);
 		}
@@ -527,15 +527,15 @@ static void rtusb_mgmt_dma_done_tasklet(unsigned long data)
 	if (pPacket)
 		RTMPFreeNdisPacket(pAd, pPacket);
 
-	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS | 
-								fRTMP_ADAPTER_HALT_IN_PROGRESS | 
+	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
+								fRTMP_ADAPTER_HALT_IN_PROGRESS |
 								fRTMP_ADAPTER_NIC_NOT_EXIST))))
 	{
 		/* do nothing and return directly. */
 	}
 	else
 	{
-		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET) && 
+		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET) &&
 			((pAd->bulkResetPipeid & BULKOUT_MGMT_RESET_FLAG) == BULKOUT_MGMT_RESET_FLAG))
 		{	/* For Mgmt Bulk-Out failed, ignore it now. */
 			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);
@@ -566,7 +566,7 @@ static void rtusb_hcca_dma_done_tasklet(unsigned long data)
 	UCHAR				BulkOutPipeId = 4;
 	purbb_t				pUrb;
 
-	
+
 	DBGPRINT_RAW(RT_DEBUG_ERROR, ("--->hcca_dma_done_tasklet\n"));
 
 
@@ -577,33 +577,33 @@ static void rtusb_hcca_dma_done_tasklet(unsigned long data)
 
 	rtusb_dataout_complete((unsigned long)pUrb);
 
-	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS | 
-								fRTMP_ADAPTER_HALT_IN_PROGRESS | 
-								fRTMP_ADAPTER_NIC_NOT_EXIST)))) 
+	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
+								fRTMP_ADAPTER_HALT_IN_PROGRESS |
+								fRTMP_ADAPTER_NIC_NOT_EXIST))))
 	{
 		/* do nothing and return directly. */
 	}
-	else 
-	{	
+	else
+	{
 		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET))
 		{
-			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);	
+			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);
 		}
 		else
 		{	pHTTXContext = &pAd->TxContext[BulkOutPipeId];
-			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) && 
+			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) &&
 				/*((pHTTXContext->CurWritePosition > (pHTTXContext->NextBulkOutPosition + 0x6000)) || (pHTTXContext->NextBulkOutPosition > pHTTXContext->CurWritePosition + 0x6000)) && */
-				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) && 
+				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) &&
 				(pHTTXContext->bCurWriting == FALSE))
 			{
 				RTMPDeQueuePacket(pAd, FALSE, BulkOutPipeId, MAX_TX_PROCESS);
 			}
-			
+
 			RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_NORMAL);
 			RTUSBKickBulkOut(pAd);
 		}
 	}
-	
+
 	DBGPRINT_RAW(RT_DEBUG_ERROR, ("<---hcca_dma_done_tasklet\n"));
 
 		return;
@@ -616,7 +616,7 @@ static void rtusb_ac3_dma_done_tasklet(unsigned long data)
 	PHT_TX_CONTEXT		pHTTXContext;
 	UCHAR				BulkOutPipeId = 3;
 	purbb_t				pUrb;
-	
+
 
 	pUrb			= (purbb_t)data;
 /*	pHTTXContext	= (PHT_TX_CONTEXT)pUrb->context; */
@@ -625,28 +625,28 @@ static void rtusb_ac3_dma_done_tasklet(unsigned long data)
 
 	rtusb_dataout_complete((unsigned long)pUrb);
 
-	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS | 
-								fRTMP_ADAPTER_HALT_IN_PROGRESS | 
-								fRTMP_ADAPTER_NIC_NOT_EXIST)))) 
+	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
+								fRTMP_ADAPTER_HALT_IN_PROGRESS |
+								fRTMP_ADAPTER_NIC_NOT_EXIST))))
 	{
 		/* do nothing and return directly. */
 	}
-	else 
-	{	
+	else
+	{
 		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET))
 		{
-			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);	
+			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);
 		}
 		else
 		{	pHTTXContext = &pAd->TxContext[BulkOutPipeId];
-			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) && 
+			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) &&
 				/*((pHTTXContext->CurWritePosition > (pHTTXContext->NextBulkOutPosition + 0x6000)) || (pHTTXContext->NextBulkOutPosition > pHTTXContext->CurWritePosition + 0x6000)) && */
-				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) && 
+				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) &&
 				(pHTTXContext->bCurWriting == FALSE))
 			{
 				RTMPDeQueuePacket(pAd, FALSE, BulkOutPipeId, MAX_TX_PROCESS);
 			}
-			
+
 			RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_NORMAL<<3);
 			RTUSBKickBulkOut(pAd);
 		}
@@ -672,28 +672,28 @@ static void rtusb_ac2_dma_done_tasklet(unsigned long data)
 
 	rtusb_dataout_complete((unsigned long)pUrb);
 
-	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS | 
-								fRTMP_ADAPTER_HALT_IN_PROGRESS | 
-								fRTMP_ADAPTER_NIC_NOT_EXIST)))) 
+	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
+								fRTMP_ADAPTER_HALT_IN_PROGRESS |
+								fRTMP_ADAPTER_NIC_NOT_EXIST))))
 	{
 		/* do nothing and return directly. */
 	}
-	else 
-	{	
+	else
+	{
 		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET))
 		{
-			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);	
+			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);
 		}
 		else
 		{	pHTTXContext = &pAd->TxContext[BulkOutPipeId];
-			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) && 
+			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) &&
 				/*((pHTTXContext->CurWritePosition > (pHTTXContext->NextBulkOutPosition + 0x6000)) || (pHTTXContext->NextBulkOutPosition > pHTTXContext->CurWritePosition + 0x6000)) && */
-				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) && 
+				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) &&
 				(pHTTXContext->bCurWriting == FALSE))
 			{
 				RTMPDeQueuePacket(pAd, FALSE, BulkOutPipeId, MAX_TX_PROCESS);
 			}
-			
+
 			RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_NORMAL<<2);
 			RTUSBKickBulkOut(pAd);
 		}
@@ -719,28 +719,28 @@ static void rtusb_ac1_dma_done_tasklet(unsigned long data)
 
 	rtusb_dataout_complete((unsigned long)pUrb);
 
-	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS | 
-								fRTMP_ADAPTER_HALT_IN_PROGRESS | 
-								fRTMP_ADAPTER_NIC_NOT_EXIST)))) 
+	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
+								fRTMP_ADAPTER_HALT_IN_PROGRESS |
+								fRTMP_ADAPTER_NIC_NOT_EXIST))))
 	{
 		/* do nothing and return directly. */
 	}
-	else 
-	{	
+	else
+	{
 		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET))
 		{
-			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);	
+			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);
 		}
 		else
 		{	pHTTXContext = &pAd->TxContext[BulkOutPipeId];
-			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) && 
+			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) &&
 				/*((pHTTXContext->CurWritePosition > (pHTTXContext->NextBulkOutPosition + 0x6000)) || (pHTTXContext->NextBulkOutPosition > pHTTXContext->CurWritePosition + 0x6000)) && */
-				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) && 
+				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) &&
 				(pHTTXContext->bCurWriting == FALSE))
 			{
 				RTMPDeQueuePacket(pAd, FALSE, BulkOutPipeId, MAX_TX_PROCESS);
 			}
-			
+
 			RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_NORMAL<<1);
 			RTUSBKickBulkOut(pAd);
 		}
@@ -756,7 +756,7 @@ static void rtusb_ac0_dma_done_tasklet(unsigned long data)
 	PHT_TX_CONTEXT		pHTTXContext;
 	UCHAR				BulkOutPipeId = 0;
 	purbb_t				pUrb;
-	
+
 
 	pUrb			= (purbb_t)data;
 /*	pHTTXContext	= (PHT_TX_CONTEXT)pUrb->context; */
@@ -764,29 +764,29 @@ static void rtusb_ac0_dma_done_tasklet(unsigned long data)
 	pAd				= pHTTXContext->pAd;
 
 	rtusb_dataout_complete((unsigned long)pUrb);
-		
-	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS | 
-								fRTMP_ADAPTER_HALT_IN_PROGRESS | 
-								fRTMP_ADAPTER_NIC_NOT_EXIST)))) 
+
+	if ((RTMP_TEST_FLAG(pAd, (fRTMP_ADAPTER_RESET_IN_PROGRESS |
+								fRTMP_ADAPTER_HALT_IN_PROGRESS |
+								fRTMP_ADAPTER_NIC_NOT_EXIST))))
 	{
 		/* do nothing and return directly. */
 	}
-	else 
-	{	
+	else
+	{
 		if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_BULKOUT_RESET))
 		{
-			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);	
+			RTEnqueueInternalCmd(pAd, CMDTHREAD_RESET_BULK_OUT, NULL, 0);
 		}
 		else
 		{	pHTTXContext = &pAd->TxContext[BulkOutPipeId];
-			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) && 
+			if ((pAd->TxSwQueue[BulkOutPipeId].Number > 0) &&
 				/*  ((pHTTXContext->CurWritePosition > (pHTTXContext->NextBulkOutPosition + 0x6000)) || (pHTTXContext->NextBulkOutPosition > pHTTXContext->CurWritePosition + 0x6000)) && */
 				(pAd->DeQueueRunning[BulkOutPipeId] == FALSE) &&
 				(pHTTXContext->bCurWriting == FALSE))
 			{
 				RTMPDeQueuePacket(pAd, FALSE, BulkOutPipeId, MAX_TX_PROCESS);
 			}
-			
+
 			RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_NORMAL);
 			RTUSBKickBulkOut(pAd);
 		}
@@ -812,7 +812,7 @@ static void rtusb_ate_ac0_dma_done_tasklet(unsigned long data)
 	/*pNullContext = (PTX_CONTEXT)pURB->rtusb_urb_context; */
 	pNullContext	= (PTX_CONTEXT)RTMP_USB_URB_DATA_GET(pURB);
 	pAd = pNullContext->pAd;
-	
+
 	/* Reset Null frame context flags */
 	pNullContext->IRPPending = FALSE;
 	pNullContext->InUse = FALSE;
@@ -821,9 +821,9 @@ static void rtusb_ate_ac0_dma_done_tasklet(unsigned long data)
 	/* Store BulkOut PipeId. */
 	BulkOutPipeId = pNullContext->BulkOutPipeId;
 	pAd->BulkOutDataOneSecCount++;
-	
+
 	if (Status == USB_ST_NOERROR)
-	{	
+	{
 #ifdef RALINK_QA
 		if ((ATE_ON(pAd)) && (pAd->ate.bQATxStart == TRUE))
 		{
@@ -898,16 +898,16 @@ static void rtusb_ate_ac0_dma_done_tasklet(unsigned long data)
 	DBGPRINT(RT_DEBUG_INFO, ("pNullContext->IRPPending = %d\n", (pNullContext->IRPPending==TRUE)));
 	DBGPRINT(RT_DEBUG_INFO, ("pNullContext->LastOne = %d\n", (pNullContext->LastOne==TRUE)));
 #endif /* RELASE_EXCLUDE */
-	
+
 
 	if (atomic_read(&pAd->BulkOutRemained) > 0)
-	{			
+	{
 		atomic_dec(&pAd->BulkOutRemained);
 #ifdef RELASE_EXCLUDE
 		DBGPRINT(RT_DEBUG_INFO, ("Bulk Out Remained = %d\n", atomic_read(&pAd->BulkOutRemained)));
 #endif /* RELASE_EXCLUDE */
 	}
-	
+
 	/* 1st - Transmit Success */
 	OldValue = pAd->WlanCounters.TransmittedFragmentCount.u.LowPart;
 	pAd->WlanCounters.TransmittedFragmentCount.u.LowPart++;
@@ -916,7 +916,7 @@ static void rtusb_ate_ac0_dma_done_tasklet(unsigned long data)
 	{
 		pAd->WlanCounters.TransmittedFragmentCount.u.HighPart++;
 	}
-	
+
 	if (((pAd->ContinBulkOut == TRUE ) ||(atomic_read(&pAd->BulkOutRemained) > 0))
 		&& (pAd->ate.Mode & ATE_TXFRAME))
 	{
@@ -924,7 +924,7 @@ static void rtusb_ate_ac0_dma_done_tasklet(unsigned long data)
 		DBGPRINT(RT_DEBUG_INFO, ("Continue to BulkOut ! \n"));
 #endif /* RELASE_EXCLUDE */
 		RTUSB_SET_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_ATE);
-	}	
+	}
 	else
 	{
 		RTUSB_CLEAR_BULK_FLAG(pAd, fRTUSB_BULK_OUT_DATA_ATE);
@@ -935,7 +935,7 @@ static void rtusb_ate_ac0_dma_done_tasklet(unsigned long data)
 
 	BULK_OUT_LOCK(&pAd->BulkOutLock[BulkOutPipeId], IrqFlags);
 	pAd->BulkOutPending[BulkOutPipeId] = FALSE;
-	BULK_OUT_UNLOCK(&pAd->BulkOutLock[BulkOutPipeId], IrqFlags);	
+	BULK_OUT_UNLOCK(&pAd->BulkOutLock[BulkOutPipeId], IrqFlags);
 
 	/* Always call Bulk routine, even reset bulk. */
 	/* The protection of rest bulk should be in BulkOut routine. */
@@ -948,7 +948,7 @@ NDIS_STATUS RtmpNetTaskInit(
 	IN RTMP_ADAPTER *pAd)
 {
 	POS_COOKIE pObj = (POS_COOKIE) pAd->OS_Cookie;
-	
+
 	/* Create receive tasklet */
 	RTMP_OS_TASKLET_INIT(pAd, &pObj->rx_done_task, rx_done_tasklet, (ULONG)pAd);
 	//RTMP_OS_TASKLET_INIT(pAd, &pObj->cmd_rsp_event_task, cmd_rsp_event_tasklet, (ULONG)pAd);
@@ -1028,15 +1028,15 @@ INT MlmeThread(
 			RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_HALT_IN_PROGRESS);
 			break;
 		}
-			
+
 		/* lock the device pointers , need to check if required*/
 		/*down(&(pAd->usbdev_semaphore)); */
-		
+
 		if (!pAd->PM_FlgSuspend)
 			MlmeHandler(pAd);
 	}
 
-	/* notify the exit routine that we're actually exiting now 
+	/* notify the exit routine that we're actually exiting now
 	 *
 	 * complete()/wait_for_completion() is similar to up()/down(),
 	 * except that complete() is safe in the case where the structure
@@ -1082,16 +1082,16 @@ INT RTUSBCmdThread(
 
 	pTask = (RTMP_OS_TASK *)Context;
 	pAd = (PRTMP_ADAPTER)RTMP_OS_TASK_DATA_GET(pTask);
-	
+
 	if (pAd == NULL)
 		return 0;
-	
+
 	RtmpOSTaskCustomize(pTask);
 
 	NdisAcquireSpinLock(&pAd->CmdQLock);
 	pAd->CmdQ.CmdQState = RTMP_TASK_STAT_RUNNING;
 	NdisReleaseSpinLock(&pAd->CmdQLock);
-	
+
 	while (pAd->CmdQ.CmdQState == RTMP_TASK_STAT_RUNNING)
 	{
 		if (RtmpOSTaskWait(pAd, pTask, &status) == FALSE)
@@ -1135,7 +1135,7 @@ INT RTUSBCmdThread(
 
 		NdisReleaseSpinLock(&pAd->CmdQLock);
 	}
-	/* notify the exit routine that we're actually exiting now 
+	/* notify the exit routine that we're actually exiting now
 	 *
 	 * complete()/wait_for_completion() is similar to up()/down(),
 	 * except that complete() is safe in the case where the structure

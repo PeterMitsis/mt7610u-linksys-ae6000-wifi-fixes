@@ -164,14 +164,14 @@ INT CFG80211DRV_IoctlHandle(
 
 #ifdef CONFIG_AP_SUPPORT
 		case CMD_RTPRIV_IOCTL_80211_BEACON_SET:
-			CFG80211DRV_OpsBeaconSet(pAd, pData);			
+			CFG80211DRV_OpsBeaconSet(pAd, pData);
 			break;
-		
+
 		case CMD_RTPRIV_IOCTL_80211_BEACON_ADD:
 			CFG80211DRV_OpsBeaconAdd(pAd, pData);
 			break;
-			
-		case CMD_RTPRIV_IOCTL_80211_BEACON_DEL:	
+
+		case CMD_RTPRIV_IOCTL_80211_BEACON_DEL:
 		{
 			INT i;
 			for(i = 0; i < WLAN_MAX_NUM_OF_TIM; i++)
@@ -222,7 +222,7 @@ BOOLEAN CFG80211DRV_OpsSetChannel(
 		/* get channel BW */
 		FlgIsChanged = FALSE;
 		BW_Old = pAd->CommonCfg.RegTransmitSetting.field.BW;
-	
+
 		/* set to new channel BW */
 		if (ChannelType == RT_CMD_80211_CHANTYPE_HT20)
 		{
@@ -237,10 +237,10 @@ BOOLEAN CFG80211DRV_OpsSetChannel(
 			pAd->CommonCfg.RegTransmitSetting.field.BW = BW_40;
 			FlgIsChanged = TRUE;
 		} /* End of if */
-	
+
 		CFG80211DBG(RT_DEBUG_ERROR, ("80211> New BW = %d\n",
 					pAd->CommonCfg.RegTransmitSetting.field.BW));
-	
+
 		/* change HT/non-HT mode (do NOT change wireless mode here) */
 		if (((ChannelType == RT_CMD_80211_CHANTYPE_NOHT) &&
 			(pAd->CommonCfg.HT_Disable == 0)) ||
@@ -252,7 +252,7 @@ BOOLEAN CFG80211DRV_OpsSetChannel(
 			else
 				pAd->CommonCfg.HT_Disable = 0;
 			/* End of if */
-	
+
 			FlgIsChanged = TRUE;
 			CFG80211DBG(RT_DEBUG_ERROR, ("80211> HT Disable = %d\n",
 						pAd->CommonCfg.HT_Disable));
@@ -350,7 +350,7 @@ BOOLEAN CFG80211DRV_OpsChgVirtualInf(
 			else
 				Filter = Filter | 0x01;
 			/* End of if */
-	
+
 			if ((FlgFilter & RT_CMD_80211_FILTER_PLCPFAIL) == \
 												RT_CMD_80211_FILTER_PLCPFAIL)
 			{
@@ -359,7 +359,7 @@ BOOLEAN CFG80211DRV_OpsChgVirtualInf(
 			else
 				Filter = Filter | 0x02;
 			/* End of if */
-	
+
 			if ((FlgFilter & RT_CMD_80211_FILTER_CONTROL) == \
 												RT_CMD_80211_FILTER_CONTROL)
 			{
@@ -368,7 +368,7 @@ BOOLEAN CFG80211DRV_OpsChgVirtualInf(
 			else
 				Filter = Filter | 0xFF00;
 			/* End of if */
-	
+
 			if ((FlgFilter & RT_CMD_80211_FILTER_OTHER_BSS) == \
 												RT_CMD_80211_FILTER_OTHER_BSS)
 			{
@@ -548,13 +548,13 @@ BOOLEAN CFG80211DRV_KeyAdd(
 		RT_CMD_STA_IOCTL_SECURITY IoctlSec;
 
 		DBGPRINT(RT_DEBUG_TRACE, ("Set_WPAPSK_Proc ==> %d, %d, %zu...\n", pKeyInfo->KeyId, pKeyInfo->KeyType, strlen(pKeyInfo->KeyBuf)));
-		
+
 		DBGPRINT(RT_DEBUG_TRACE, ("Set_WPAPSK_Proc ==> %d, %d, %zu...\n", pKeyInfo->KeyId, pKeyInfo->KeyType, strlen(pKeyInfo->KeyBuf)));
-		
+
 		IoctlSec.KeyIdx = pKeyInfo->KeyId;
 		IoctlSec.pData = pKeyInfo->KeyBuf;
 		IoctlSec.length = pKeyInfo->KeyLen;
-		
+
 		/* YF@20120327: Due to WepStatus will be set in the cfg connect function.*/
 		if (pAd->StaCfg.wdev.WepStatus == Ndis802_11Encryption2Enabled)
 			IoctlSec.Alg = RT_CMD_STA_IOCTL_SECURITY_ALG_TKIP;
@@ -565,27 +565,27 @@ BOOLEAN CFG80211DRV_KeyAdd(
 		if (pKeyInfo->bPairwise == FALSE )
 #else
 		if (pKeyInfo->KeyId > 0)
-#endif	
+#endif
 		{
 			if (pAd->StaCfg.GroupCipher == Ndis802_11Encryption2Enabled)
 				IoctlSec.Alg = RT_CMD_STA_IOCTL_SECURITY_ALG_TKIP;
 			else if (pAd->StaCfg.GroupCipher == Ndis802_11Encryption3Enabled)
 				IoctlSec.Alg = RT_CMD_STA_IOCTL_SECURITY_ALG_CCMP;
-				
+
 			DBGPRINT(RT_DEBUG_TRACE, ("Install GTK: %d\n", IoctlSec.Alg));
 			IoctlSec.ext_flags = RT_CMD_STA_IOCTL_SECURTIY_EXT_GROUP_KEY;
-		}	
+		}
 		else
 		{
 			if (pAd->StaCfg.PairCipher == Ndis802_11Encryption2Enabled)
 				IoctlSec.Alg = RT_CMD_STA_IOCTL_SECURITY_ALG_TKIP;
 			else if (pAd->StaCfg.PairCipher == Ndis802_11Encryption3Enabled)
 				IoctlSec.Alg = RT_CMD_STA_IOCTL_SECURITY_ALG_CCMP;
-				
+
 			DBGPRINT(RT_DEBUG_TRACE, ("Install PTK: %d\n", IoctlSec.Alg));
 			IoctlSec.ext_flags = RT_CMD_STA_IOCTL_SECURTIY_EXT_SET_TX_KEY;
 		}
-		
+
 		/*Set_GroupKey_Proc(pAd, &IoctlSec) */
 		RTMP_STA_IoctlHandle(pAd, NULL, CMD_RTPRIV_IOCTL_STA_SIOCSIWENCODEEXT, 0,
 							  &IoctlSec, 0, INT_MAIN);
@@ -608,7 +608,7 @@ BOOLEAN CFG80211DRV_Connect(
 	UINT32 SSIDLen;
 	RT_CMD_STA_IOCTL_SECURITY_ADV IoctlWpa;
 
-	if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_INFRA_ON) && 
+	if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_INFRA_ON) &&
             OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED))
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("CFG80211: Connected, disconnect first !\n"));
@@ -628,25 +628,25 @@ BOOLEAN CFG80211DRV_Connect(
 	{
 		SSIDLen = NDIS_802_11_LENGTH_SSID;
 	}
-	
+
 	memset(&SSID, 0, sizeof(SSID));
 	memcpy(SSID, pConnInfo->pSsid, SSIDLen);
 
-	if (pConnInfo->bWpsConnection) 
+	if (pConnInfo->bWpsConnection)
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("WPS Connection onGoing.....\n"));
-		/* YF@20120327: Trigger Driver to Enable WPS function. */	
+		/* YF@20120327: Trigger Driver to Enable WPS function. */
 		pAd->StaCfg.WpaSupplicantUP |= WPA_SUPPLICANT_ENABLE_WPS;  /* Set_Wpa_Support(pAd, "3") */
 		Set_AuthMode_Proc(pAd, "OPEN");
 		Set_EncrypType_Proc(pAd, "NONE");
 		Set_SSID_Proc(pAd, (PSTRING)SSID);
-		
+
 		return TRUE;
 	}
 	else
 	{
 		pAd->StaCfg.WpaSupplicantUP = WPA_SUPPLICANT_ENABLE; /* Set_Wpa_Support(pAd, "1")*/
-	}	
+	}
 
 
 
@@ -657,7 +657,7 @@ BOOLEAN CFG80211DRV_Connect(
 			DBGPRINT(RT_DEBUG_TRACE, ("WPA2\n"));
 			Set_AuthMode_Proc(pAd, "WPA2");
 		}
-		else 
+		else
 		{
 			DBGPRINT(RT_DEBUG_TRACE, ("WPA2PSK\n"));
 			Set_AuthMode_Proc(pAd, "WPA2PSK");
@@ -669,7 +669,7 @@ BOOLEAN CFG80211DRV_Connect(
 			DBGPRINT(RT_DEBUG_TRACE, ("WPA\n"));
 			Set_AuthMode_Proc(pAd, "WPA");
 		}
-		else 
+		else
 		{
 			DBGPRINT(RT_DEBUG_TRACE, ("WPAPSK\n"));
 			Set_AuthMode_Proc(pAd, "WPAPSK");
@@ -687,12 +687,12 @@ BOOLEAN CFG80211DRV_Connect(
 
 
 	/* set encryption mode */
-	if (pConnInfo->PairwiseEncrypType & RT_CMD_80211_CONN_ENCRYPT_CCMP) 
+	if (pConnInfo->PairwiseEncrypType & RT_CMD_80211_CONN_ENCRYPT_CCMP)
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("AES\n"));
 		Set_EncrypType_Proc(pAd, "AES");
 	}
-	else if (pConnInfo->PairwiseEncrypType & RT_CMD_80211_CONN_ENCRYPT_TKIP) 
+	else if (pConnInfo->PairwiseEncrypType & RT_CMD_80211_CONN_ENCRYPT_TKIP)
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("TKIP\n"));
 		Set_EncrypType_Proc(pAd, "TKIP");
@@ -705,11 +705,11 @@ BOOLEAN CFG80211DRV_Connect(
 	else
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("NONE\n"));
-		Set_EncrypType_Proc(pAd, "NONE");		
+		Set_EncrypType_Proc(pAd, "NONE");
 	}
-	
+
 	/* Groupwise Key Information Setting */
-	IoctlWpa.flags = RT_CMD_STA_IOCTL_WPA_GROUP;    
+	IoctlWpa.flags = RT_CMD_STA_IOCTL_WPA_GROUP;
 	if (pConnInfo->GroupwiseEncrypType & RT_CMD_80211_CONN_ENCRYPT_CCMP)
 	{
 		DBGPRINT(RT_DEBUG_TRACE, ("GTK AES\n"));
@@ -721,7 +721,7 @@ BOOLEAN CFG80211DRV_Connect(
 		DBGPRINT(RT_DEBUG_TRACE, ("GTK TKIP\n"));
 		IoctlWpa.value = RT_CMD_STA_IOCTL_WPA_GROUP_TKIP;
 		RtmpIoctl_rt_ioctl_siwauth(pAd, &IoctlWpa, 0);
-	} 
+	}
 
 
 	CFG80211DBG(RT_DEBUG_ERROR,
@@ -983,7 +983,7 @@ VOID CFG80211_RegRuleApply(
 	UINT32 ChanNum, ChanId, Power, RecId, DfsType;
 	BOOLEAN FlgIsRadar;
 	ULONG IrqFlags;
-#ifdef DFS_SUPPORT	
+#ifdef DFS_SUPPORT
 	RADAR_DETECT_STRUCT	*pRadarDetect;
 #endif /* DFS_SUPPORT */
 
@@ -1005,7 +1005,7 @@ VOID CFG80211_RegRuleApply(
 
 	/* 2.4GHZ & 5GHz */
 	RecId = 0;
-#ifdef DFS_SUPPORT	
+#ifdef DFS_SUPPORT
 	pRadarDetect = &pAd->CommonCfg.RadarDetect;
 #endif /* DFS_SUPPORT */
 
@@ -1031,7 +1031,7 @@ VOID CFG80211_RegRuleApply(
 				if (ChRegion[IdReg].CountReg[0] == 0x00)
 					break;
 				/* End of if */
-	
+
 				if ((pAlpha2[0] == ChRegion[IdReg].CountReg[0]) &&
 					(pAlpha2[1] == ChRegion[IdReg].CountReg[1]))
 				{
@@ -1039,7 +1039,7 @@ VOID CFG80211_RegRuleApply(
 						DfsType = pAd->CommonCfg.DfsType;
 					else
 					DfsType = ChRegion[IdReg].DfsType;
-	
+
 					CFG80211DBG(RT_DEBUG_ERROR,
 								("crda> find region %c%c, DFS Type %d\n",
 								pAlpha2[0], pAlpha2[1], DfsType));
@@ -1351,7 +1351,7 @@ INT CFG80211_SendWirelessEvent(
 	PRTMP_ADAPTER pAd = (PRTMP_ADAPTER)pAdCB;
 
 	P2pSendWirelessEvent(pAd, RT_P2P_CONNECTED, NULL, pMacAddr);
-	
+
 	return 0;
 }
 #endif /* RT_P2P_SPECIFIC_WIRELESS_EVENT */
@@ -1363,7 +1363,7 @@ VOID CFG80211_LostApInform(
 
 	PRTMP_ADAPTER pAd = (PRTMP_ADAPTER)pAdCB;
 	// CFG80211_CB *p80211CB = pAd->pCfg80211_CB;
-	
+
 	DBGPRINT(RT_DEBUG_TRACE, ("80211> CFG80211_LostApInform ==> \n"));
 	pAd->StaCfg.bAutoReconnect = FALSE;
 
@@ -1375,7 +1375,7 @@ VOID CFG80211_LostApInform(
 	//}
 	//else if (p80211CB->pCfg80211_Wdev->sme_state == CFG80211_SME_CONNECTED)
 	//{
-	//if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_INFRA_ON) && 
+	//if (OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_INFRA_ON) &&
         //    OPSTATUS_TEST_FLAG(pAd, fOP_STATUS_MEDIA_STATE_CONNECTED))
 	//{
 

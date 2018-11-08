@@ -52,7 +52,7 @@ INT LED_Array[16][12]={
 
 /*
 	========================================================================
-	
+
 	Routine Description:
 		Set LED Status
 
@@ -65,13 +65,13 @@ INT LED_Array[16][12]={
 
 	IRQL = PASSIVE_LEVEL
 	IRQL = DISPATCH_LEVEL
-	
+
 	Note:
-	
+
 	========================================================================
 */
 VOID RTMPSetLEDStatus(
-	IN PRTMP_ADAPTER 	pAd, 
+	IN PRTMP_ADAPTER 	pAd,
 	IN UCHAR			Status)
 {
 	/*ULONG			data; */
@@ -109,7 +109,7 @@ VOID RTMPSetLEDStatus(
 
 		LED_CMD = LED_Array[LedMode][Status];
 	}
-	
+
 	switch (Status)
 	{
 		case LED_LINK_DOWN:
@@ -129,7 +129,7 @@ VOID RTMPSetLEDStatus(
 			LinkStatus = LINK_STATUS_RADIO_ON;
 			MCUCmd = MCU_SET_LED_MODE;
 			break;
-		case LED_HALT: 
+		case LED_HALT:
 			LedMode = 0; /* Driver sets MAC register and MAC controls LED */
 		case LED_RADIO_OFF:
 			LinkStatus = LINK_STATUS_RADIO_OFF;
@@ -162,22 +162,22 @@ VOID RTMPSetLEDStatus(
 			AsicSendCommandToMcu(pAd, MCUCmd, 0xff, LedMode, LinkStatus, FALSE);
 	}
 	DBGPRINT(RT_DEBUG_TRACE, ("%s: MCUCmd:0x%x, LED Mode:0x%x, LinkStatus:0x%x\n", __FUNCTION__, MCUCmd, LedMode, LinkStatus));
-	
+
     /* */
 	/* Keep LED status for LED SiteSurvey mode. */
 	/* After SiteSurvey, we will set the LED mode to previous status. */
 	/* */
 	if ((Status != LED_ON_SITE_SURVEY) && (Status != LED_POWER_UP) && (bIgnored == FALSE))
 		pAd->LedCntl.LedStatus = Status;
-    
+
 }
 
 
 /*
 	========================================================================
-	
+
 	Routine Description:
-		Set LED Signal Stregth 
+		Set LED Signal Stregth
 
 	Arguments:
 		pAd						Pointer to our adapter
@@ -187,9 +187,9 @@ VOID RTMPSetLEDStatus(
 		None
 
 	IRQL = PASSIVE_LEVEL
-	
+
 	Note:
-		Can be run on any IRQL level. 
+		Can be run on any IRQL level.
 
 		According to Microsoft Zero Config Wireless Signal Stregth definition as belows.
 		<= -90  No Signal
@@ -197,11 +197,11 @@ VOID RTMPSetLEDStatus(
 		<= -71  Low
 		<= -67  Good
 		<= -57  Very Good
-		 > -57  Excellent		
+		 > -57  Excellent
 	========================================================================
 */
 VOID RTMPSetSignalLED(
-	IN PRTMP_ADAPTER 	pAd, 
+	IN PRTMP_ADAPTER 	pAd,
 	IN NDIS_802_11_RSSI Dbm)
 {
 	UCHAR		nLed = 0;
@@ -227,7 +227,7 @@ VOID RTMPSetSignalLED(
 			nLed = 7;
 		else if (Dbm <= -57)
 			nLed = 15;
-		else 
+		else
 			nLed = 31;
 
 		/* */
@@ -292,10 +292,10 @@ void RTMPInitLEDMode(IN RTMP_ADAPTER *pAd)
 		pLedCntl->LedACTCfg= 0x2221;
 
 #ifdef RTMP_MAC_USB
-		pLedCntl->LedPolarity = 0x5627; 
+		pLedCntl->LedPolarity = 0x5627;
 #endif /* RTMP_MAC_USB */
 	}
-	
+
 	AsicSendCommandToMcu(pAd, MCU_SET_LED_AG_CFG, 0xff, (UCHAR)pLedCntl->LedAGCfg, (UCHAR)(pLedCntl->LedAGCfg >> 8), FALSE);
 	AsicSendCommandToMcu(pAd, MCU_SET_LED_ACT_CFG, 0xff, (UCHAR)pLedCntl->LedACTCfg, (UCHAR)(pLedCntl->LedACTCfg >> 8), FALSE);
 	AsicSendCommandToMcu(pAd, MCU_SET_LED_POLARITY, 0xff, (UCHAR)pLedCntl->LedPolarity, (UCHAR)(pLedCntl->LedPolarity >> 8), FALSE);

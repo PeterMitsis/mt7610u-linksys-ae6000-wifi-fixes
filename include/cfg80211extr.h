@@ -52,7 +52,7 @@
 
 #ifdef CONFIG_STA_SUPPORT
 #define RT_CFG80211_LOST_AP_INFORM(__pAd) 									\
-	CFG80211_LostApInform((VOID *)__pAd);	
+	CFG80211_LostApInform((VOID *)__pAd);
 #endif /*CONFIG_STA_SUPPORT*/
 
 #define RT_CFG80211_REINIT(__pAd)											\

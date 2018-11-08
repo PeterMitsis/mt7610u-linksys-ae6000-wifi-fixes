@@ -30,7 +30,7 @@
 INT MCUBurstWrite(PRTMP_ADAPTER pAd, UINT32 Offset, UINT32 *Data, UINT32 Cnt)
 {
 #ifdef RTMP_USB_SUPPORT
-	RTUSBMultiWrite_nBytes(pAd, Offset, (PUCHAR) Data, Cnt * 4, 64); 
+	RTUSBMultiWrite_nBytes(pAd, Offset, (PUCHAR) Data, Cnt * 4, 64);
 #endif /* RTMP_USB_SUPPORT */
 
 	return 0;
@@ -39,7 +39,7 @@ INT MCUBurstWrite(PRTMP_ADAPTER pAd, UINT32 Offset, UINT32 *Data, UINT32 Cnt)
 INT MCURandomWrite(PRTMP_ADAPTER pAd, RTMP_REG_PAIR *RegPair, UINT32 Num)
 {
 	UINT32 Index;
-	
+
 	for (Index = 0; Index < Num; Index++)
 		RTMP_IO_WRITE32(pAd, RegPair->Register, RegPair->Value);
 
@@ -54,7 +54,7 @@ VOID ChipOpsMCUHook(PRTMP_ADAPTER pAd, enum MCU_TYPE MCUType)
 
 
 #ifdef CONFIG_ANDES_SUPPORT
-	if (MCUType == ANDES) 
+	if (MCUType == ANDES)
 	{
 
 #ifdef RTMP_USB_SUPPORT

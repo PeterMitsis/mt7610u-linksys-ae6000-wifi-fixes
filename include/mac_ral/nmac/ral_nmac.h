@@ -121,7 +121,7 @@ typedef struct GNU_PACKED _LED_NMAC_CMD{
 	UINT32 Arg1:8;
 	UINT32 Arg0:8;
 	UINT32 CmdID:8;
-	UINT32 rsv:8;	
+	UINT32 rsv:8;
 }LED_NMAC_CMD;
 #endif /* RT_BIG_ENDIAN */
 
@@ -136,7 +136,7 @@ typedef struct GNU_PACKED _TXWI_NMAC {
 	UINT32		BW:2;			/* channel bandwidth 20/40/80 MHz */
 	UINT32		LDPC:1
 	UINT32		MCS:6;
-	
+
 	UINT32		lut_en:1;
 	UINT32		rsv0:1;
 	UINT32		Sounding:1;
@@ -150,7 +150,7 @@ typedef struct GNU_PACKED _TXWI_NMAC {
 	UINT32		CFACK:1;
 	UINT32		MIMOps:1;	/* the remote peer is in dynamic MIMO-PS mode */
 	UINT32		FRAG:1;		/* 1 to inform TKIP engine this is a fragment. */
-	
+
 	/* Word 1 */
 	UINT32		TIM:1;
 	UINT32		TXBF_PT_SCA:1;
@@ -189,7 +189,7 @@ typedef	struct GNU_PACKED _TXWI_NMAC {
 	UINT32		Sounding:1;
 	UINT32		rsv0:1;
 	UINT32		lut_en:1;
-	
+
 	UINT32		MCS:6;
 	UINT32		LDPC:1;
 	UINT32		BW:2;		/*channel bandwidth 20/40/80 MHz */
@@ -197,7 +197,7 @@ typedef	struct GNU_PACKED _TXWI_NMAC {
 	UINT32		STBC:1;
 	UINT32		eTxBF:1;
 	UINT32		iTxBF:1;
-	UINT32		PHYMODE:3;  
+	UINT32		PHYMODE:3;
 
 	/* Word1 */
 	/* ex:  1c ff 38 00 means ACK=0, BAWinSize=7, MPDUtotalByteCnt = 0x38 */
@@ -208,10 +208,10 @@ typedef	struct GNU_PACKED _TXWI_NMAC {
 	UINT32		MPDUtotalByteCnt:14;
 	UINT32		TXBF_PT_SCA:1;
 	UINT32		TIM:1;
-	
+
 	/*Word2 */
 	UINT32		IV;
-	
+
 	/*Word3 */
 	UINT32		EIV;
 
@@ -219,7 +219,7 @@ typedef	struct GNU_PACKED _TXWI_NMAC {
 	UINT32		TxEAPId:8;
 	UINT32		TxStreamMode:8;
 	UINT32		TxPwrAdj:4;
-	UINT32		Rsv4:4;	
+	UINT32		Rsv4:4;
 	UINT32		TxPktId:8;
 }	TXWI_NMAC, *PTXWI_NMAC;
 #endif
@@ -271,7 +271,7 @@ typedef struct GNU_PACKED _RXFCE_INFO{
 	UINT32 ip_err:1;
 	UINT32 tcp_err:1;
 	UINT32 udp_err:1;
-	
+
 	UINT32 rsv:2;
 	UINT32 pkt_len:14;
 }RXFCE_INFO;
@@ -365,7 +365,7 @@ typedef struct GNU_PACKED _RXINFO_NMAC{
 	UINT32 bcast:1;
 	UINT32 mybss:1;
 	UINT32 crc_err:1;
-	UINT32 icv_err:1;	
+	UINT32 icv_err:1;
 	UINT32 mic_err:1;
 	UINT32 amsdu:1;
 	UINT32 htc:1;
@@ -491,7 +491,7 @@ typedef struct GNU_PACKED _HW_RATE_CTRL_STRUCT_{
 	UINT16 STBC:1;
 	UINT16 eTxBF:1;
 	UINT16 iTxBF:1;
-	UINT16 PHYMODE:3;  
+	UINT16 PHYMODE:3;
 #endif /* RT_BIG_ENDIAN */
 }HW_RATE_CTRL_STRUCT;
 
@@ -544,7 +544,7 @@ typedef union _WLAN_FUN_CTRL_STRUC{
 typedef union _WLAN_FUN_INFO_STRUC{
 	struct{
 		UINT32		BT_EEP_BUSY:1; /* Read-only for WLAN Driver */
-		UINT32		Rsv1:26;		
+		UINT32		Rsv1:26;
 		UINT32		COEX_MODE:5; /* WLAN function enable */
 	}field;
 	UINT32 word;
@@ -606,7 +606,7 @@ typedef union _BT_FUN_INFO_STRUC{
 		UINT32		WLAN_EEP_BUSY:1;
 		UINT32		BTPower1:7;	/* Peer */
 		UINT32		BTPower0:8; /* Self */
-		UINT32		AFH_END_CH:8;		
+		UINT32		AFH_END_CH:8;
 		UINT32		AFH_START_CH:8;
 	}field;
 	UINT32 word;
@@ -618,7 +618,7 @@ typedef	union _BT_FUN_INFO_STRUC	{
 		UINT32		AFH_END_CH:8;
 		UINT32		BTPower0:8;	/* Self */
 		UINT32		BTPower1:7;	/* Peer */
-		UINT32		WLAN_EEP_BUSY:1;			
+		UINT32		WLAN_EEP_BUSY:1;
 	}field;
 	UINT32 word;
 }BT_FUN_INFO_STRUC, *PBT_FUN_INFO_STRUC;
@@ -677,12 +677,12 @@ typedef union _TSO_CTRL_STRUC {
 #define PIFS_TX_CFG     0x13EC    // PIFS setting
 
 //----------------------------------------------------------------
-// Header Translation 
+// Header Translation
 //----------------------------------------------------------------
 
-/* 
-	WIFI INFO for TX translation 
-	|TXINO|TXWI|WIFI INFO|802.3 MAC Header|Pyaload| 
+/*
+	WIFI INFO for TX translation
+	|TXINO|TXWI|WIFI INFO|802.3 MAC Header|Pyaload|
 */
 
 #ifdef HDR_TRANS_SUPPORT
@@ -728,10 +728,10 @@ typedef union GNU_PACKED _WIFI_INFO_STRUC {
 } WIFI_INFO_STRUC, *PWIFI_INFO_STRUC;
 #endif /* RT_BIG_ENDIAN */
 
-/* 
-	header translation control register 
+/*
+	header translation control register
 	bit0 --> TX translation enable
-	bit1 --> RX translation enable 
+	bit1 --> RX translation enable
 */
 #define HEADER_TRANS_CTRL_REG	0x0260
 #define HT_TX_ENABLE			0x1
@@ -749,7 +749,7 @@ typedef union GNU_PACKED _HDR_TRANS_CTRL_STRUC {
     	UINT32 Rx_En:1;
     	UINT32 Tx_En:1;
 	} field;
-	UINT32 word;	
+	UINT32 word;
 } HDR_TRANS_CTRL_STRUC, *PHDR_TRANS_CTRL_STRUC;
 #else
 typedef union GNU_PACKED _HDR_TRANS_CTRL_STRUC {
@@ -762,7 +762,7 @@ typedef union GNU_PACKED _HDR_TRANS_CTRL_STRUC {
 } HDR_TRANS_CTRL_STRUC, *PHDR_TRANS_CTRL_STRUC;
 #endif /* RT_BIG_ENDIAN */
 
-/* RX header translation enable by WCID */ 
+/* RX header translation enable by WCID */
 #define HT_RX_WCID_EN_BASE	0x0264
 #define HT_RX_WCID_OFFSET	32
 #ifdef RT63xx
@@ -806,7 +806,7 @@ typedef union GNU_PACKED _HT_RX_WCID_EN_STRUC {
     	UINT32 RX_WCID1_TRAN_EN:1;
     	UINT32 RX_WCID0_TRAN_EN:1;
 	} field;
-	UINT32 word;	
+	UINT32 word;
 } HT_RX_WCID_EN_STRUC, *PHT_RX_WCID_EN_STRUC;
 #else
 typedef union GNU_PACKED _HT_RX_WCID_EN_STRUC {
@@ -858,7 +858,7 @@ typedef union GNU_PACKED _HT_RX_BLACK_LIST_STRUC {
     	UINT32 BLACK_ETHER_TYPE1:16;
     	UINT32 BLACK_ETHER_TYPE0:16;
 	} field;
-	UINT32 word;	
+	UINT32 word;
 } HT_RX_BLACK_LIST_STRUC, *PHT_RX_BLACK_LIST_STRUC;
 #else
 typedef union GNU_PACKED _HT_RX_BLACK_LIST_STRUC {
@@ -884,7 +884,7 @@ typedef union GNU_PACKED _HT_BSS_VLAN_STRUC {
     	UINT32 TCI0_CFI:1;
     	UINT32 TCI0_PCP:3;
 	} field;
-	UINT32 word;	
+	UINT32 word;
 } HT_BSS_VLAN_STRUC, *PHT_BSS_VLAN_STRUC;
 #else
 typedef union GNU_PACKED _HT_BSS_VLAN_STRUC {
@@ -929,7 +929,7 @@ typedef union GNU_PACKED _HT_BSS_VLAN_STRUC {
 
 /* This resgiser is ONLY be supported for RT3883 or later.
    It conflicted with BCN#0 offset of previous chipset. */
-#define WAPI_PN_TABLE_BASE		0xb800		
+#define WAPI_PN_TABLE_BASE		0xb800
 #define WAPI_PN_ENTRY_SIZE   		8
 
 #define RF_MISC	0x0518
